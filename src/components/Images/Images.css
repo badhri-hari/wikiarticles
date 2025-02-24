@@ -1,0 +1,340 @@
+.image-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  margin-top: -70px;
+}
+
+.image-container::-webkit-scrollbar {
+  display: none;
+}
+
+.image-carousel-slide {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  position: relative;
+}
+
+.image-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  pointer-events: none;
+}
+
+.toc {
+  position: absolute;
+  top: 20%;
+  left: 2%;
+  height: 55%;
+  width: 12.5vw;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  font-size: 1.21rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.toc::-webkit-scrollbar {
+  display: none;
+}
+
+.toc h3 {
+  font-size: 1.3rem;
+  margin-top: 7px;
+  margin-bottom: 9px;
+  margin-left: -7px;
+  color: white;
+  text-decoration: underline;
+  text-underline-offset: 3.5px;
+}
+
+.toc h4 {
+  font-size: 1.1rem;
+  margin-top: 7px;
+  margin-bottom: 10px;
+  margin-left: 16px;
+}
+
+.toc h5 {
+  font-size: 0.95rem;
+  margin-top: 0;
+  margin-bottom: 4px;
+  margin-left: 40px;
+  font-style: italic;
+}
+
+.toc a {
+  color: white;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.description {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  height: 55%;
+  width: 40vw;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: white;
+  font-size: 1.2rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.description::-webkit-scrollbar {
+  display: none;
+}
+
+.description h2 {
+  font-size: 1.9rem;
+  text-decoration: bold;
+  margin-top: 7px;
+  margin-bottom: 16px;
+}
+
+.more-like-this {
+  position: absolute;
+  bottom: 1.5%;
+  right: 1%;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 9px 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.more-like-this a {
+  color: white;
+  font-size: large;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+
+.more-like-this a:hover {
+  transform: scale(1.05);
+  text-decoration: underline;
+}
+
+.last-edited {
+  position: absolute;
+  bottom: 1.5%;
+  left: 1%;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 8px 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  color: white;
+  font-size: large;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.last-edited a {
+  color: white;
+  text-decoration: none;
+}
+
+.last-edited a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.view-count {
+  position: absolute;
+  bottom: 1.5%;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 8px 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  color: white;
+  font-size: large;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.view-count a {
+  color: white;
+  text-decoration: none;
+}
+
+.view-count a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.search {
+  position: absolute;
+  top: 20%;
+  right: 2%;
+  height: 26.5%;
+  width: 29vw;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: white;
+  font-size: 1.19rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow: hidden;
+  align-content: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search::-webkit-scrollbar {
+  display: none;
+}
+
+.search h2 {
+  font-size: 2rem;
+  text-decoration: bold;
+  margin-top: 8px;
+  margin-bottom: 22px;
+}
+
+.search h2:hover {
+  text-decoration: underline;
+  text-underline-offset: 4.5px;
+  cursor: pointer;
+}
+
+.article-link {
+  position: absolute;
+  top: 53.74%;
+  right: 2%;
+  height: 20vh;
+  width: 29vw;
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: white;
+  font-size: 1.21rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow: hidden;
+  text-align: center;
+  align-content: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.article-link a {
+  color: white;
+  font-size: 1.65rem;
+  text-decoration: none;
+}
+
+.article-link a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+@media only screen and (max-width: 900px) {
+  .image-container {
+    margin-top: -70px;
+  }
+
+  .toc {
+    display: none;
+  }
+
+  .description {
+    background: rgba(0, 0, 0, 0.45);
+    top: 20%;
+    left: 2%;
+    height: 51%;
+    width: 83.5vw;
+  }
+
+  .more-like-this {
+    background: rgba(0, 0, 0, 0.45);
+    bottom: 1.5%;
+    right: 2%;
+  }
+
+  .last-edited {
+    display: none;
+  }
+
+  .talk-page {
+    display: none;
+  }
+
+  .view-count {
+    bottom: 1.5%;
+    left: 2%;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 15px;
+  }
+
+  .search-text {
+    display: none;
+  }
+
+  .search {
+    background: rgba(0, 0, 0, 0.45);
+    top: 9%;
+    left: 2%;
+    height: 5vh;
+    width: 86vw;
+    padding: 20px;
+    font-size: 1.19rem;
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .search h2 {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  .article-link {
+    background: rgba(0, 0, 0, 0.45);
+    top: 77.5%;
+    left: 2%;
+    height: 8vh;
+    width: 84vw;
+  }
+}
