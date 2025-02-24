@@ -43,7 +43,7 @@ export default function Images() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("https://wikiarticles.vercel.app/api/wikipedia");
+      const response = await axios.get("/api/wikipedia");
       setArticles((prev) => [...prev, ...response.data.articles]);
     } catch (error) {
       console.error("Error fetching articles:", error);
