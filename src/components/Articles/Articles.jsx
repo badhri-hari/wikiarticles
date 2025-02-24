@@ -6,9 +6,9 @@ import { FaRedditAlien } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaArrowRightLong } from "react-icons/fa6";
 
-import "./Images.css";
+import "./Articles.css";
 
-export default function Images() {
+export default function Articles() {
   const containerRef = useRef(null);
   const slidesRef = useRef([]);
   const sentinelRef = useRef(null);
@@ -61,7 +61,7 @@ export default function Images() {
           fetchArticles();
         }
       },
-      { threshold: 0, rootMargin: "200px" }
+      { threshold: 0, rootMargin: "400px" }
     );
     if (sentinelRef.current) observer.observe(sentinelRef.current);
     return () => {

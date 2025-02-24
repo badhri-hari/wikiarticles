@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import Header from "./components/Header/Header";
 import Arrow from "./components/Arrow/Arrow";
-import Images from "./components/Images/Images";
+import Articles from "./components/Articles/Articles";
 
 export default function Home() {
   const [showArrow, setShowArrow] = useState(true);
@@ -10,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowArrow(false);
-    }, 1000);
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <Header />
 
-      <Images />
+      <Articles />
 
       {showArrow && <Arrow />}
     </>
