@@ -28,3 +28,18 @@ header {
 .header-icon:hover {
   transform: scale(1.1);
 }
+
+@media only screen and (max-width: 900px) {
+  header {
+    height: 45px;
+    padding: 10px;
+  }
+  
+  .header-logo {
+    font-size: 30px;
+  }
+  
+  .header-icon {
+    display: none;
+  }
+}
