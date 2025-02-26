@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
-    const numArticles = 9;
+    const numArticles = 27;
     const summaryRequests = [];
     for (let i = 0; i < numArticles; i++) {
       summaryRequests.push(
