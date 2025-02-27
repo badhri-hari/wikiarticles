@@ -130,13 +130,23 @@ export default function Articles() {
 
               <div className="more-like-this">
                 <a
+                  href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
+                    title
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Talk page
+                </a>
+                <span style={{color: "white"}}> | </span>
+                <a
                   href={`https://en.wikipedia.org/w/index.php?fulltext=1&search=${encodeURIComponent(
                     title
                   )}&title=Special%3ASearch&ns0=1`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  More Like This
+                  More Like This 
                 </a>
               </div>
 
@@ -154,16 +164,7 @@ export default function Articles() {
               </div>
 
               <div className="view-count">
-                {article.viewCount} views |{" "}
-                <a
-                  href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
-                    title
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Talk page
-                </a>
+                {article.viewCount} views
               </div>
 
               <div className="search">
