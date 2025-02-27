@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="./public/favicon.png" alt="Wikipedia Logo">
-</p>
-
 # wikiarticles
 
 This repository contains the code for the wikiarticles page, a scroll-based interface for exploring random Wikipedia articles.
