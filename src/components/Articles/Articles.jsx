@@ -47,7 +47,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("http://192.168.1.9:5000/api/articles");
+      const response = await axios.get("/api/articles");
       setArticles((prev) => [...prev, ...response.data.articles]);
     } catch (error) {
       console.error("Error fetching articles:", error);
@@ -206,7 +206,11 @@ export default function Articles() {
                     rel="noopener noreferrer"
                   >
                     Last edited on{" "}
-                    {new Date(article.timestamp).toLocaleDateString()}
+                    {new Date(article.timestamp).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </a>
                 </div>
 

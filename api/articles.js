@@ -9,6 +9,12 @@ function getMonthlyEndDate() {
   return `${year}${month}0100`;
 }
 
+function formatDate(timestamp) {
+  const date = new Date(timestamp);
+  const options = { month: "short", day: "numeric", year: "numeric" };
+  return date.toLocaleDateString("en-US", options);
+}
+
 export default async function handler(req, res) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
@@ -75,6 +81,8 @@ export default async function handler(req, res) {
         if (!data.timestamp) {
           data.timestamp = new Date().toISOString();
         }
+        data.formattedTimestamp = formatDate(data.timestamp);
+
         return data;
       })
     );
