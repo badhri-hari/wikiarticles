@@ -4,7 +4,7 @@
   "description": "A scroll-based interface for exploring random Wikipedia articles.",
   "start_url": ".",
   "scope": ".",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "theme_color": "#000000",
   "display": "standalone",
   "orientation": "portrait",
