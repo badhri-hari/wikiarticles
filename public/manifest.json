@@ -1,6 +1,6 @@
 {
   "name": "wikiarticles",
-  "short_name": "WA",
+  "short_name": "wikiarticles",
   "description": "A scroll-based interface for exploring random Wikipedia articles.",
   "start_url": ".",
   "scope": ".",
