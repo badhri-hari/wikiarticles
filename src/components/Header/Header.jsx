@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header>
       <div className="header-logo">
-        <span style={{ fontWeight: "500" }}>wiki</span>articles
+        <span>wiki</span>articles
       </div>
       <a
         href="https://github.com/badhri-hari/wikiarticles"

@@ -4,7 +4,7 @@ import axios from "axios";
 import { IoMdSearch } from "react-icons/io";
 import { FaRedditAlien } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
-import { FaArrowRightLong } from "react-icons/fa6";
+import { FaWikipediaW } from "react-icons/fa6";
 
 import "./Articles.css";
 
@@ -230,10 +230,9 @@ export default function Articles() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Go to article
-                    <FaArrowRightLong
-                      size="1.3rem"
-                      style={{ marginLeft: "14px" }}
+                    <FaWikipediaW
+                      size="2rem"
+                      style={{ marginLeft: "10px" }}
                     />
                   </a>
                 </div>

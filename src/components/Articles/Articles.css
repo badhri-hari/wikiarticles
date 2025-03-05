@@ -130,9 +130,8 @@
   bottom: 1.5%;
   right: 1%;
   background: rgba(0, 0, 0, 0.6);
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 9px 16px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(2.5px);
   -webkit-backdrop-filter: blur(2.5px);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -155,9 +154,8 @@
   bottom: 1.5%;
   left: 1%;
   background: rgba(0, 0, 0, 0.6);
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 8px 15px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(2.5px);
   -webkit-backdrop-filter: blur(2.5px);
   color: white;
@@ -179,9 +177,8 @@
   position: absolute;
   bottom: 1.5%;
   background: rgba(0, 0, 0, 0.6);
-  border-radius: 15px;
+  border-radius: 12px;
   padding: 8px 15px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(2.5px);
   -webkit-backdrop-filter: blur(2.5px);
   color: white;
@@ -355,9 +352,9 @@
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 400px) {  
   .image-container {
-    margin-top: -70px;
+    margin-top: -180px;
   }
 
   .toc {
@@ -365,12 +362,24 @@
   }
 
   .description {
-    background: rgba(0, 0, 0, 0.45);
-    top: 24.5%;
-    left: 3.5%;
-    height: 45%;
-    width: 78vw;
-    font-size: 1.08rem;
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: none;
+    border-radius: 0;
+    font-size: 1rem;
+    top: 48%;
+    right: 0;
+    left: 0;
+    height: 30%;
+    width: calc(100vw - 30px);
+    font-size: 1rem;
+    padding: 15px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .description h2 {
+    font-size: 1.3rem;
+    margin-top: 8px;
   }
 
   .more-like-this {
@@ -394,18 +403,19 @@
   }
 
   .search {
-    background: rgba(0, 0, 0, 0.45);
-    top: 12%;
-    left: 3.5%;
-    height: 5vh;
-    width: 80vw;
-    padding: 20px;
-    font-size: 1.19rem;
-    align-content: center;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    top: 15%;
+    left: 0;
+    height: 4vh;
+    width: 100vw;
+    padding: 20px 0 20px 0;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
+    z-index: 1000;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
   }
 
   .search h2 {
@@ -414,10 +424,17 @@
   }
 
   .article-link {
-    background: rgba(0, 0, 0, 0.45);
-    top: 77.5%;
-    left: 3.5%;
-    height: 6vh;
-    width: 79vw;
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: none;
+    border-radius: 0;
+    top: 81.5%;
+    right: 0;
+    left: 0;
+    height: 3vh;
+    width: calc(100vw - 50px);
+  }
+
+  .article-link a {
+    font-size: 1.3rem;
   }
 }
