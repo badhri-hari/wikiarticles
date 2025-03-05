@@ -98,7 +98,7 @@
   top: 20%;
   left: 20%;
   height: 55%;
-  width: 40vw;
+  width: 40.5vw;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
   padding: 25px;
@@ -200,7 +200,7 @@
   position: absolute;
   top: 20%;
   right: 2%;
-  height: 26.5%;
+  height: 35%;
   width: 29vw;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 15px;
@@ -236,9 +236,9 @@
 
 .article-link {
   position: absolute;
-  top: 53.74%;
+  top: 62.6%;
   right: 2%;
-  height: 20vh;
+  height: 11vh;
   width: 29vw;
   margin-top: 10px;
   background: rgba(0, 0, 0, 0.5);

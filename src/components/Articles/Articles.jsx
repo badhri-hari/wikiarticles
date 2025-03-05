@@ -5,6 +5,9 @@ import { IoMdSearch } from "react-icons/io";
 import { FaRedditAlien } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { FaWikipediaW } from "react-icons/fa6";
+import { IoMdLink } from "react-icons/io";
+import { FaCheck } from "react-icons/fa6";
+import { GoShare } from "react-icons/go";
 
 import "./Articles.css";
 
@@ -13,6 +16,7 @@ export default function Articles() {
   const slidesRef = useRef([]);
   const sentinelRef = useRef(null);
   const [articles, setArticles] = useState([]);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -43,7 +47,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("/api/articles");
+      const response = await axios.get("http://192.168.1.9:5000/api/articles");
       setArticles((prev) => [...prev, ...response.data.articles]);
     } catch (error) {
       console.error("Error fetching articles:", error);
@@ -71,6 +75,34 @@ export default function Articles() {
 
   const createLink = (baseUrl, title, extra = "") =>
     `${baseUrl}${encodeURIComponent(title)}${extra}`;
+
+  const handleCopyLink = (pageUrl) => {
+    navigator.clipboard
+      .writeText(pageUrl)
+      .then(() => {
+        setCopiedLink(true);
+        setTimeout(() => {
+          setCopiedLink(false);
+        }, 7000);
+      })
+      .catch((error) => {
+        console.error("Error copying to clipboard:", error);
+      });
+  };
+
+  const handleShareLink = (pageUrl, title) => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: title,
+          text: title,
+          url: pageUrl,
+        })
+        .catch((error) => console.error("Error sharing the link:", error));
+    } else {
+      console.log("the web Share API is not supported on this device.");
+    }
+  };
 
   return (
     <>
@@ -144,7 +176,7 @@ export default function Articles() {
                 </div>
 
                 <div className="more-like-this">
-                <a
+                  <a
                     href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
                       title
                     )}`}
@@ -153,7 +185,7 @@ export default function Articles() {
                   >
                     Talk page
                   </a>
-                  <span style={{color: "white"}}> | </span>
+                  <span style={{ color: "white" }}> | </span>
                   <a
                     href={`https://en.wikipedia.org/w/index.php?fulltext=1&search=${encodeURIComponent(
                       title
@@ -178,25 +210,32 @@ export default function Articles() {
                   </a>
                 </div>
 
-                <div className="view-count">
-                  {article.viewCount} views
-                </div>
+                <div className="view-count">{article.viewCount} views</div>
 
                 <div className="search">
                   <h2>
                     <a
-                      href={createLink("https://www.google.com/search?q=", title)}
+                      href={createLink(
+                        "https://www.google.com/search?q=",
+                        title
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      <IoMdSearch size="1.5rem" style={{ marginRight: "15px" }} />
+                      <IoMdSearch
+                        size="1.5rem"
+                        style={{ marginRight: "15px" }}
+                      />
                       <span className="search-text">Online</span>
                     </a>
                   </h2>
                   <h2>
                     <a
-                      href={createLink("https://www.reddit.com/search/?q=", title)}
+                      href={createLink(
+                        "https://www.reddit.com/search/?q=",
+                        title
+                      )}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
@@ -218,24 +257,62 @@ export default function Articles() {
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      <FaYoutube size="1.5rem" style={{ marginRight: "15px" }} />
+                      <FaYoutube
+                        size="1.5rem"
+                        style={{ marginRight: "15px" }}
+                      />
                       <span className="search-text">YouTube</span>
+                    </a>
+                  </h2>
+                  <h2>
+                    <a
+                      onClick={() => {
+                        if (window.innerWidth < 400) {
+                          handleShareLink(pageUrl, title);
+                        } else {
+                          handleCopyLink(pageUrl);
+                        }
+                      }}
+                      style={{
+                        textDecoration: "none",
+                        color: "inherit",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {window.innerWidth < 400 ? (
+                        <>
+                          <GoShare
+                            size="1.5rem"
+                            style={{ marginRight: "15px" }}
+                          />
+                          <span className="search-text">Share</span>
+                        </>
+                      ) : copiedLink ? (
+                        <>
+                          <FaCheck
+                            size="1.5rem"
+                            style={{ marginRight: "15px", color: "green" }}
+                          />
+                          <span className="search-text">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <IoMdLink
+                            size="1.5rem"
+                            style={{ marginRight: "15px" }}
+                          />
+                          <span className="search-text">Link</span>
+                        </>
+                      )}
                     </a>
                   </h2>
                 </div>
 
-                <div className="article-link">
-                  <a
-                    href={pageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FaWikipediaW
-                      size="2rem"
-                      style={{ marginLeft: "10px" }}
-                    />
-                  </a>
-                </div>
+                <a href={pageUrl} target="_blank" rel="noopener noreferrer">
+                  <div className="article-link">
+                    <FaWikipediaW size="2rem" style={{ marginLeft: "10px" }} />
+                  </div>
+                </a>
               </div>
             );
           })
