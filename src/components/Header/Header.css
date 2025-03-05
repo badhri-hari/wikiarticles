@@ -23,7 +23,7 @@ span {
 
 .header-icon {
   position: absolute;
-  top: 16px;
+  top: 15px;
   right: 15px;
   transition: all 0.1s linear;
 }
