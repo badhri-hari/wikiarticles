@@ -176,6 +176,7 @@
 .view-count {
   position: absolute;
   bottom: 1.5%;
+  left: 45%;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 12px;
   padding: 8px 15px;
@@ -288,7 +289,7 @@
 
 @media only screen and (max-width: 900px) {
   .image-container {
-    margin-top: -180px;
+    margin-top: -100px;
   }
 
   .toc {
@@ -300,10 +301,10 @@
     box-shadow: none;
     border-radius: 0;
     font-size: 1rem;
-    top: 48%;
+    top: calc(45% - 30px);
     right: 0;
     left: 0;
-    height: 30%;
+    height: 26%;
     width: calc(100vw - 30px);
     font-size: 1rem;
     padding: 15px;
@@ -317,19 +318,55 @@
   }
 
   .more-like-this {
-    display: none;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 10px 8px;
+    padding-top: 2px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    right: 2.5%;
+    bottom: 2.5%;
+  }
+
+  .more-like-this a {
+    font-size: 0.95rem;
+    text-decoration: none;
+  }
+
+  .more-like-this a:hover {
+    text-decoration: none;
   }
 
   .last-edited {
-    display: none;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 6px 8px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    font-size: 0.95rem;
+    left: 2.5%;
+    bottom: 2.5%;
   }
 
-  .talk-page {
-    display: none;
+  .last-edited a:hover {
+    text-decoration: none;
   }
 
   .view-count {
-    display: none;
+    bottom: 80px;
+    left: calc(50% - 60px);
+    width: 110px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 6px 8px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .view-count a:hover {
+    text-decoration: none;
   }
 
   .search-text {
@@ -340,7 +377,7 @@
     background: none;
     box-shadow: none;
     border-radius: 0;
-    top: 115px;
+    top: 35px;
     left: 0;
     height: 4vh;
     width: 100vw;
@@ -366,7 +403,7 @@
     background: rgba(0, 0, 0, 0.35);
     box-shadow: none;
     border-radius: 0;
-    top: 81.5%;
+    top: calc(81.5% - 80px);
     right: 0;
     left: 0;
     height: 3vh;

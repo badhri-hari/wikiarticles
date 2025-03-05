@@ -141,6 +141,12 @@ export default function Articles() {
                   <p>{article.extract}</p>
                 </div>
 
+                <a href={pageUrl} target="_blank" rel="noopener noreferrer">
+                  <div className="article-link">
+                    <FaWikipediaW size="2rem" style={{ marginLeft: "10px" }} />
+                  </div>
+                </a>
+
                 <div className="toc">
                   {article.toc && article.toc.length > 0 ? (
                     article.toc.map((section, idx) => {
@@ -174,47 +180,6 @@ export default function Articles() {
                     <h3>No sections available</h3>
                   )}
                 </div>
-
-                <div className="more-like-this">
-                  <a
-                    href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
-                      title
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Talk page
-                  </a>
-                  <span style={{ color: "white" }}> | </span>
-                  <a
-                    href={`https://en.wikipedia.org/w/index.php?fulltext=1&search=${encodeURIComponent(
-                      title
-                    )}&title=Special%3ASearch&ns0=1`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    More Like This
-                  </a>
-                </div>
-
-                <div className="last-edited">
-                  <a
-                    href={`https://en.wikipedia.org/w/index.php?title=${encodeURIComponent(
-                      title
-                    )}&action=history`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Last edited on{" "}
-                    {new Date(article.timestamp).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </a>
-                </div>
-
-                <div className="view-count">{article.viewCount} views</div>
 
                 <div className="search">
                   <h2>
@@ -312,11 +277,65 @@ export default function Articles() {
                   </h2>
                 </div>
 
-                <a href={pageUrl} target="_blank" rel="noopener noreferrer">
-                  <div className="article-link">
-                    <FaWikipediaW size="2rem" style={{ marginLeft: "10px" }} />
+                <footer>
+                  <div className="more-like-this">
+                    <a
+                      href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
+                        title
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Talk page
+                    </a>
+                    <span style={{ color: "white" }}> | </span>
+                    <a
+                      href={`https://en.wikipedia.org/w/index.php?fulltext=1&search=${encodeURIComponent(
+                        title
+                      )}&title=Special%3ASearch&ns0=1`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      More Like This
+                    </a>
                   </div>
-                </a>
+                  <div className="last-edited">
+                    <a
+                      href={`https://en.wikipedia.org/w/index.php?title=${encodeURIComponent(
+                        title
+                      )}&action=history`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {window.innerWidth < 900 ? (
+                        <>
+                          Edited:{" "}
+                          {new Date(article.timestamp).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          Last edited on{" "}
+                          {new Date(article.timestamp).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
+                        </>
+                      )}
+                    </a>
+                  </div>
+                  <div className="view-count">{article.viewCount} views</div>
+                </footer>
               </div>
             );
           })
