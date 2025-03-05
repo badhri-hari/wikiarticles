@@ -271,7 +271,7 @@ export default function Articles() {
                   <h2>
                     <a
                       onClick={() => {
-                        if (window.innerWidth < 400) {
+                        if (window.innerWidth < 900) {
                           handleShareLink(pageUrl, title);
                         } else {
                           handleCopyLink(pageUrl);
@@ -283,7 +283,7 @@ export default function Articles() {
                         cursor: "pointer",
                       }}
                     >
-                      {window.innerWidth < 400 ? (
+                      {window.innerWidth < 900 ? (
                         <>
                           <GoShare
                             size="1.5rem"
