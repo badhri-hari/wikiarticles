@@ -1,14 +1,18 @@
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
 .image-container {
   height: 100vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   margin-top: -70px;
-}
-
-.image-container::-webkit-scrollbar {
-  display: none;
 }
 
 .image-carousel-slide {
@@ -45,15 +49,8 @@
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   font-size: 1.21rem;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   overflow-y: scroll;
   overflow-x: hidden;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.toc::-webkit-scrollbar {
-  display: none;
 }
 
 .toc h3 {
@@ -62,9 +59,6 @@
   margin-bottom: 5px;
   margin-left: -7px;
   color: white;
-  text-decoration: underline;
-  text-decoration-thickness: 1.15px;
-  text-underline-offset: 3px;
 }
 
 .toc h4 {
@@ -89,8 +83,7 @@
 }
 
 .toc a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  opacity: 0.7;
 }
 
 .description {
@@ -107,15 +100,8 @@
   -webkit-backdrop-filter: blur(5px);
   color: white;
   font-size: 1.2rem;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   overflow-x: hidden;
   overflow-y: scroll;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.description::-webkit-scrollbar {
-  display: none;
 }
 
 .description h2 {
@@ -134,19 +120,16 @@
   padding: 9px 16px;
   backdrop-filter: blur(2.5px);
   -webkit-backdrop-filter: blur(2.5px);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .talk-more a {
   color: white;
   font-size: large;
   text-decoration: none;
-  transition: all 0.25s;
 }
 
 .talk-more a:hover {
-  transform: scale(1.05);
-  text-decoration: underline;
+  opacity: 0.7;
 }
 
 .last-edited {
@@ -160,7 +143,6 @@
   -webkit-backdrop-filter: blur(2.5px);
   color: white;
   font-size: large;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .last-edited a {
@@ -169,8 +151,7 @@
 }
 
 .last-edited a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  opacity: 0.7;
 }
 
 .view-count {
@@ -184,17 +165,6 @@
   -webkit-backdrop-filter: blur(2.5px);
   color: white;
   font-size: large;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.view-count a {
-  color: white;
-  text-decoration: none;
-}
-
-.view-count a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .search {
@@ -211,15 +181,8 @@
   -webkit-backdrop-filter: blur(5px);
   color: white;
   font-size: 1.19rem;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   overflow: hidden;
   align-content: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.search::-webkit-scrollbar {
-  display: none;
 }
 
 .search h2 {
@@ -229,9 +192,8 @@
   margin-bottom: 22px;
 }
 
-.search h2:hover {
-  text-decoration: underline;
-  text-underline-offset: 4.5px;
+.search h2:hover span {
+  opacity: 0.7;
   cursor: pointer;
 }
 
@@ -250,23 +212,13 @@
   -webkit-backdrop-filter: blur(5px);
   color: white;
   font-size: 1.21rem;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
   overflow: hidden;
   text-align: center;
   align-content: center;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.article-link a {
-  color: white;
-  font-size: 1.65rem;
-  text-decoration: none;
-}
-
-.article-link a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.article-link:hover {
+  opacity: 0.95;
 }
 
 @media only screen and (max-width: 1181px) {
