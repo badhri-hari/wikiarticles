@@ -10,7 +10,7 @@ import { FaCheck } from "react-icons/fa6";
 import { GoShare } from "react-icons/go";
 
 import "./Articles.css";
-import "./Articles-mobile.css"
+import "./Articles-mobile.css";
 
 export default function Articles() {
   const containerRef = useRef(null);
@@ -103,6 +103,42 @@ export default function Articles() {
     } else {
       console.log("the web Share API is not supported on this device.");
     }
+  };
+
+  const generateSeeMoreLink = (toc, pageUrl) => {
+    let seeMoreLink = null;
+
+    const furtherReadingSection = toc.find((section) =>
+      section.line.toLowerCase().includes("further reading")
+    );
+    const referencesSection = toc.find((section) =>
+      section.line.toLowerCase().includes("references")
+    );
+    const externalLinksSection = toc.find((section) =>
+      section.line.toLowerCase().includes("external links")
+    );
+    const seeAlsoSection = toc.find((section) =>
+      section.line.toLowerCase().includes("see also")
+    );
+
+    if (furtherReadingSection) {
+      seeMoreLink = `${pageUrl}#${furtherReadingSection.anchor}`;
+    } else if (referencesSection) {
+      seeMoreLink = `${pageUrl}#${referencesSection.anchor}`;
+    } else if (externalLinksSection) {
+      seeMoreLink = `${pageUrl}#${externalLinksSection.anchor}`;
+    } else if (seeAlsoSection) {
+      seeMoreLink = `${pageUrl}#${seeAlsoSection.anchor}`;
+    } else if (pageUrl) {
+      seeMoreLink = `${pageUrl}?search=${encodeURIComponent(toc.title)}`;
+    }
+
+    return seeMoreLink;
+  };
+
+  const handleSeeMoreClick = (pageUrl, toc) => {
+    const seeMoreLink = generateSeeMoreLink(toc, pageUrl);
+    window.open(seeMoreLink, "_blank");
   };
 
   return (
@@ -291,11 +327,8 @@ export default function Articles() {
                     </a>
                     <span style={{ color: "white" }}> | </span>
                     <a
-                      href={`https://en.wikipedia.org/w/index.php?fulltext=1&search=${encodeURIComponent(
-                        title
-                      )}&title=Special%3ASearch&ns0=1`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="#"
+                      onClick={() => handleSeeMoreClick(pageUrl, article.toc)}
                     >
                       See More
                     </a>
@@ -308,31 +341,12 @@ export default function Articles() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {window.innerWidth < 900 ? (
-                        <>
-                          Edited:{" "}
-                          {new Date(article.timestamp).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          Last edited on{" "}
-                          {new Date(article.timestamp).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
-                        </>
-                      )}
+                      Last edited on{" "}
+                      {new Date(article.timestamp).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </a>
                   </div>
                   <div className="view-count">{article.viewCount} views</div>
