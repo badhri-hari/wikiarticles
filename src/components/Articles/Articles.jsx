@@ -74,6 +74,33 @@ export default function Articles() {
     };
   }, []);
 
+  useEffect(() => {
+    const urlObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const titleEl = entry.target.querySelector(".description h2");
+            if (titleEl) {
+              const title = titleEl.textContent;
+              const formattedTitle = title.replace(/\s+/g, "_");
+              const newUrl = window.location.origin + "/" + formattedTitle;
+              window.history.replaceState(null, "", newUrl);
+            }
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    slidesRef.current.forEach((slide) => {
+      if (slide) urlObserver.observe(slide);
+    });
+    return () => {
+      slidesRef.current.forEach((slide) => {
+        if (slide) urlObserver.unobserve(slide);
+      });
+    };
+  }, [articles]);
+
   const createLink = (baseUrl, title, extra = "") =>
     `${baseUrl}${encodeURIComponent(title)}${extra}`;
 
