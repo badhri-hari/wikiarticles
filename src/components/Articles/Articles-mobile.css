@@ -17,14 +17,14 @@
       left: 0;
       height: 26%;
       width: calc(100vw - 30px);
-      font-size: 1rem;
+      font-size: 0.9rem;
       padding: 15px;
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
     }
   
     .description h2 {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       margin-top: 8px;
     }
   
@@ -40,7 +40,7 @@
     }
   
     .talk-more a {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       text-decoration: none;
     }
   
@@ -54,7 +54,7 @@
       padding: 6px 8px;
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       left: 2.5%;
       bottom: 4.25%;
     }
@@ -72,7 +72,7 @@
       padding: 6px 8px;
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       text-align: center;
     }
   
