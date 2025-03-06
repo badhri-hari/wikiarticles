@@ -18,40 +18,16 @@ export default function Articles() {
   const sentinelRef = useRef(null);
   const [articles, setArticles] = useState([]);
   const [copiedLink, setCopiedLink] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const slides = slidesRef.current;
-    slides.forEach((slide) => {
-      if (slide) observer.observe(slide);
-    });
-
-    return () => {
-      slides.forEach((slide) => {
-        if (slide) observer.unobserve(slide);
-      });
-    };
-  }, []);
+  const [hasError, setHasError] = useState(false);
 
   const fetchArticles = async () => {
     try {
       const response = await axios.get("/api/articles");
       setArticles((prev) => [...prev, ...response.data.articles]);
+      setHasError(false);
     } catch (error) {
       console.error("Error fetching articles:", error);
+      setHasError(true);
     }
   };
 
@@ -175,8 +151,12 @@ export default function Articles() {
           <div className="image-carousel-slide">
             <img src="/default-image.jpg" alt="Loading..." />
             <div className="description">
-              <h2>Please wait...</h2>
-              <p>Fetching articles...</p>
+              <h2>{hasError ? "Uh Oh!" : "Please wait..."}</h2>
+              <p>
+                {hasError
+                  ? "Looks like there's a problem with the server right now, please try again later."
+                  : "Fetching articles..."}
+              </p>
             </div>
             <div className="toc"></div>
             <div className="search"></div>
