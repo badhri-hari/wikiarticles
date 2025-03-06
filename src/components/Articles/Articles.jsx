@@ -146,7 +146,12 @@ export default function Articles() {
 
   return (
     <>
-      <div className="image-container" ref={containerRef}>
+      <div
+        className="image-container"
+        ref={containerRef}
+        role="region"
+        aria-label="Page container"
+      >
         {articles.length === 0 ? (
           <div className="image-carousel-slide">
             <img src="/default-image.jpg" alt="Loading..." />
@@ -184,14 +189,21 @@ export default function Articles() {
                   <h2>{title}</h2>
                   <p>{article.extract}</p>
                 </div>
-
-                <a href={pageUrl} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={pageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open article page in Wikipedia"
+                >
                   <div className="article-link">
-                    <FaWikipediaW size="2rem" style={{ marginLeft: "10px" }} />
+                    <FaWikipediaW
+                      size="2rem"
+                      style={{ marginLeft: "10px" }}
+                      aria-hidden="true"
+                    />
                   </div>
                 </a>
-
-                <div className="toc">
+                <div className="toc" aria-label="Table of contents">
                   {article.toc && article.toc.length > 0 ? (
                     article.toc.map((section, idx) => {
                       let Tag = "h5";
@@ -214,6 +226,7 @@ export default function Articles() {
                             href={`${pageUrl}#${section.anchor}`}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`Open ${section.line} section in Wikipedia`}
                           >
                             {section.line}
                           </a>
@@ -224,8 +237,7 @@ export default function Articles() {
                     <h3>No sections available</h3>
                   )}
                 </div>
-
-                <div className="search">
+                <div className="search" aria-label="Search options">
                   <h2>
                     <a
                       href={createLink(
@@ -235,10 +247,12 @@ export default function Articles() {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
+                      aria-label={`Search ${title} online`}
                     >
                       <IoMdSearch
                         size="1.5rem"
                         style={{ marginRight: "15px" }}
+                        aria-hidden="true"
                       />
                       <span className="search-text">Online</span>
                     </a>
@@ -252,10 +266,12 @@ export default function Articles() {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
+                      aria-label={`Search ${title} on Reddit`}
                     >
                       <FaRedditAlien
                         size="1.5rem"
                         style={{ marginRight: "15px" }}
+                        aria-hidden="true"
                       />
                       <span className="search-text">Reddit</span>
                     </a>
@@ -269,10 +285,12 @@ export default function Articles() {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
+                      aria-label={`Search ${title} on YouTube`}
                     >
                       <FaYoutube
                         size="1.5rem"
                         style={{ marginRight: "15px" }}
+                        aria-hidden="true"
                       />
                       <span className="search-text">YouTube</span>
                     </a>
@@ -286,17 +304,36 @@ export default function Articles() {
                           handleCopyLink(pageUrl);
                         }
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          if (window.innerWidth < 900) {
+                            handleShareLink(pageUrl, title);
+                          } else {
+                            handleCopyLink(pageUrl);
+                          }
+                        }
+                      }}
                       style={{
                         textDecoration: "none",
                         color: "inherit",
                         cursor: "pointer",
                       }}
+                      role="button"
+                      tabIndex="0"
+                      aria-label={
+                        window.innerWidth < 900
+                          ? "Share article"
+                          : copiedLink
+                          ? "Copied link"
+                          : "Copy article link"
+                      }
                     >
                       {window.innerWidth < 900 ? (
                         <>
                           <GoShare
                             size="1.5rem"
                             style={{ marginRight: "15px" }}
+                            aria-hidden="true"
                           />
                           <span className="search-text">Share</span>
                         </>
@@ -305,6 +342,7 @@ export default function Articles() {
                           <FaCheck
                             size="1.5rem"
                             style={{ marginRight: "15px", color: "green" }}
+                            aria-hidden="true"
                           />
                           <span className="search-text">Copied!</span>
                         </>
@@ -313,6 +351,7 @@ export default function Articles() {
                           <IoMdLink
                             size="1.5rem"
                             style={{ marginRight: "15px" }}
+                            aria-hidden="true"
                           />
                           <span className="search-text">Link</span>
                         </>
@@ -329,6 +368,7 @@ export default function Articles() {
                       )}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Open article talk page"
                     >
                       Talk page
                     </a>
@@ -336,6 +376,7 @@ export default function Articles() {
                     <a
                       href="#"
                       onClick={() => handleSeeMoreClick(pageUrl, article.toc)}
+                      aria-label="See more details about the article"
                     >
                       See More
                     </a>
@@ -347,23 +388,33 @@ export default function Articles() {
                       )}&action=history`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="View article edit history"
                     >
-                      Last edited on{" "}
-                      {new Date(article.timestamp).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
+                      Last edited on
+                      {" " +
+                        new Date(article.timestamp).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          }
+                        )}
                     </a>
                   </div>
-                  <div className="view-count">{article.viewCount} views</div>
+                  <div
+                    className="view-count"
+                    aria-label={`This article has ${article.viewCount} views`}
+                  >
+                    {article.viewCount} views
+                  </div>
                 </footer>
               </div>
             );
           })
         )}
       </div>
-      <div ref={sentinelRef} style={{ height: "1px" }}></div>
+      <div ref={sentinelRef} style={{ height: "1px" }} aria-hidden="true"></div>
     </>
   );
 }
