@@ -10,6 +10,7 @@ import { FaCheck } from "react-icons/fa6";
 import { GoShare } from "react-icons/go";
 
 import "./Articles.css";
+import "./Articles-mobile.css"
 
 export default function Articles() {
   const containerRef = useRef(null);
