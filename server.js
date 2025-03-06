@@ -1,4 +1,6 @@
 // Used for development only
+// Update API endpoint in src/Articles/Articles.jsx to http://{your IPv4 address}:5000/api/articles
+// Server automatically starts with the default `npm run dev` command
 
 import express from "express";
 import axios from "axios";
@@ -25,7 +27,7 @@ app.get("/api/articles", async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
 
   try {
-    const numArticles = 100;
+    const numArticles = 20;
     const summaryRequests = [];
     for (let i = 0; i < numArticles; i++) {
       summaryRequests.push(
