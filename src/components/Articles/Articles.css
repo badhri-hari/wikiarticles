@@ -1,5 +1,4 @@
 * {
-  -ms-overflow-style: none;
   scrollbar-width: none;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -215,10 +214,11 @@
   overflow: hidden;
   text-align: center;
   align-content: center;
+  transition: all 0.1s linear;
 }
 
 .article-link:hover {
-  opacity: 0.95;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 @media only screen and (max-width: 1181px) {

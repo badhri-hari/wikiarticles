@@ -15,10 +15,125 @@ header {
   font-weight: lighter;
   position: absolute;
   left: 15px;
+  transition: all 0.1s linear;
 }
 
 span {
   font-weight: 500;
+}
+
+.search-icon {
+  cursor: pointer;
+  position: absolute;
+  top: 26px;
+  left: 175px;
+  transition: all 0.1s linear;
+}
+
+.header-logo-dim {
+  position: absolute;
+  top: 4.5px;
+  left: 9px;
+  height: 60px;
+  width: 195px;
+  z-index: 1000;
+}
+
+.header-logo-dim:hover {
+  opacity: 0;
+}
+
+.header-logo-dim:hover ~ .header-logo {
+  opacity: 0.7;
+}
+
+.header-logo-dim:hover ~ .search-icon {
+  opacity: 0.7;
+}
+
+.search-input {
+  position: absolute;
+  top: 5px;
+  left: 8.5px;
+  height: 59px;
+  width: 250px;
+  padding: 0 15px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  outline: none;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  z-index: 1000;
+}
+
+::placeholder {
+  color: white;
+  opacity: 0.7;
+}
+
+::-webkit-input-placeholder {
+  color: white;
+  opacity: 0.7;
+}
+
+.search-input:focus ~ .header-logo {
+  opacity: 0;
+}
+
+.search-input:focus ~ .search-icon {
+  opacity: 0;
+}
+
+.search-result-container {
+  position: relative;
+  top: 60px;
+  left: -1px;
+  height: 45vh;
+  width: 500px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  padding: 15px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-result {
+  width: max-content;
+  max-width: 490px;
+  height: max-content;
+  position: relative;
+  padding: 10px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  cursor: pointer;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-result a {
+  color: white;
+  text-decoration: none;
+}
+
+.search-result h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0;
+  transition: all 0.1s linear;
+}
+
+.search-result:hover {
+  opacity: 0.7;
+}
+
+.search-result::-webkit-scrollbar {
+  display: none;
 }
 
 .header-icon {
@@ -30,26 +145,4 @@ span {
 
 .header-icon:hover {
   opacity: 0.7;
-}
-
-@media only screen and (max-width: 900px) {
-  header {
-    background: rgba(0, 0, 0, 0.3);
-    height: 85px;
-    padding: 10px;
-  }
-
-  .header-logo {
-    font-size: 25px;
-  }
-
-  span {
-    font-weight: 600;
-  }
-
-  .header-icon {
-    top: 15px;
-    right: 12px;
-    font-size: 0.7rem;
-  }
 }

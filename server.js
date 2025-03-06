@@ -97,6 +97,26 @@ app.get("/api/articles", async (req, res) => {
   }
 });
 
+app.get("/api/search", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  const { searchTerm } = req.query;
+
+  if (!searchTerm) {
+    return res.status(400).json({ error: "No searchTerm provided" });
+  }
+
+  try {
+    const wikipediaUrl = `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&limit=5&profile=fuzzy&search=${encodeURIComponent(
+      searchTerm
+    )}&warningsaserror=true`;
+    const response = await axios.get(wikipediaUrl);
+    res.status(200).json(response.data);
+  } catch (err) {
+    console.error("Error fetching Wikipedia opensearch:", err.message);
+    res.status(500).json({ error: "Error fetching search results" });
+  }
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
