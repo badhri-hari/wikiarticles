@@ -125,7 +125,7 @@
   margin-bottom: 16px;
 }
 
-.more-like-this {
+.talk-more {
   position: absolute;
   bottom: 1.5%;
   right: 1%;
@@ -137,14 +137,14 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.more-like-this a {
+.talk-more a {
   color: white;
   font-size: large;
   text-decoration: none;
   transition: all 0.25s;
 }
 
-.more-like-this a:hover {
+.talk-more a:hover {
   transform: scale(1.05);
   text-decoration: underline;
 }

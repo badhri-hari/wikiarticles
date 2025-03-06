@@ -279,7 +279,7 @@ export default function Articles() {
                 </div>
 
                 <footer>
-                  <div className="more-like-this">
+                  <div className="talk-more">
                     <a
                       href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
                         title
@@ -297,7 +297,7 @@ export default function Articles() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      More Like This
+                      See More
                     </a>
                   </div>
                   <div className="last-edited">
