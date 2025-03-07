@@ -40,7 +40,7 @@ export default function Header() {
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
@@ -71,26 +71,23 @@ export default function Header() {
       } else {
         setSearchResults([]);
       }
-    }, 500);
+    }, 0);
 
     setTypingTimeout(newTimeout);
   };
 
   return (
     <header aria-label="Site header" role="banner">
-      {showInput && (
-        <input
-          type="text"
-          className="search-input"
-          maxLength="255"
-          placeholder="Search articles..."
-          aria-label="Search for an article"
-          ref={inputRef}
-          autoFocus
-          onBlur={handleBlur}
-          onChange={handleInputChange}
-        />
-      )}
+      <input
+        type="text"
+        className={`search-input ${showInput ? "active" : ""}`}
+        maxLength="255"
+        placeholder="Search articles..."
+        aria-label="Search for an article"
+        ref={inputRef}
+        onBlur={handleBlur}
+        onChange={handleInputChange}
+      />
 
       <div
         className="header-logo-dim"
@@ -138,6 +135,7 @@ export default function Header() {
               <a
                 href={searchResult.link}
                 target="_blank"
+                rel="noreferrer noopener"
                 aria-label={`Search result number ${index}: ${searchResult.title}`}
               >
                 <h2>{searchResult.title}</h2>
