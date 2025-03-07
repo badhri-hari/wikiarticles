@@ -66,12 +66,6 @@ span {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 20px;
   z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.1s linear, transform 0.1s linear;
-}
-
-.search-input.active {
-  opacity: 1;
 }
 
 ::placeholder {
@@ -107,7 +101,6 @@ span {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: all 0.1s linear;
 }
 
 .search-result {
