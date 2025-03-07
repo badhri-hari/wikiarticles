@@ -11,7 +11,6 @@ export default function Header() {
   const inputRef = useRef(null);
   const resultsContainerRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [typingTimeout, setTypingTimeout] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
 
   const handleSearchClick = () => {
@@ -40,40 +39,32 @@ export default function Header() {
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
+    if (term.trim() !== "") {
+      try {
+        const res = await axios.get(
+          `/api/search?searchTerm=${encodeURIComponent(term)}`
+        );
 
-    const newTimeout = setTimeout(async () => {
-      if (term.trim() !== "") {
-        try {
-          const res = await axios.get(
-            `/api/search?searchTerm=${encodeURIComponent(term)}`
-          );
+        const data = res.data;
+        const titles = data[1];
+        const links = data[3];
 
-          const data = res.data;
-          const titles = data[1];
-          const links = data[3];
-
-          const searchsearchResults = titles.map((title, index) => ({
-            title,
-            link: links[index],
-          }));
-          setSearchResults(searchsearchResults);
-        } catch (err) {
-          console.error("Search error:", err);
-          setSearchResults([]);
-        }
-      } else {
+        const searchsearchResults = titles.map((title, index) => ({
+          title,
+          link: links[index],
+        }));
+        setSearchResults(searchsearchResults);
+      } catch (err) {
+        console.error("Search error:", err);
         setSearchResults([]);
       }
-    }, 500);
-
-    setTypingTimeout(newTimeout);
+    } else {
+      setSearchResults([]);
+    }
   };
 
   return (
@@ -89,6 +80,7 @@ export default function Header() {
           autoFocus
           onBlur={handleBlur}
           onChange={handleInputChange}
+          value={searchTerm}
         />
       )}
 
