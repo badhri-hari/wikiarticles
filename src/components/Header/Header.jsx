@@ -1,7 +1,9 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 
-import { VscSearch, VscGithubInverted } from "react-icons/vsc";
+import { VscGithubInverted } from "react-icons/vsc";
+import { IoSearch } from "react-icons/io5";
+import { TbFileLike } from "react-icons/tb";
 
 import "./Header.css";
 import "./Header-mobile.css";
@@ -99,9 +101,9 @@ export default function Header({ setSearchActive }) {
         <span>wiki</span>articles
       </div>
 
-      <VscSearch
+      <IoSearch
         color="#F8F8FF"
-        size="1.3em"
+        size="1.45em"
         className="search-icon"
         aria-hidden="true"
         onClick={handleSearchClick}

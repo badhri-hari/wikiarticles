@@ -25,8 +25,8 @@ span {
 .search-icon {
   cursor: pointer;
   position: absolute;
-  top: 26px;
-  left: 175px;
+  top: 24.5px;
+  left: 174px;
   transition: all 0.1s linear;
 }
 
