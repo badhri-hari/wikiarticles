@@ -1,5 +1,5 @@
 // Used for development only
-// Update API endpoint in src/Articles/Articles.jsx to http://{your IPv4 address}:5000/api/articles
+// Update API endpoint in src/components/Articles/Articles.jsx and src/components/Header/Header.jsx to http://{your IPv4 address}:5000/api/articles
 // Server automatically starts with the default `npm run dev` command
 
 import express from "express";

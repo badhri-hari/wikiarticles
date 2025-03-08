@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
-import { IoMdSearch } from "react-icons/io";
-import { FaRedditAlien } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
+import { TbWorldSearch } from "react-icons/tb";
+import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaWikipediaW } from "react-icons/fa6";
-import { IoMdLink } from "react-icons/io";
-import { FaCheck } from "react-icons/fa6";
-import { GoShare } from "react-icons/go";
 
 import "./Articles.css";
 import "./Articles-mobile.css";
@@ -17,7 +13,7 @@ export default function Articles({ searchActive }) {
   const slidesRef = useRef([]);
   const sentinelRef = useRef(null);
   const [articles, setArticles] = useState([]);
-  const [copiedLink, setCopiedLink] = useState(false);
+  const [likedArticlesUpdate, setLikedArticlesUpdate] = useState(0);
   const [hasError, setHasError] = useState(false);
 
   const fetchArticles = async () => {
@@ -80,34 +76,6 @@ export default function Articles({ searchActive }) {
   const createLink = (baseUrl, title, extra = "") =>
     `${baseUrl}${encodeURIComponent(title)}${extra}`;
 
-  const handleCopyLink = (pageUrl) => {
-    navigator.clipboard
-      .writeText(pageUrl)
-      .then(() => {
-        setCopiedLink(true);
-        setTimeout(() => {
-          setCopiedLink(false);
-        }, 7000);
-      })
-      .catch((error) => {
-        console.error("Error copying to clipboard:", error);
-      });
-  };
-
-  const handleShareLink = (pageUrl, title) => {
-    if (navigator.share) {
-      navigator
-        .share({
-          title: title,
-          text: title,
-          url: pageUrl,
-        })
-        .catch((error) => console.error("Error sharing the link:", error));
-    } else {
-      console.log("the web Share API is not supported on this device.");
-    }
-  };
-
   const generateSeeMoreLink = (toc, pageUrl) => {
     let seeMoreLink = null;
 
@@ -142,6 +110,26 @@ export default function Articles({ searchActive }) {
   const handleSeeMoreClick = (pageUrl, toc) => {
     const seeMoreLink = generateSeeMoreLink(toc, pageUrl);
     window.open(seeMoreLink, "_blank");
+  };
+
+  const isArticleLiked = (pageUrl) => {
+    const likedArticles =
+      JSON.parse(localStorage.getItem("likedArticles")) || [];
+    return likedArticles.some((item) => item.link === pageUrl);
+  };
+
+  const handleLikeArticle = (article) => {
+    let likedArticles = JSON.parse(localStorage.getItem("likedArticles")) || [];
+    const index = likedArticles.findIndex(
+      (item) => item.link === article.pageUrl
+    );
+    if (index === -1) {
+      likedArticles.push({ link: article.pageUrl });
+    } else {
+      likedArticles.splice(index, 1);
+    }
+    localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
+    setLikedArticlesUpdate(likedArticlesUpdate + 1);
   };
 
   return (
@@ -256,7 +244,7 @@ export default function Articles({ searchActive }) {
                       style={{ textDecoration: "none", color: "inherit" }}
                       aria-label={`Search ${title} online`}
                     >
-                      <IoMdSearch
+                      <TbWorldSearch
                         size="1.5rem"
                         style={{ marginRight: "15px" }}
                         aria-hidden="true"
@@ -264,106 +252,54 @@ export default function Articles({ searchActive }) {
                       <span className="search-text">Online</span>
                     </a>
                   </h2>
-                  <h2>
-                    <a
-                      href={createLink(
-                        "https://www.reddit.com/search/?q=",
-                        title
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      aria-label={`Search ${title} on Reddit`}
-                    >
-                      <FaRedditAlien
-                        size="1.5rem"
-                        style={{ marginRight: "15px" }}
-                        aria-hidden="true"
-                      />
-                      <span className="search-text">Reddit</span>
-                    </a>
-                  </h2>
-                  <h2>
-                    <a
-                      href={createLink(
-                        "https://www.youtube.com/results?search_query=",
-                        title
-                      )}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      aria-label={`Search ${title} on YouTube`}
-                    >
-                      <FaYoutube
-                        size="1.5rem"
-                        style={{ marginRight: "15px" }}
-                        aria-hidden="true"
-                      />
-                      <span className="search-text">YouTube</span>
-                    </a>
-                  </h2>
-                  <h2>
-                    <a
-                      onClick={() => {
-                        if (window.innerWidth < 900) {
-                          handleShareLink(pageUrl, title);
-                        } else {
-                          handleCopyLink(pageUrl);
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          if (window.innerWidth < 900) {
-                            handleShareLink(pageUrl, title);
-                          } else {
-                            handleCopyLink(pageUrl);
-                          }
-                        }
-                      }}
+                  <h2 style={{ marginLeft: "-6px" }}>
+                    <button
+                      onClick={() => handleLikeArticle({ title, pageUrl })}
                       style={{
+                        background: "none",
+                        border: "none",
                         textDecoration: "none",
                         color: "inherit",
                         cursor: "pointer",
+                        fontSize: "2rem",
+                        textDecoration: "bold",
+                        marginTop: "8px",
+                        marginBottom: "22px",
                       }}
-                      role="button"
-                      tabIndex="0"
                       aria-label={
-                        window.innerWidth < 900
-                          ? "Share article"
-                          : copiedLink
-                          ? "Copied link"
-                          : "Copy article link"
+                        isArticleLiked(pageUrl)
+                          ? "This article has been liked!"
+                          : "Like and save this article"
                       }
                     >
-                      {window.innerWidth < 900 ? (
+                      {isArticleLiked(pageUrl) ? (
                         <>
-                          <GoShare
+                          <BiSolidLike
                             size="1.5rem"
-                            style={{ marginRight: "15px" }}
+                            style={{
+                              marginRight: "15px",
+                              marginTop:
+                                window.innerWidth < 900 ? "27px" : "0px",
+                            }}
                             aria-hidden="true"
                           />
-                          <span className="search-text">Share</span>
-                        </>
-                      ) : copiedLink ? (
-                        <>
-                          <FaCheck
-                            size="1.5rem"
-                            style={{ marginRight: "15px", color: "green" }}
-                            aria-hidden="true"
-                          />
-                          <span className="search-text">Copied!</span>
+                          <span className="search-text">Liked!</span>
                         </>
                       ) : (
                         <>
-                          <IoMdLink
+                          <BiLike
                             size="1.5rem"
-                            style={{ marginRight: "15px" }}
+                            style={{
+                              marginRight: "15px",
+                              marginTop:
+                                window.innerWidth < 900 ? "27px" : "0px",
+                            }}
                             aria-hidden="true"
                           />
-                          <span className="search-text">Link</span>
+                          <span className="search-text">Like</span>
                         </>
                       )}
-                    </a>
+                    </button>
                   </h2>
                 </div>
 

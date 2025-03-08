@@ -55,12 +55,13 @@ export default function Header({ setSearchActive }) {
         const titles = data[1];
         const links = data[3];
 
-        const searchsearchResults = titles.map((title, index) => ({
+        const searchResultsFormatted = titles.map((title, index) => ({
           title,
           link: links[index],
         }));
-        setSearchResults(searchsearchResults);
-        setSearchActive(searchsearchResults.length > 0);
+
+        setSearchResults(searchResultsFormatted);
+        setSearchActive(searchResultsFormatted.length > 0);
       } catch (err) {
         console.error("Search error:", err);
         setSearchResults([]);
@@ -70,6 +71,23 @@ export default function Header({ setSearchActive }) {
       setSearchResults([]);
       setSearchActive(false);
     }
+  };
+
+  const handleDownloadLikedArticles = () => {
+    const likedArticles = localStorage.getItem("likedArticles") || "[]";
+    const blob = new Blob([likedArticles], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    const today = new Date();
+    const formattedDate = today.toISOString().split("T")[0];
+
+    a.href = url;
+    a.download = `wikiarticles_liked_${formattedDate}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -108,6 +126,18 @@ export default function Header({ setSearchActive }) {
         aria-hidden="true"
         onClick={handleSearchClick}
       />
+      <button
+        onClick={handleDownloadLikedArticles}
+        aria-label="Download liked articles JSON file"
+        className="header-icon liked-articles-icon"
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        <TbFileLike color="#F8F8FF" size="2.7em" aria-hidden="true" />
+      </button>
       <a
         href="https://github.com/badhri-hari/wikiarticles"
         target="_blank"

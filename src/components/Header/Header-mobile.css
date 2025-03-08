@@ -29,6 +29,7 @@
 
   .search-input {
     height: 38px;
+    width: 220px;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     font-size: 16px;
@@ -74,5 +75,9 @@
     top: 9px;
     right: 11px;
     font-size: 0.7rem;
+  }
+
+  .liked-articles-icon {
+    right: 58px;
   }
 }
