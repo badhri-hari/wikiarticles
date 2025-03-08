@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 import { VscGithubInverted } from "react-icons/vsc";
@@ -8,10 +8,14 @@ import { TbFileLike } from "react-icons/tb";
 import "./Header.css";
 import "./Header-mobile.css";
 
-export default function Header({ setSearchActive }) {
+export default function Header() {
   const [showInput, setShowInput] = useState(false);
+  const [showLikedArticles, setShowLikedArticles] = useState(false);
+  const [likedArticles, setLikedArticles] = useState([]);
   const inputRef = useRef(null);
   const resultsContainerRef = useRef(null);
+  const likedArticlesContainerRef = useRef(null);
+  const likedArticlesIconRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -26,12 +30,15 @@ export default function Header({ setSearchActive }) {
       if (
         (inputRef.current && inputRef.current.contains(activeElement)) ||
         (resultsContainerRef.current &&
-          resultsContainerRef.current.contains(activeElement))
+          resultsContainerRef.current.contains(activeElement)) ||
+        (likedArticlesContainerRef.current &&
+          likedArticlesContainerRef.current.contains(activeElement))
       ) {
         return;
       }
       setSearchResults([]);
       setShowInput(false);
+      setShowLikedArticles(false);
     }, 0);
   };
 
@@ -61,21 +68,26 @@ export default function Header({ setSearchActive }) {
         }));
 
         setSearchResults(searchResultsFormatted);
-        setSearchActive(searchResultsFormatted.length > 0);
       } catch (err) {
         console.error("Search error:", err);
         setSearchResults([]);
-        setSearchActive(false);
       }
     } else {
       setSearchResults([]);
-      setSearchActive(false);
     }
   };
 
+  const handleLikedArticlesClick = () => {
+    if (!showLikedArticles) {
+      const liked = JSON.parse(localStorage.getItem("likedArticles") || "[]");
+      setLikedArticles(liked);
+    }
+    setShowLikedArticles(!showLikedArticles);
+  };
+
   const handleDownloadLikedArticles = () => {
-    const likedArticles = localStorage.getItem("likedArticles") || "[]";
-    const blob = new Blob([likedArticles], { type: "application/json" });
+    const liked = localStorage.getItem("likedArticles") || "[]";
+    const blob = new Blob([liked], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
 
@@ -90,6 +102,23 @@ export default function Header({ setSearchActive }) {
     URL.revokeObjectURL(url);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showLikedArticles &&
+        likedArticlesContainerRef.current &&
+        !likedArticlesContainerRef.current.contains(event.target) &&
+        likedArticlesIconRef.current &&
+        !likedArticlesIconRef.current.contains(event.target)
+      ) {
+        setShowLikedArticles(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showLikedArticles]);
+
   return (
     <header aria-label="Site header" role="banner">
       {showInput && (
@@ -101,7 +130,13 @@ export default function Header({ setSearchActive }) {
           aria-label="Search for an article"
           ref={inputRef}
           autoFocus
-          onBlur={handleBlur}
+          onBlur={() => {
+            setTimeout(() => {
+              setSearchResults([]);
+              setShowInput(false);
+              setSearchTerm("");
+            }, 0);
+          }}
           onChange={handleInputChange}
           value={searchTerm}
         />
@@ -127,8 +162,9 @@ export default function Header({ setSearchActive }) {
         onClick={handleSearchClick}
       />
       <button
-        onClick={handleDownloadLikedArticles}
-        aria-label="Download liked articles JSON file"
+        ref={likedArticlesIconRef}
+        onClick={handleLikedArticlesClick}
+        aria-label="Toggle liked articles popup"
         className="header-icon liked-articles-icon"
         style={{
           background: "none",
@@ -165,12 +201,62 @@ export default function Header({ setSearchActive }) {
               <a
                 href={searchResult.link}
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label={`Search result number ${index}: ${searchResult.title}`}
               >
-                <h2>{searchResult.title}</h2>
+                <h2 style={{ borderBottom: "1px solid gray" }}>
+                  {searchResult.title}
+                </h2>
               </a>
             </div>
           ))}
+        </div>
+      )}
+
+      {showLikedArticles && (
+        <div
+          className="liked-articles-container"
+          ref={likedArticlesContainerRef}
+          onBlur={handleBlur}
+          aria-label="List of liked articles"
+        >
+          {likedArticles.length > 0 ? (
+            <>
+              <button
+                onClick={handleDownloadLikedArticles}
+                aria-label="Click on this button to download your liked articles in a JSON file"
+                className="download-liked-articles-button"
+              >
+                Download List
+              </button>
+              {likedArticles.map((article, index) => (
+                <div key={index} className="search-result">
+                  <a
+                    href={article.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open Wikipedia page for liked article number ${index}: ${article.title}`}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        width: "490px",
+                        borderBottom: "1px solid gray",
+                      }}
+                    >
+                      <h2>{article.title}</h2>
+                      <h3>{article.dateLiked} (UTC)</h3>
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </>
+          ) : (
+            <div className="search-result no-liked-articles-text">
+              <h2>No liked articles.</h2>
+            </div>
+          )}
         </div>
       )}
     </header>

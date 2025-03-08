@@ -114,6 +114,7 @@ span {
   scrollbar-width: none;
   cursor: pointer;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  flex-shrink: 0;
 }
 
 .search-result a {
@@ -125,6 +126,7 @@ span {
   font-size: 1.5rem;
   font-weight: 500;
   margin: 0;
+  padding: 3px;
   transition: all 0.1s linear;
 }
 
@@ -151,4 +153,55 @@ span {
   top: 20px;
   right: 82px;
   cursor: pointer;
+}
+
+.liked-articles-container {
+  position: absolute;
+  top: 70px;
+  right: 80px;
+  height: 45vh;
+  width: 500px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  padding: 15px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-left: 5px;
+}
+
+.download-liked-articles-button {
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0);
+  border-radius: 15px;
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+  font-size: 1.21rem;
+  transition: all 0.1s linear;
+}
+
+.download-liked-articles-button:hover {
+  opacity: 0.75;
+}
+
+.search-result h3 {
+  position: absolute;
+  bottom: -5px;
+  left: 340px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgb(234, 234, 234);
+  padding-bottom: 3px;
+}
+
+.no-liked-articles-text:hover {
+  cursor: default;
+  opacity: 1;
 }

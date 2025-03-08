@@ -5,23 +5,26 @@ import Arrow from "./components/Arrow/Arrow";
 import Articles from "./components/Articles/Articles";
 
 export default function Home() {
-  const [showArrow, setShowArrow] = useState(true);
-  const [searchActive, setSearchActive] = useState(false);
+  const [showArrow, setShowArrow] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowArrow(false);
-    }, 10000);
+    const showTimer = setTimeout(() => {
+      setShowArrow(true);
 
-    return () => clearTimeout(timer);
+      const hideTimer = setTimeout(() => {
+        setShowArrow(false);
+      }, 7000);
+
+      return () => clearTimeout(hideTimer);
+    }, 3000);
+
+    return () => clearTimeout(showTimer);
   }, []);
 
   return (
     <>
-      <Header setSearchActive={setSearchActive} />
-
-      <Articles searchActive={searchActive} />
-
+      <Header />
+      <Articles />
       {showArrow && <Arrow />}
     </>
   );

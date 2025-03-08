@@ -8,7 +8,7 @@ import { FaWikipediaW } from "react-icons/fa6";
 import "./Articles.css";
 import "./Articles-mobile.css";
 
-export default function Articles({ searchActive }) {
+export default function Articles() {
   const containerRef = useRef(null);
   const slidesRef = useRef([]);
   const sentinelRef = useRef(null);
@@ -119,7 +119,14 @@ export default function Articles({ searchActive }) {
       (item) => item.link === article.pageUrl
     );
     if (index === -1) {
-      likedArticles.push({ title: article.title, link: article.pageUrl });
+      likedArticles.push({
+        title: article.title,
+        link: article.pageUrl,
+        dateLiked: new Date().toLocaleString("en-US", {
+          timeZone: "UTC",
+          hour12: false,
+        }),
+      });
     } else {
       likedArticles.splice(index, 1);
     }
@@ -220,14 +227,7 @@ export default function Articles({ searchActive }) {
                     <h3>No sections available</h3>
                   )}
                 </div>
-                <div
-                  className="search"
-                  aria-label="Search options"
-                  style={{
-                    display:
-                      searchActive && window.innerWidth < 900 ? "none" : "",
-                  }}
-                >
+                <div className="search" aria-label="Search options">
                   <h2>
                     <a
                       href={createLink(
@@ -244,7 +244,9 @@ export default function Articles({ searchActive }) {
                         style={{ marginRight: "15px" }}
                         aria-hidden="true"
                       />
-                      <span className="search-online-text">Online</span>
+                      <span className="search-text search-online-text">
+                        Online
+                      </span>
                     </a>
                   </h2>
                   <h2 style={{ marginLeft: "-6px" }}>
@@ -278,7 +280,9 @@ export default function Articles({ searchActive }) {
                             }}
                             aria-hidden="true"
                           />
-                          <span className="search-liked-text">Liked!</span>
+                          <span className="search-text search-liked-text">
+                            Liked!
+                          </span>
                         </>
                       ) : (
                         <>
@@ -291,7 +295,9 @@ export default function Articles({ searchActive }) {
                             }}
                             aria-hidden="true"
                           />
-                          <span className="search-liked-text">Like</span>
+                          <span className="search-text search-liked-text">
+                            Like
+                          </span>
                         </>
                       )}
                     </button>
