@@ -6,6 +6,7 @@ import Articles from "./components/Articles/Articles";
 
 export default function Home() {
   const [showArrow, setShowArrow] = useState(true);
+  const [searchActive, setSearchActive] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,9 +18,9 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      <Header setSearchActive={setSearchActive} />
 
-      <Articles />
+      <Articles searchActive={searchActive} />
 
       {showArrow && <Arrow />}
     </>

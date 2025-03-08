@@ -12,7 +12,7 @@ import { GoShare } from "react-icons/go";
 import "./Articles.css";
 import "./Articles-mobile.css";
 
-export default function Articles() {
+export default function Articles({ searchActive }) {
   const containerRef = useRef(null);
   const slidesRef = useRef([]);
   const sentinelRef = useRef(null);
@@ -237,7 +237,14 @@ export default function Articles() {
                     <h3>No sections available</h3>
                   )}
                 </div>
-                <div className="search" aria-label="Search options">
+                <div
+                  className="search"
+                  aria-label="Search options"
+                  style={{
+                    display:
+                      searchActive && window.innerWidth < 900 ? "none" : "",
+                  }}
+                >
                   <h2>
                     <a
                       href={createLink(

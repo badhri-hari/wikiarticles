@@ -6,7 +6,7 @@ import { VscSearch, VscGithubInverted } from "react-icons/vsc";
 import "./Header.css";
 import "./Header-mobile.css";
 
-export default function Header() {
+export default function Header({ setSearchActive }) {
   const [showInput, setShowInput] = useState(false);
   const inputRef = useRef(null);
   const resultsContainerRef = useRef(null);
@@ -58,12 +58,15 @@ export default function Header() {
           link: links[index],
         }));
         setSearchResults(searchsearchResults);
+        setSearchActive(searchsearchResults.length > 0);
       } catch (err) {
         console.error("Search error:", err);
         setSearchResults([]);
+        setSearchActive(false);
       }
     } else {
       setSearchResults([]);
+      setSearchActive(false);
     }
   };
 
