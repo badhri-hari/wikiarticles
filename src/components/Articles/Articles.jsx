@@ -249,7 +249,7 @@ export default function Articles({ searchActive }) {
                         style={{ marginRight: "15px" }}
                         aria-hidden="true"
                       />
-                      <span className="search-text">Online</span>
+                      <span className="search-online-text">Online</span>
                     </a>
                   </h2>
                   <h2 style={{ marginLeft: "-6px" }}>
@@ -283,7 +283,7 @@ export default function Articles({ searchActive }) {
                             }}
                             aria-hidden="true"
                           />
-                          <span className="search-text">Liked!</span>
+                          <span className="search-liked-text">Liked!</span>
                         </>
                       ) : (
                         <>
@@ -296,7 +296,7 @@ export default function Articles({ searchActive }) {
                             }}
                             aria-hidden="true"
                           />
-                          <span className="search-text">Like</span>
+                          <span className="search-liked-text">Like</span>
                         </>
                       )}
                     </button>

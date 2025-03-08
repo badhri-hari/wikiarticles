@@ -179,7 +179,11 @@
   margin-bottom: 22px;
 }
 
-.search h2:hover span {
+.search h2:hover .search-online-text {
+  opacity: 0.7;
+}
+
+.search button:hover .search-liked-text {
   opacity: 0.7;
 }
 
