@@ -368,18 +368,7 @@ export default function Articles({ searchActive }) {
                 </div>
 
                 <footer>
-                  <div className="talk-more">
-                    <a
-                      href={`https://en.wikipedia.org/wiki/Talk:${encodeURIComponent(
-                        title
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="Open article talk page"
-                    >
-                      Talk page
-                    </a>
-                    <span style={{ color: "white" }}> | </span>
+                  <div className="see-more">
                     <a
                       href="#"
                       onClick={() => handleSeeMoreClick(pageUrl, article.toc)}
@@ -397,7 +386,7 @@ export default function Articles({ searchActive }) {
                       rel="noopener noreferrer"
                       aria-label="View article edit history"
                     >
-                      Last edited on
+                      Last edited:
                       {" " +
                         new Date(article.timestamp).toLocaleDateString(
                           "en-US",

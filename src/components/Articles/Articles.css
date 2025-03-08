@@ -110,7 +110,7 @@
   margin-bottom: 16px;
 }
 
-.talk-more {
+.see-more {
   position: absolute;
   bottom: 1.5%;
   right: 1%;
@@ -121,13 +121,13 @@
   -webkit-backdrop-filter: blur(2.5px);
 }
 
-.talk-more a {
+.see-more a {
   color: white;
   font-size: large;
   text-decoration: none;
 }
 
-.talk-more a:hover {
+.see-more a:hover {
   opacity: 0.7;
 }
 
