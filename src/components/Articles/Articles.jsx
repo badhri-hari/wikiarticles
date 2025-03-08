@@ -304,13 +304,14 @@ export default function Articles({ searchActive }) {
                 </div>
 
                 <footer>
-                  <div className="see-more">
+                  <div className="view-count">
                     <a
-                      href="#"
-                      onClick={() => handleSeeMoreClick(pageUrl, article.toc)}
-                      aria-label="See more details about the article"
+                      href={`https://pageviews.wmcloud.org/?project=en.wikipedia.org&platform=all-access&agent=user&redirects=1&range=all-time&pages=${article.title}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`This article has ${article.viewCount} views. Click on this to see historical pageview data`}
                     >
-                      See More
+                      {article.viewCount} views
                     </a>
                   </div>
                   <div className="last-edited">
@@ -333,12 +334,6 @@ export default function Articles({ searchActive }) {
                           }
                         )}
                     </a>
-                  </div>
-                  <div
-                    className="view-count"
-                    aria-label={`This article has ${article.viewCount} views`}
-                  >
-                    {article.viewCount} views
                   </div>
                 </footer>
               </div>

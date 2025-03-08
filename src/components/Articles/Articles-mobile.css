@@ -1,6 +1,6 @@
 @media only screen and (max-width: 900px) {
   .image-container {
-    margin-top: -100px;
+    margin-top: -82px;
   }
 
   .toc {
@@ -12,7 +12,7 @@
     box-shadow: none;
     border-radius: 0;
     font-size: 1rem;
-    top: calc(45% - 30px);
+    top: calc(46.5% - 30px);
     right: 0;
     left: 0;
     height: 26%;
@@ -28,44 +28,9 @@
     margin-top: 8px;
   }
 
-  .see-more {
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 8px;
-    padding: 10px 8px;
-    padding-top: 2px;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    right: 2.5%;
-    bottom: 4.25%;
-  }
-
-  .see-more a {
-    font-size: 0.85rem;
-    text-decoration: none;
-  }
-
-  .see-more a:hover {
-    text-decoration: none;
-  }
-
-  .last-edited {
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 8px;
-    padding: 6px 8px;
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    font-size: 0.85rem;
-    left: 2.5%;
-    bottom: 4.25%;
-  }
-
-  .last-edited a:hover {
-    text-decoration: none;
-  }
-
   .view-count {
-    bottom: 80px;
-    left: calc(50% - 60px);
+    left: 2.5%;
+    bottom: 10.5%;
     width: 110px;
     background: rgba(0, 0, 0, 0.4);
     border-radius: 8px;
@@ -76,6 +41,17 @@
     text-align: center;
   }
 
+  .last-edited {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 6px 8px;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    font-size: 0.85rem;
+    right: 2.5%;
+    bottom: 10.5%;
+  }
+
   .search-text {
     display: none;
   }
@@ -84,7 +60,7 @@
     background: none;
     box-shadow: none;
     border-radius: 0;
-    top: 35px;
+    top: 23px;
     left: 0;
     height: 4vh;
     width: 100vw;
@@ -110,7 +86,7 @@
     background: rgba(0, 0, 0, 0.35);
     box-shadow: none;
     border-radius: 0;
-    top: calc(81.5% - 80px);
+    top: calc(83% - 80px);
     right: 0;
     left: 0;
     height: 3vh;

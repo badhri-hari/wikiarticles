@@ -110,31 +110,32 @@
   margin-bottom: 16px;
 }
 
-.see-more {
+.view-count {
   position: absolute;
   bottom: 1.5%;
-  right: 1%;
+  left: 1%;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 12px;
-  padding: 9px 16px;
+  padding: 8px 15px;
   backdrop-filter: blur(2.5px);
   -webkit-backdrop-filter: blur(2.5px);
-}
-
-.see-more a {
   color: white;
   font-size: large;
+}
+
+.view-count a {
+  color: white;
   text-decoration: none;
 }
 
-.see-more a:hover {
+.view-count a:hover {
   opacity: 0.7;
 }
 
 .last-edited {
   position: absolute;
   bottom: 1.5%;
-  left: 1%;
+  right: 1%;
   background: rgba(0, 0, 0, 0.6);
   border-radius: 12px;
   padding: 8px 15px;
@@ -151,19 +152,6 @@
 
 .last-edited a:hover {
   opacity: 0.7;
-}
-
-.view-count {
-  position: absolute;
-  bottom: 1.5%;
-  left: 45%;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 12px;
-  padding: 8px 15px;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
-  color: white;
-  font-size: large;
 }
 
 .search {
