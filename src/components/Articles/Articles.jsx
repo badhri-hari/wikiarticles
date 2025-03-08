@@ -107,11 +107,6 @@ export default function Articles({ searchActive }) {
     return seeMoreLink;
   };
 
-  const handleSeeMoreClick = (pageUrl, toc) => {
-    const seeMoreLink = generateSeeMoreLink(toc, pageUrl);
-    window.open(seeMoreLink, "_blank");
-  };
-
   const isArticleLiked = (pageUrl) => {
     const likedArticles =
       JSON.parse(localStorage.getItem("likedArticles")) || [];
@@ -124,7 +119,7 @@ export default function Articles({ searchActive }) {
       (item) => item.link === article.pageUrl
     );
     if (index === -1) {
-      likedArticles.push({ link: article.pageUrl });
+      likedArticles.push({ title: article.title, link: article.pageUrl });
     } else {
       likedArticles.splice(index, 1);
     }
