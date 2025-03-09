@@ -191,6 +191,23 @@ span {
   opacity: 0.75;
 }
 
+.search-result button {
+  position: absolute;
+  bottom: 14.5px;
+  left: -1px;
+  font-size: 0.95rem;
+  color: rgb(234, 234, 234);
+}
+
+.search-result:hover button {
+  color: rgb(255, 53, 53);
+  opacity: 1;
+}
+
+.search-result div h2 {
+  margin-left: 15px;
+}
+
 .search-result h3 {
   position: absolute;
   bottom: -5px;

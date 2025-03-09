@@ -4,6 +4,7 @@ import axios from "axios";
 import { VscGithubInverted } from "react-icons/vsc";
 import { IoSearch } from "react-icons/io5";
 import { TbFileLike } from "react-icons/tb";
+import { RxCross1 } from "react-icons/rx";
 
 import "./Header.css";
 import "./Header-mobile.css";
@@ -118,6 +119,15 @@ export default function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showLikedArticles]);
+
+  const handleRemoveLikedArticle = (articleToRemove) => {
+    const updatedArticles = likedArticles.filter(
+      (article) => article.link !== articleToRemove.link
+    );
+
+    setLikedArticles(updatedArticles);
+    localStorage.setItem("likedArticles", JSON.stringify(updatedArticles));
+  };
 
   return (
     <header aria-label="Site header" role="banner">
@@ -245,7 +255,34 @@ export default function Header() {
                         borderBottom: "1px solid gray",
                       }}
                     >
-                      <h2>{article.title}</h2>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemoveLikedArticle(article);
+                        }}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                        aria-label="Remove article from liked list"
+                      >
+                        <RxCross1 />
+                      </button>
+
+                      {window.innerWidth < 900 ? (
+                        <h2>
+                          {article.title.length > 17
+                            ? article.title.slice(0, 17) + "..."
+                            : article.title}
+                        </h2>
+                      ) : (
+                        <h2>
+                          {article.title.length > 23
+                            ? article.title.slice(0, 23) + "..."
+                            : article.title}
+                        </h2>
+                      )}
                       <h3>{article.dateLiked} (UTC)</h3>
                     </div>
                   </a>

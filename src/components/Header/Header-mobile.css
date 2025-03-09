@@ -96,6 +96,18 @@
     font-size: 1rem;
   }
 
+  .search-result button {
+    position: absolute;
+    bottom: 7px;
+    left: -1px;
+    font-size: 0.9rem;
+    color: rgb(255, 53, 53);
+  }
+
+  .search-result div h2 {
+    margin-left: 25px;
+  }
+
   .search-result h3 {
     bottom: -5px;
     left: 200px;
