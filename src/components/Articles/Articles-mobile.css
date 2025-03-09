@@ -96,6 +96,11 @@
     margin: 0;
   }
 
+  .like-button {
+    margin-top: 30px;
+    height: 35px;
+  }
+
   .article-link {
     background: rgba(0, 0, 0, 0.35);
     box-shadow: none;

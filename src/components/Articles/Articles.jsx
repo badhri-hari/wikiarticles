@@ -19,7 +19,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("/api/articles");
+      const response = await axios.get("http://localhost:5000/api/articles");
       setArticles((prev) => [...prev, ...response.data.articles]);
       setHasError(false);
     } catch (error) {
@@ -270,17 +270,7 @@ export default function Articles() {
                   <h2 style={{ marginLeft: "-6px" }}>
                     <button
                       onClick={() => handleLikeArticle({ title, pageUrl })}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        textDecoration: "none",
-                        color: "inherit",
-                        cursor: "pointer",
-                        fontSize: "2rem",
-                        textDecoration: "bold",
-                        marginTop: "8px",
-                        marginBottom: "22px",
-                      }}
+                      className="like-button"
                       aria-label={
                         isArticleLiked(pageUrl)
                           ? "This article has been liked!"
@@ -293,8 +283,8 @@ export default function Articles() {
                             size="1.5rem"
                             style={{
                               marginRight: "15px",
-                              marginTop:
-                                window.innerWidth < 900 ? "27px" : "0px",
+                              marginBottom:
+                                window.innerWidth < 900 ? "6px" : "",
                             }}
                             aria-hidden="true"
                           />
@@ -308,8 +298,8 @@ export default function Articles() {
                             size="1.5rem"
                             style={{
                               marginRight: "15px",
-                              marginTop:
-                                window.innerWidth < 900 ? "27px" : "0px",
+                              marginBottom:
+                                window.innerWidth < 900 ? "6px" : "",
                             }}
                             aria-hidden="true"
                           />
