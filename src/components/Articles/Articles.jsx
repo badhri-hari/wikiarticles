@@ -19,7 +19,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/articles");
+      const response = await axios.get("/api/articles");
       setArticles((prev) => [...prev, ...response.data.articles]);
       setHasError(false);
     } catch (error) {
