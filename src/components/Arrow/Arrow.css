@@ -18,6 +18,7 @@
     opacity: 1;
     cursor: default;
     user-select: none;
+    z-index: 5000;
   }
   
   @keyframes bounce {
