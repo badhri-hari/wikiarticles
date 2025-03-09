@@ -15,6 +15,7 @@ export default function Articles() {
   const [articles, setArticles] = useState([]);
   const [likedArticlesUpdate, setLikedArticlesUpdate] = useState(0);
   const [hasError, setHasError] = useState(false);
+  const [isFirstTap, setIsFirstTap] = useState(false);
 
   const fetchArticles = async () => {
     try {
@@ -132,6 +133,16 @@ export default function Articles() {
     }
     localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
     setLikedArticlesUpdate(likedArticlesUpdate + 1);
+  };
+
+  const handleLikeOverlayClick = ({ title, pageUrl }) => {
+    if (isFirstTap) {
+      handleLikeArticle({ title, pageUrl });
+      setIsFirstTap(false);
+    } else {
+      setIsFirstTap(true);
+      setTimeout(() => setIsFirstTap(false), 2000);
+    }
   };
 
   return (
@@ -303,6 +314,16 @@ export default function Articles() {
                     </button>
                   </h2>
                 </div>
+
+                {window.innerWidth < 900 ? (
+                  <div
+                    className="like-overlay"
+                    onClick={() => handleLikeOverlayClick({ title, pageUrl })}
+                    aria-hidden="true"
+                  ></div>
+                ) : (
+                  ""
+                )}
 
                 <footer>
                   <div className="view-count">
