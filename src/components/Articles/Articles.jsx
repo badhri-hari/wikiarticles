@@ -133,6 +133,13 @@ export default function Articles() {
     }
     localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
     setLikedArticlesUpdate(likedArticlesUpdate + 1);
+
+    if (navigator.vibrate) {
+      navigator.vibrate(50);
+    } else if (window.innerWidth <= 900) {
+      const audio = new Audio("/article-liked-audio.mp3");
+      audio.play();
+    }
   };
 
   const handleLikeOverlayClick = ({ title, pageUrl }) => {
