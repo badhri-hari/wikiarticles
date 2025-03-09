@@ -16,6 +16,7 @@ export default function Articles() {
   const [likedArticlesUpdate, setLikedArticlesUpdate] = useState(0);
   const [hasError, setHasError] = useState(false);
   const [isFirstTap, setIsFirstTap] = useState(false);
+  const [articleLiked, setArticleLiked] = useState(false);
 
   const fetchArticles = async () => {
     try {
@@ -58,6 +59,7 @@ export default function Articles() {
               const formattedTitle = title.replace(/\s+/g, "_");
               const newUrl = window.location.origin + "/" + formattedTitle;
               window.history.replaceState(null, "", newUrl);
+              setArticleLiked(false);
             }
           }
         });
@@ -76,37 +78,6 @@ export default function Articles() {
 
   const createLink = (baseUrl, title, extra = "") =>
     `${baseUrl}${encodeURIComponent(title)}${extra}`;
-
-  const generateSeeMoreLink = (toc, pageUrl) => {
-    let seeMoreLink = null;
-
-    const furtherReadingSection = toc.find((section) =>
-      section.line.toLowerCase().includes("further reading")
-    );
-    const referencesSection = toc.find((section) =>
-      section.line.toLowerCase().includes("references")
-    );
-    const externalLinksSection = toc.find((section) =>
-      section.line.toLowerCase().includes("external links")
-    );
-    const seeAlsoSection = toc.find((section) =>
-      section.line.toLowerCase().includes("see also")
-    );
-
-    if (furtherReadingSection) {
-      seeMoreLink = `${pageUrl}#${furtherReadingSection.anchor}`;
-    } else if (referencesSection) {
-      seeMoreLink = `${pageUrl}#${referencesSection.anchor}`;
-    } else if (externalLinksSection) {
-      seeMoreLink = `${pageUrl}#${externalLinksSection.anchor}`;
-    } else if (seeAlsoSection) {
-      seeMoreLink = `${pageUrl}#${seeAlsoSection.anchor}`;
-    } else if (pageUrl) {
-      seeMoreLink = `${pageUrl}?search=${encodeURIComponent(toc.title)}`;
-    }
-
-    return seeMoreLink;
-  };
 
   const isArticleLiked = (pageUrl) => {
     const likedArticles =
@@ -134,11 +105,10 @@ export default function Articles() {
     localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
     setLikedArticlesUpdate(likedArticlesUpdate + 1);
 
+    setArticleLiked(true);
+
     if (navigator.vibrate) {
       navigator.vibrate(50);
-    } else if (window.innerWidth <= 900) {
-      const audio = new Audio("/article-liked-audio.mp3");
-      audio.play();
     }
   };
 
@@ -312,14 +282,26 @@ export default function Articles() {
                   </h2>
                 </div>
 
-                {window.innerWidth < 900 ? (
-                  <div
-                    className="like-overlay"
-                    onClick={() => handleLikeOverlayClick({ title, pageUrl })}
-                    aria-hidden="true"
-                  ></div>
-                ) : (
-                  ""
+                {window.innerWidth < 900 && (
+                  <>
+                    <div
+                      className="like-overlay"
+                      onClick={() => handleLikeOverlayClick({ title, pageUrl })}
+                      aria-hidden="true"
+                    ></div>
+                    {articleLiked && (
+                      <div
+                        className="like-feedback"
+                        aria-label="Article has been liked successfully"
+                      >
+                        <BiSolidLike
+                          size="3rem"
+                          aria-hidden="true"
+                          style={{ color: "white" }}
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
 
                 <footer>
