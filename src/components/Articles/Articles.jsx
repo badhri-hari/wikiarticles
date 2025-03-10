@@ -17,6 +17,7 @@ export default function Articles() {
   const [hasError, setHasError] = useState(false);
   const [isFirstTap, setIsFirstTap] = useState(false);
   const [articleLiked, setArticleLiked] = useState(false);
+  const [lastLikeAction, setLastLikeAction] = useState(null);
 
   const fetchArticles = async () => {
     try {
@@ -59,7 +60,6 @@ export default function Articles() {
               const formattedTitle = title.replace(/\s+/g, "_");
               const newUrl = window.location.origin + "/" + formattedTitle;
               window.history.replaceState(null, "", newUrl);
-              setArticleLiked(false);
             }
           }
         });
@@ -90,6 +90,7 @@ export default function Articles() {
     const index = likedArticles.findIndex(
       (item) => item.link === article.pageUrl
     );
+    let actionType = null;
     if (index === -1) {
       likedArticles.push({
         title: article.title,
@@ -99,17 +100,23 @@ export default function Articles() {
           hour12: false,
         }),
       });
+      actionType = "like";
     } else {
       likedArticles.splice(index, 1);
+      actionType = "unlike";
     }
     localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
     setLikedArticlesUpdate(likedArticlesUpdate + 1);
 
     setArticleLiked(true);
 
+    setLastLikeAction(actionType);
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
+    setTimeout(() => {
+      setArticleLiked(false);
+    }, 1000);
   };
 
   const handleLikeOverlayClick = ({ title, pageUrl }) => {
@@ -292,13 +299,25 @@ export default function Articles() {
                     {articleLiked && (
                       <div
                         className="like-feedback"
-                        aria-label="Article has been liked successfully"
+                        aria-label={
+                          lastLikeAction === "like"
+                            ? "Article has been liked successfully"
+                            : "Article has been unliked successfully"
+                        }
                       >
-                        <BiSolidLike
-                          size="3rem"
-                          aria-hidden="true"
-                          style={{ color: "white" }}
-                        />
+                        {lastLikeAction === "like" ? (
+                          <BiSolidLike
+                            size="3rem"
+                            aria-hidden="true"
+                            style={{ color: "white" }}
+                          />
+                        ) : (
+                          <BiLike
+                            size="3rem"
+                            aria-hidden="true"
+                            style={{ color: "white" }}
+                          />
+                        )}
                       </div>
                     )}
                   </>
