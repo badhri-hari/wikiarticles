@@ -1,4 +1,6 @@
-# wikiarticles
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/022e1cf8-1187-4b69-966f-c8ba9808f6e2" alt="wikiarticles logo" height="80" width="342">
+</p>
 
 A scroll-based interface for exploring random Wikipedia articles.
 
