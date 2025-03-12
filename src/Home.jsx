@@ -13,10 +13,10 @@ export default function Home() {
 
       const hideTimer = setTimeout(() => {
         setShowArrow(false);
-      }, 7000);
+      }, 6000);
 
       return () => clearTimeout(hideTimer);
-    }, 3000);
+    }, 5000);
 
     return () => clearTimeout(showTimer);
   }, []);
