@@ -291,7 +291,11 @@ export default function Header() {
             </>
           ) : (
             <div className="search-result no-liked-articles-text">
-              <h2>No liked articles.</h2>
+              {window.innerWidth < 900 ? (
+                <h2>Double tap to like/unlike an article!</h2>
+              ) : (
+                <h2>No liked articles.</h2>
+              )}
             </div>
           )}
         </div>
