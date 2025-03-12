@@ -166,7 +166,7 @@ export default function Header() {
 
       <IoSearch
         color="#F8F8FF"
-        size="1.45em"
+        size={window.innerWidth < 900 ? 19 : 23}
         className="search-icon"
         aria-hidden="true"
         onClick={handleSearchClick}
@@ -182,7 +182,12 @@ export default function Header() {
           cursor: "pointer",
         }}
       >
-        <TbFileLike color="#F8F8FF" size="2.7em" aria-hidden="true" />
+        <TbFileLike
+          color="#F8F8FF"
+          size={window.innerWidth < 900 ? 27.5 : 43.2}
+          style={{ position: "relative", bottom: "5px" }}
+          aria-hidden="true"
+        />
       </button>
       <a
         href="https://github.com/badhri-hari/wikiarticles"
@@ -192,7 +197,7 @@ export default function Header() {
       >
         <VscGithubInverted
           color="#F8F8FF"
-          size="2.7em"
+          size={window.innerWidth < 900 ? 27.5 : 43.2}
           className="header-icon"
           aria-hidden="true"
         />
@@ -272,8 +277,8 @@ export default function Header() {
 
                       {window.innerWidth < 900 ? (
                         <h2>
-                          {article.title.length > 17
-                            ? article.title.slice(0, 17) + "..."
+                          {article.title.length > 13
+                            ? article.title.slice(0, 13) + "..."
                             : article.title}
                         </h2>
                       ) : (

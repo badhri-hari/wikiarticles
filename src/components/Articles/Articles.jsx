@@ -5,6 +5,8 @@ import { TbWorldSearch } from "react-icons/tb";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaWikipediaW } from "react-icons/fa6";
 
+import ViewCountAnimator from "./ViewCountAnimator";
+
 import "./Articles.css";
 import "./Articles-mobile.css";
 
@@ -91,6 +93,7 @@ export default function Articles() {
       (item) => item.link === article.pageUrl
     );
     let actionType = null;
+
     if (index === -1) {
       likedArticles.push({
         title: article.title,
@@ -105,18 +108,20 @@ export default function Articles() {
       likedArticles.splice(index, 1);
       actionType = "unlike";
     }
+
     localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
-    setLikedArticlesUpdate(likedArticlesUpdate + 1);
+    setLikedArticlesUpdate((prev) => prev + 1);
 
     setArticleLiked(true);
-
     setLastLikeAction(actionType);
+
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
+
     setTimeout(() => {
       setArticleLiked(false);
-    }, 1000);
+    }, 690);
   };
 
   const handleLikeOverlayClick = ({ title, pageUrl }) => {
@@ -125,9 +130,51 @@ export default function Articles() {
       setIsFirstTap(false);
     } else {
       setIsFirstTap(true);
-      setTimeout(() => setIsFirstTap(false), 2000);
+      setTimeout(() => setIsFirstTap(false), 400);
     }
   };
+
+  function getTimeAgo(timestamp) {
+    const now = new Date();
+    const pastDate = new Date(timestamp);
+    const diffInSeconds = Math.floor((now - pastDate) / 1000);
+
+    if (diffInSeconds < 60) {
+      return `Just now`;
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `Last edited ${diffInMinutes} minute${
+        diffInMinutes > 1 ? "s" : ""
+      } ago`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `Last edited ${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) {
+      return `Last edited ${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
+    }
+
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    if (diffInWeeks < 4) {
+      return `Last edited ${diffInWeeks} week${diffInWeeks > 1 ? "s" : ""} ago`;
+    }
+
+    const diffInMonths = Math.floor(diffInDays / 30.44);
+    if (diffInMonths < 12) {
+      return `Last edited ${diffInMonths} month${
+        diffInMonths > 1 ? "s" : ""
+      } ago`;
+    }
+
+    const diffInYears = Math.floor(diffInDays / 365.25);
+    return `Last edited ${diffInYears} year${diffInYears > 1 ? "s" : ""} ago`;
+  }
 
   return (
     <>
@@ -150,7 +197,10 @@ export default function Articles() {
             </div>
             <div className="toc"></div>
             <div className="search"></div>
-            <div className="article-link"></div>
+            <div
+              className="article-link"
+              style={{ display: window.innerWidth < 900 ? "none" : "block" }}
+            ></div>
             <div className="more-like-this" style={{ display: "none" }}></div>
             <div className="last-edited" style={{ display: "none" }}></div>
             <div className="view-count" style={{ display: "none" }}></div>
@@ -178,7 +228,7 @@ export default function Articles() {
                   href={pageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Open article page in Wikipedia"
+                  aria-label={`Open article page for ${title} on Wikipedia`}
                 >
                   <div className="article-link">
                     <FaWikipediaW
@@ -222,7 +272,7 @@ export default function Articles() {
                     <h3>No sections available</h3>
                   )}
                 </div>
-                <div className="search" aria-label="Search options">
+                <div className="search">
                   <h2>
                     <a
                       href={createLink(
@@ -251,18 +301,14 @@ export default function Articles() {
                       aria-label={
                         isArticleLiked(pageUrl)
                           ? "This article has been liked!"
-                          : "Like and save this article"
+                          : "Like this article"
                       }
                     >
                       {isArticleLiked(pageUrl) ? (
                         <>
                           <BiSolidLike
                             size="1.5rem"
-                            style={{
-                              marginRight: "15px",
-                              marginBottom:
-                                window.innerWidth < 900 ? "6px" : "",
-                            }}
+                            style={{ marginRight: "15px" }}
                             aria-hidden="true"
                           />
                           <span className="search-text search-liked-text">
@@ -273,11 +319,7 @@ export default function Articles() {
                         <>
                           <BiLike
                             size="1.5rem"
-                            style={{
-                              marginRight: "15px",
-                              marginBottom:
-                                window.innerWidth < 900 ? "6px" : "",
-                            }}
+                            style={{ marginRight: "15px" }}
                             aria-hidden="true"
                           />
                           <span className="search-text search-liked-text">
@@ -296,30 +338,30 @@ export default function Articles() {
                       onClick={() => handleLikeOverlayClick({ title, pageUrl })}
                       aria-hidden="true"
                     ></div>
-                    {articleLiked && (
-                      <div
-                        className="like-feedback"
-                        aria-label={
-                          lastLikeAction === "like"
-                            ? "Article has been liked successfully"
-                            : "Article has been unliked successfully"
-                        }
-                      >
-                        {lastLikeAction === "like" ? (
+                    {articleLiked &&
+                      (lastLikeAction === "like" ? (
+                        <div
+                          className="like-feedback"
+                          aria-label="Article has been liked successfully"
+                        >
                           <BiSolidLike
                             size="3rem"
                             aria-hidden="true"
                             style={{ color: "white" }}
                           />
-                        ) : (
+                        </div>
+                      ) : (
+                        <div
+                          className="like-feedback"
+                          aria-label="Article has been unliked successfully"
+                        >
                           <BiLike
                             size="3rem"
                             aria-hidden="true"
                             style={{ color: "white" }}
                           />
-                        )}
-                      </div>
-                    )}
+                        </div>
+                      ))}
                   </>
                 )}
 
@@ -331,7 +373,20 @@ export default function Articles() {
                       rel="noopener noreferrer"
                       aria-label={`This article has ${article.viewCount} views. Click on this to see historical pageview data`}
                     >
-                      {article.viewCount} views
+                      {window.innerWidth < 900 ? (
+                        <ViewCountAnimator
+                          start={0}
+                          end={article.viewCount}
+                          duration={3.5}
+                          separator=","
+                          enableScrollSpy={true}
+                          scrollSpyOnce={true}
+                          style={{ fontWeight: "normal" }}
+                          aria-hidden={true}
+                        />
+                      ) : (
+                        <>{article.viewCount} views</>
+                      )}
                     </a>
                   </div>
                   <div className="last-edited">
@@ -343,16 +398,7 @@ export default function Articles() {
                       rel="noopener noreferrer"
                       aria-label="View article edit history"
                     >
-                      Last edited:
-                      {" " +
-                        new Date(article.timestamp).toLocaleDateString(
-                          "en-US",
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          }
-                        )}
+                      {getTimeAgo(article.timestamp)}
                     </a>
                   </div>
                 </footer>

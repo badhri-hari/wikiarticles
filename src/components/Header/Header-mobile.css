@@ -1,14 +1,21 @@
 @media only screen and (max-width: 900px) {
   header {
-    background: rgba(0, 0, 0, 0.3);
-    height: 72px;
-    padding: 5px;
+    height: 65px;
+    width: 85%;
+    padding: 15px;
+    top: 15px;
+    left: 3.5vw;
+    backdrop-filter: blur(7px) saturate(200%);
+    -webkit-backdrop-filter: blur(7px) saturate(200%);
+    background-color: rgba(17, 25, 40, 0.5);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
   .header-logo {
-    top: 3.5px;
-    left: 9px;
-    font-size: 25px;
+    top: 7px;
+    left: 15px;
+    font-size: 24.5px;
   }
 
   span {
@@ -16,8 +23,8 @@
   }
 
   .search-icon {
-    top: 9px;
-    left: 160px;
+    top: 14px;
+    left: 165px;
   }
 
   .header-logo-dim {
@@ -28,32 +35,31 @@
   }
 
   .search-input {
-    height: 38px;
-    width: 220px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    height: 32px;
+    width: 60%;
+    top: 6.5px;
+    left: 12px;
     font-size: 16px;
-  }
-
-  .search-input:focus ~ .header-logo {
-    opacity: 0;
-  }
-
-  .search-input:focus ~ .search-icon {
-    opacity: 0;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    background-color: rgba(17, 25, 40, 0.5);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
   .search-result-container {
     position: absolute;
-    top: 85px;
-    left: 9px;
+    top: 95px;
+    left: -3px;
     height: 210px;
-    width: 90vw;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    width: 88.5vw;
     padding: 10px;
-    padding-top: 10px;
     gap: 10px;
+    backdrop-filter: blur(7px) saturate(200%);
+    -webkit-backdrop-filter: blur(7px) saturate(200%);
+    background-color: rgba(17, 25, 40, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
   .search-result {
@@ -81,19 +87,22 @@
   }
 
   .liked-articles-container {
-    top: 85px;
-    right: 0;
-    left: 1.5vw;
+    top: 95px;
+    left: -5px;
     height: 210px;
-    width: 90vw;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    width: 87vw;
     padding: 10px;
+    backdrop-filter: blur(7px) saturate(200%);
+    -webkit-backdrop-filter: blur(7px) saturate(200%);
+    background-color: rgba(10, 15, 24, 0.8);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
   .download-liked-articles-button {
-    border-radius: 5px;
     font-size: 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
   .search-result button {
@@ -110,7 +119,8 @@
 
   .search-result h3 {
     bottom: -5px;
-    left: 200px;
+    left: auto;
+    right: 33%;
     font-size: 0.7rem;
     font-weight: 400;
     color: rgb(234, 234, 234);
