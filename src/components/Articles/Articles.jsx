@@ -385,7 +385,7 @@ export default function Articles() {
                           aria-hidden={true}
                         />
                       ) : (
-                        <>{article.viewCount} views</>
+                        <> {article.viewCount.toLocaleString()} views </>
                       )}
                     </a>
                   </div>
