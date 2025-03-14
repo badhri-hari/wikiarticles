@@ -1,0 +1,71 @@
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-log {
+  height: calc(69% + 8px);
+  margin-top: -10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.chat-message {
+  width: 100%;
+  word-break: break-word;
+  font-size: 1.07rem;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.chat-message-icons {
+  position: relative;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.bot {
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid gray;
+}
+
+.chat-input-area {
+  position: absolute;
+  bottom: 12px;
+  left: 8.5px;
+  height: 60px;
+  width: 87%;
+  padding: 0 55px 0 15px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  outline: none;
+  font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+::placeholder {
+  color: white;
+  opacity: 0.7;
+}
+
+::-webkit-input-placeholder {
+  color: white;
+  opacity: 0.7;
+}
+
+.prompt-count {
+  position: absolute;
+  bottom: 29px;
+  right: 28px;
+  font-size: 20px;
+  z-index: 1000;
+}

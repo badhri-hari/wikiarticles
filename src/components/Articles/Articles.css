@@ -1,6 +1,5 @@
 * {
   scrollbar-width: none;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 *::-webkit-scrollbar {
@@ -179,7 +178,7 @@
 .search h2 {
   font-size: 2rem;
   text-decoration: bold;
-  margin-top: 8px;
+  margin-top: 28px;
   margin-bottom: 22px;
 }
 
@@ -220,7 +219,7 @@
   overflow: hidden;
   text-align: center;
   align-content: center;
-  transition: all 0.1s linear;
+  transition: background 0.1s linear;
 }
 
 .article-link:hover {

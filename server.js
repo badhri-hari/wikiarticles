@@ -1,12 +1,23 @@
 // Used for development only
-// Update API endpoint in src/components/Articles/Articles.jsx and src/components/Header/Header.jsx to http://{your IPv4 address}:5000/api/articles
+// Update API endpoint in src/components/Articles/Articles.jsx to http://localhost:5000/api/articles
+// Update API endpiont in src/components/Chat/Chat.jsx to http://localhost:5000/api/chat
+// Update API endpoint in src/components/Header/Header.jsx to http://localhost:5000/api/search
 // Server automatically starts with the default `npm run dev` command
 
 import express from "express";
 import axios from "axios";
+import dotenv from "dotenv";
+import { GoogleGenAI } from "@google/genai";
+
+dotenv.config();
 
 const app = express();
-const PORT = 5000;
+
+app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 function getMonthlyEndDate() {
   const now = new Date();
@@ -24,8 +35,6 @@ function formatDate(timestamp) {
 }
 
 app.get("/api/articles", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
   try {
     const numArticles = 20;
     const summaryRequests = [];
@@ -98,7 +107,6 @@ app.get("/api/articles", async (req, res) => {
 });
 
 app.get("/api/search", async (req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
   const { searchTerm } = req.query;
 
   if (!searchTerm) {
@@ -117,6 +125,52 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+});
+
+app.options("/api/chat", (req, res) => {
+  res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.sendStatus(200);
+});
+
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { chatHistory } = req.body;
+
+    if (
+      !chatHistory ||
+      !Array.isArray(chatHistory) ||
+      chatHistory.length === 0
+    ) {
+      return res
+        .status(400)
+        .json({ error: "oi stop messing around with my site" });
+    }
+
+    const formattedChatHistory = chatHistory.map((message) => ({
+      role: message.sender === "user" ? "user" : "assistant",
+      parts: [{ text: message.text }],
+    }));
+
+    const responseStream = await ai.models.generateContentStream({
+      model: "gemini-2.0-flash",
+      contents: formattedChatHistory,
+    });
+
+    res.setHeader("Content-Type", "text/plain");
+
+    for await (const chunk of responseStream) {
+      res.write(chunk.candidates[0].content.parts[0].text);
+    }
+    res.end();
+  } catch (error) {
+    console.error("Chatbot error:", error);
+    return res.status(500).json({ error: error });
+  }
+});
+
+app.listen(5000, "0.0.0.0", () => {
+  console.log(`Server running on port 5000`);
 });

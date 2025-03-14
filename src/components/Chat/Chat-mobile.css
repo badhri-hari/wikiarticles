@@ -1,0 +1,35 @@
+@media only screen and (max-width: 900px) {
+  .chat-log {
+    height: 85%;
+    padding-top: 5px;
+  }
+
+  .chat-message {
+    font-size: 0.82rem;
+    margin-bottom: 15px;
+  }
+
+  .bot {
+    padding-bottom: 10px;
+    margin-bottom: 18px;
+  }
+
+  .chat-input-area {
+    bottom: 9px;
+    height: 32px;
+    width: 79.5%;
+    padding: 0 40px 0 15px;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    background-color: rgba(17, 25, 40, 0.5);
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    font-size: 0.83rem;
+  }
+
+  .prompt-count {
+    bottom: 18px;
+    right: 23px;
+    font-size: 13px;
+  }
+}

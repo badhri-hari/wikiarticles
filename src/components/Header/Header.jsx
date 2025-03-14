@@ -130,14 +130,15 @@ export default function Header() {
   };
 
   return (
-    <header aria-label="Site header" role="banner">
+    <header role="banner">
       {showInput && (
         <input
           type="text"
           className="search-input"
           maxLength="255"
           placeholder="Search articles..."
-          aria-label="Search for an article"
+          title="Search for an article on Wikipedia"
+          aria-label="Search for an article on Wikipedia"
           ref={inputRef}
           autoFocus
           onBlur={() => {
@@ -157,7 +158,8 @@ export default function Header() {
         onClick={handleSearchClick}
         onKeyDown={handleKeyDown}
         role="button"
-        aria-label="Open search input field"
+        title="Open article search"
+        aria-label="Open article search input field"
         tabIndex="0"
       />
       <div className="header-logo" aria-label="wikiarticles logo">
@@ -174,6 +176,7 @@ export default function Header() {
       <button
         ref={likedArticlesIconRef}
         onClick={handleLikedArticlesClick}
+        title="View liked articles"
         aria-label="Toggle liked articles popup"
         className="header-icon liked-articles-icon"
         style={{
@@ -185,7 +188,10 @@ export default function Header() {
         <TbFileLike
           color="#F8F8FF"
           size={window.innerWidth < 900 ? 27.5 : 43.2}
-          style={{ position: "relative", bottom: "5px" }}
+          style={{
+            position: "relative",
+            bottom: window.innerWidth < 900 ? "0" : "5px",
+          }}
           aria-hidden="true"
         />
       </button>
@@ -193,7 +199,8 @@ export default function Header() {
         href="https://github.com/badhri-hari/wikiarticles"
         target="_blank"
         rel="noreferrer noopener"
-        aria-label="View website source code on GitHub"
+        title="View source code on GitHub"
+        aria-label="View source code on GitHub"
       >
         <VscGithubInverted
           color="#F8F8FF"
@@ -209,7 +216,7 @@ export default function Header() {
           ref={resultsContainerRef}
           tabIndex="0"
           onBlur={handleBlur}
-          aria-label="Search results container"
+          aria-label="List of search results"
         >
           {searchResults.map((searchResult, index) => (
             <div key={index} className="search-result">
@@ -217,7 +224,8 @@ export default function Header() {
                 href={searchResult.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label={`Search result number ${index}: ${searchResult.title}`}
+                title={`Open ${searchResult.title} on Wikipedia`}
+                aria-label={`Search result number ${index}: ${searchResult.title}. Click to open it on Wikipedia`}
               >
                 <h2 style={{ borderBottom: "1px solid gray" }}>
                   {searchResult.title}
@@ -239,7 +247,8 @@ export default function Header() {
             <>
               <button
                 onClick={handleDownloadLikedArticles}
-                aria-label="Click on this button to download your liked articles in a JSON file"
+                title="Download your liked articles in a JSON file"
+                aria-label="Click to download your liked articles in a JSON file"
                 className="download-liked-articles-button"
               >
                 Download List
@@ -250,7 +259,8 @@ export default function Header() {
                     href={article.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Open Wikipedia page for liked article number ${index}: ${article.title}`}
+                    title={`Open Wikipedia page for ${article.title}`}
+                    aria-label={`Click to open Wikipedia page for liked article number ${index}: ${article.title}`}
                   >
                     <div
                       style={{
@@ -274,20 +284,7 @@ export default function Header() {
                       >
                         <RxCross1 />
                       </button>
-
-                      {window.innerWidth < 900 ? (
-                        <h2>
-                          {article.title.length > 13
-                            ? article.title.slice(0, 13) + "..."
-                            : article.title}
-                        </h2>
-                      ) : (
-                        <h2>
-                          {article.title.length > 23
-                            ? article.title.slice(0, 23) + "..."
-                            : article.title}
-                        </h2>
-                      )}
+                      <h2 className="liked-articles-title">{article.title}</h2>
                       <h3>{article.dateLiked} (UTC)</h3>
                     </div>
                   </a>

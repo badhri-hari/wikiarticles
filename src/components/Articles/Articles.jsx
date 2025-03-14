@@ -4,7 +4,10 @@ import axios from "axios";
 import { TbWorldSearch } from "react-icons/tb";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaWikipediaW } from "react-icons/fa6";
+import { SiGooglegemini } from "react-icons/si";
+import { RxCross1 } from "react-icons/rx";
 
+import Chat from "../Chat/Chat";
 import ViewCountAnimator from "./ViewCountAnimator";
 
 import "./Articles.css";
@@ -20,10 +23,15 @@ export default function Articles() {
   const [isFirstTap, setIsFirstTap] = useState(false);
   const [articleLiked, setArticleLiked] = useState(false);
   const [lastLikeAction, setLastLikeAction] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [currentArticleTitle, setCurrentArticleTitle] = useState("");
+  const [currentArticleDescription, setCurrentArticleDescription] =
+    useState("");
+  const [currentArticleToc, setCurrentArticleToc] = useState([]);
 
   const fetchArticles = async () => {
     try {
-      const response = await axios.get("/api/articles");
+      const response = await axios.get("http://192.168.1.9:5000/api/articles");
       setArticles((prev) => [...prev, ...response.data.articles]);
       setHasError(false);
     } catch (error) {
@@ -219,25 +227,13 @@ export default function Articles() {
                 ref={(el) => (slidesRef.current[index] = el)}
               >
                 <img src={imageUrl} alt={`Slide ${index + 1}`} />
-
-                <div className="description">
-                  <h2>{title}</h2>
-                  <p>{article.extract}</p>
-                </div>
-                <a
-                  href={pageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Open article page for ${title} on Wikipedia`}
-                >
-                  <div className="article-link">
-                    <FaWikipediaW
-                      size="2rem"
-                      style={{ marginLeft: "10px" }}
-                      aria-hidden="true"
-                    />
+                {!isChatOpen && (
+                  <div className="description">
+                    <h2>{title}</h2>
+                    <p>{article.extract}</p>
                   </div>
-                </a>
+                )}
+                {/* {!isChatOpen && ( */}
                 <div className="toc" aria-label="Table of contents">
                   {article.toc && article.toc.length > 0 ? (
                     article.toc.map((section, idx) => {
@@ -261,7 +257,8 @@ export default function Articles() {
                             href={`${pageUrl}#${section.anchor}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`Open ${section.line} section in Wikipedia`}
+                            title={`Open section "${section.line}" on Wikipedia`}
+                            aria-label={`Click to open ${section.line} section in Wikipedia`}
                           >
                             {section.line}
                           </a>
@@ -272,6 +269,7 @@ export default function Articles() {
                     <h3>No sections available</h3>
                   )}
                 </div>
+                {/* )} */}
                 <div className="search">
                   <h2>
                     <a
@@ -282,6 +280,7 @@ export default function Articles() {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none", color: "inherit" }}
+                      title={`Search ${title} online`}
                       aria-label={`Search ${title} online`}
                     >
                       <TbWorldSearch
@@ -296,8 +295,59 @@ export default function Articles() {
                   </h2>
                   <h2 style={{ marginLeft: "-6px" }}>
                     <button
+                      onClick={() => {
+                        setCurrentArticleTitle(title);
+                        setCurrentArticleDescription(article.extract);
+                        setCurrentArticleToc(article.toc || []);
+                        setIsChatOpen((prev) => !prev);
+                      }}
+                      className="like-button"
+                      style={{ marginBottom: "0" }}
+                    >
+                      {isChatOpen ? (
+                        <div
+                          title="Close chat"
+                          aria-label="Click to close chat"
+                        >
+                          <RxCross1
+                            size={window.innerWidth < 900 ? 21.5 : 24}
+                            style={{
+                              marginRight: "15px",
+                              marginBottom:
+                                window.innerWidth < 900 ? "1.95px" : "",
+                            }}
+                            aria-hidden="true"
+                          />
+                          <span className="search-text search-liked-text">
+                            Close Chat
+                          </span>
+                        </div>
+                      ) : (
+                        <div
+                          title={`Talk with a chatbot about ${title}`}
+                          aria-label={`Click to talk with a chatbot about ${title}`}
+                        >
+                          <SiGooglegemini
+                            size="1.5rem"
+                            style={{ marginRight: "15px" }}
+                            aria-hidden="true"
+                          />
+                          <span className="search-text search-liked-text">
+                            Chat
+                          </span>
+                        </div>
+                      )}
+                    </button>
+                  </h2>
+                  <h2 style={{ marginLeft: "-6px" }}>
+                    <button
                       onClick={() => handleLikeArticle({ title, pageUrl })}
                       className="like-button"
+                      title={
+                        isArticleLiked(pageUrl)
+                          ? "This article has been liked!"
+                          : "Like this article"
+                      }
                       aria-label={
                         isArticleLiked(pageUrl)
                           ? "This article has been liked!"
@@ -330,7 +380,6 @@ export default function Articles() {
                     </button>
                   </h2>
                 </div>
-
                 {window.innerWidth < 900 && (
                   <>
                     <div
@@ -365,19 +414,36 @@ export default function Articles() {
                   </>
                 )}
 
+                <a
+                  href={pageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`Open article page for ${title} on Wikipedia`}
+                  aria-label={`Open article page for ${title} on Wikipedia`}
+                >
+                  <div className="article-link">
+                    <FaWikipediaW
+                      size="2rem"
+                      style={{ marginLeft: "10px" }}
+                      aria-hidden="true"
+                    />
+                  </div>
+                </a>
+
                 <footer>
                   <div className="view-count">
                     <a
                       href={`https://pageviews.wmcloud.org/?project=en.wikipedia.org&platform=all-access&agent=user&redirects=1&range=all-time&pages=${article.title}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      title="View historical pageview data"
                       aria-label={`This article has ${article.viewCount} views. Click on this to see historical pageview data`}
                     >
                       {window.innerWidth < 900 ? (
                         <ViewCountAnimator
                           start={0}
                           end={article.viewCount}
-                          duration={3.5}
+                          duration={2}
                           separator=","
                           enableScrollSpy={true}
                           scrollSpyOnce={true}
@@ -396,6 +462,7 @@ export default function Articles() {
                       )}&action=history`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      title="View article edit history"
                       aria-label="View article edit history"
                     >
                       {getTimeAgo(article.timestamp)}
@@ -408,6 +475,18 @@ export default function Articles() {
         )}
       </div>
       <div ref={sentinelRef} style={{ height: "1px" }} aria-hidden="true"></div>
+      {isChatOpen && (
+        <div
+          className="description"
+          // style={{ width: "58.5vw", left: "2%" }}
+        >
+          <Chat
+            articleTitle={currentArticleTitle}
+            articleDescription={currentArticleDescription}
+            articleToc={currentArticleToc}
+          />
+        </div>
+      )}
     </>
   );
 }

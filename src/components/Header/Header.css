@@ -10,7 +10,6 @@ header {
 }
 
 .header-logo {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 33px;
   font-weight: lighter;
   position: absolute;
@@ -63,7 +62,6 @@ span {
   border-radius: 10px;
   color: white;
   outline: none;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-size: 20px;
   z-index: 1000;
 }
@@ -113,7 +111,6 @@ span {
   overflow-y: hidden;
   scrollbar-width: none;
   cursor: pointer;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   flex-shrink: 0;
 }
 
@@ -128,6 +125,13 @@ span {
   margin: 0;
   padding: 3px;
   transition: all 0.1s linear;
+}
+
+.liked-articles-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 62%;
 }
 
 .search-result:hover {
