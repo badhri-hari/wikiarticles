@@ -147,7 +147,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
     );
 
     try {
-      const response = await fetch("http://192.168.1.9:5000/api/chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatHistory: updatedChatMessages }),
