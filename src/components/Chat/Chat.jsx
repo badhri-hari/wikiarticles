@@ -22,6 +22,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
   );
 
   const chatLogRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     async function fetchArticleContent() {
@@ -30,13 +31,22 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
         const content = doc.text();
         setArticleContent(content);
       } catch (error) {
-        setPlaceholderText(
-          "We couldn't fetch the article details, please try again later."
-        );
+        setChatMessages((prev) => [
+          ...prev,
+          {
+            sender: "bot",
+            text: "Sorry, looks like there's a problem right now. Please try again later.",
+          },
+        ]);
         console.error("Error fetching article content:", error);
       }
     }
     fetchArticleContent();
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 50);
   }, [articleTitle]);
 
   const capitalizeFirstLetter = (inputValue) => {
@@ -54,7 +64,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
   <p>Table of Contents: ${articleToc}</p>
   <p>Article Content: ${articleContent}</p>
   INSTRUCTIONS:
-  You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information regarding the subject of the given article.
+  You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information regarding the subject of the given article in a friendly tone.
   - Respond in TEXT ONLY (no HTML).
   - Use the following custom formatting:
     - *word* for italics
@@ -62,8 +72,12 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
     - When listing items in the format "subject: subject details", bold the subject (ex. **subject**: subject details)
     - For bullet lists, start each item on a new line with '- '
     - For numbered lists, start each item on a new line with '1) ', '2) ', etc.
-  Do not start with any greetings or introductions.
-  Ensure your response is strictly under 130 words.
+  Whenever you reference a fact or detail from the article, include a clickable website link formatted exactly as |display text__(websitelink)|, where “display text” is replaced by the descriptive text for that section and “websitelink” is replaced by an actual URL from the article. Ensure that if a specific section of the Wikipedia article is relevant, you use its exact URL rather than a generic link. Do not repeat the display text separately in the main text—use it only as the hyperlink's label. This link should point to the corresponding article section, further reading, or an external source.
+  Do not start with any greetings or introductions unless the user greets you.
+  Do not provide ANY information to the user about the article until they ask for it.
+  All lists must be both preceded and succeeded by at least one line or more.
+  Ensure your response is strictly under 150 words.
+  Use context clues and information from the article and your pre-existing knowledge database to give logical answers to creative or complex questions
   You should answer questions not directly related to the subject of the article.
   You should answer questions (even if the answer is not mentioned in the article) using your pre-existing knowledge database.
   Now, please answer the following user query:
@@ -76,6 +90,13 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
     output = output.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
 
     output = output.replace(/\*(.*?)\*/g, "<em>$1</em>");
+
+    output = output.replace(
+      /\|([^|]+?)__([^|]+?)\|/g,
+      (match, displayText, websiteLink) => {
+        return `<a href="${websiteLink}" target="_blank" class="chat-message-link" rel="noopener noreferrer">${displayText}</a>`;
+      }
+    );
 
     const lines = output.split("\n");
     let inUl = false;
@@ -172,17 +193,11 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
           setTitleText(
             `Type your question about ${articleTitle} in this field`
           );
-          if (chatLogRef.current) {
-            const lastMessage = chatLogRef.current.querySelector(
-              ".chat-message:last-child"
-            );
-            if (lastMessage) {
-              lastMessage.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
             }
-          }
+          }, 50);
           return;
         }
 
@@ -213,6 +228,9 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
           text: "Sorry, looks like there's a problem right now. Please try again later.",
         },
       ]);
+      setPlaceholderText(`Uh oh!`);
+      setTitleText(error);
+      setLoading(true);
     } finally {
       setMessageCount((prevCount) => {
         const newCount = prevCount + 1;
@@ -248,12 +266,18 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
               {msg.sender === "user" ? (
                 <FiUser
                   className="chat-message-icons"
-                  style={{ top: window.innerWidth < 900 ? "2.42px" : "4px" }}
+                  size="1.05rem"
+                  style={{
+                    top: window.innerWidth < 900 ? "2.42px" : "3.4px",
+                  }}
                 />
               ) : (
                 <SiGooglegemini
                   className="chat-message-icons"
-                  style={{ top: window.innerWidth < 900 ? "2.4px" : "4.5px" }}
+                  size="1.04rem"
+                  style={{
+                    top: window.innerWidth < 900 ? "2.4px" : "3.6px",
+                  }}
                 />
               )}{" "}
               {msg.sender === "bot" ? (
@@ -272,6 +296,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
 
       <div
         className="prompt-count"
+        style={{ display: loading && "none" }}
         title={`You have ${30 - messageCount} prompts left`}
         aria-label={`You have ${30 - messageCount} prompts left`}
       >
@@ -280,6 +305,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
 
       <input
         type="text"
+        ref={inputRef}
         placeholder={placeholderText}
         className="chat-input-area"
         value={userInput}
@@ -291,6 +317,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
           }
         }}
         disabled={loading}
+        style={{ opacity: loading ? "0.5" : "1" }}
         autoFocus
         maxLength="250"
         title={titleText}

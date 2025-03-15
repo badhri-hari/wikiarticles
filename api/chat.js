@@ -1,4 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
+import { Redis } from "@upstash/redis";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -7,28 +8,56 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-export default async function handler(req, res) {
-  const allowedOrigin = "https://wikiarticles.vercel.app";
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
 
-  const requestOrigin = req.headers.origin;
-  if (requestOrigin !== allowedOrigin) {
-    return res.status(403).json({ error: "Forbidden" });
+const REQUEST_LIMIT = 1;
+const TIME_WINDOW = 4;
+
+export default async function handler(req, res) {
+  if (req.headers.origin !== "https://wikiarticles.vercel.app") {
+    return res
+      .status(403)
+      .json({ error: "oi stop messing around with my site" });
   }
 
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
-  res.setHeader("Access-Control-Allow-Origin", allowedOrigin);
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://wikiarticles.vercel.app"
+  );
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return res
+      .status(405)
+      .json({ error: "oi stop messing around with my site" });
   }
 
-  if (req.headers["x-api-key"] !== process.env.GEMINI_API_KEY) {
-    return res.status(401).json({ error: "Unauthorized" });
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const key = `rate-limit-${ip}`;
+
+  try {
+    const count = await redis.incr(key);
+    if (count === 1) {
+      await redis.expire(key, Math.ceil(TIME_WINDOW));
+    }
+    if (count > REQUEST_LIMIT) {
+      return res.status(429).send("Too many questions, slow down!");
+    }
+  } catch (error) {
+    console.error("Rate limiting error:", error);
+    return res
+      .status(500)
+      .send(
+        "Sorry, looks like there's a problem right now. Please try again later."
+      );
   }
 
   try {
@@ -58,11 +87,15 @@ export default async function handler(req, res) {
     for await (const chunk of responseStream) {
       res.write(chunk.candidates[0].content.parts[0].text);
     }
-    return res.end();
+
+    res.end();
   } catch (error) {
     console.error("Chatbot error:", error);
+    res.setHeader("Content-Type", "text/plain");
     return res
       .status(500)
-      .json({ error: error.message || "Internal Server Error" });
+      .send(
+        "Sorry, looks like there's a problem right now. Please try again later."
+      );
   }
 }

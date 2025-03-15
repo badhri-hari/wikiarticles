@@ -22,9 +22,19 @@
   margin-bottom: 15px;
 }
 
+.chat-message-link {
+  color: white;
+  text-decoration-thickness: 1.18px;
+  text-underline-offset: 2px;
+}
+
+.chat-message-link:hover {
+  opacity: 0.7;
+}
+
 .chat-message-icons {
   position: relative;
-  margin-right: 8px;
+  margin-right: 10px;
   flex-shrink: 0;
 }
 
@@ -39,8 +49,8 @@
   bottom: 12px;
   left: 8.5px;
   height: 60px;
-  width: 87%;
-  padding: 0 55px 0 15px;
+  width: 87.65%;
+  padding: 0 50.2px 0 15px;
   background-color: rgba(0, 0, 0, 0.7);
   border: none;
   border-radius: 10px;
