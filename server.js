@@ -185,11 +185,7 @@ app.post("/api/chat", async (req, res) => {
   } catch (error) {
     console.error("Chatbot error:", error);
     res.setHeader("Content-Type", "text/plain");
-    return res
-      .status(500)
-      .send(
-        "Sorry, looks like there's a problem right now. Please try again later."
-      );
+    return res.status(500).send("Chatbot error:", error);
   }
 });
 
