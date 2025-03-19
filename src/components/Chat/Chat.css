@@ -7,8 +7,8 @@
 }
 
 .chat-log {
-  height: calc(69% + 8px);
-  margin-top: -10px;
+  height: calc(71% + 8px);
+  margin-top: -18px;
   overflow-x: hidden;
   overflow-y: scroll;
 }
