@@ -1,3 +1,4 @@
+import axios from "axios";
 import wtf from "wtf_wikipedia";
 
 export default async function handler(req, res) {
