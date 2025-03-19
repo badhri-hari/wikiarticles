@@ -35,8 +35,10 @@ export default function Articles() {
       setArticles((prev) => [...prev, ...response.data.articles]);
       setHasError(false);
     } catch (error) {
-      console.error("Error fetching articles:", error);
-      setHasError(true);
+      setTimeout(() => {
+        console.error("Error fetching articles:", error);
+        setHasError(true);
+      }, 1000);
     }
   };
 

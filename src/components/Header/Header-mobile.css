@@ -37,6 +37,7 @@
   .search-input {
     height: 32px;
     width: 60%;
+    padding: 0 10px;
     top: 6.5px;
     left: 12px;
     font-size: 16px;
@@ -45,6 +46,11 @@
     background-color: rgba(17, 25, 40, 0.5);
     border-radius: 13px;
     border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  .search-icon-animated {
+    top: 13.5px;
+    left: 225px;
   }
 
   .search-result-container {
@@ -70,6 +76,7 @@
   .search-result h2 {
     font-size: 1rem;
     font-weight: 400;
+    width: 34%;
   }
 
   .liked-articles-title {

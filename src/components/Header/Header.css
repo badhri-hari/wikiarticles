@@ -38,10 +38,6 @@ span {
   z-index: 1000;
 }
 
-.header-logo-dim:hover {
-  opacity: 0;
-}
-
 .header-logo-dim:hover ~ .header-logo {
   opacity: 0.7;
 }
@@ -56,7 +52,7 @@ span {
   left: 8.5px;
   height: 59px;
   width: 250px;
-  padding: 0 15px;
+  padding: 0 18px;
   background-color: rgba(0, 0, 0, 0.7);
   border: none;
   border-radius: 10px;
@@ -76,12 +72,24 @@ span {
   opacity: 0.7;
 }
 
-.search-input:focus ~ .header-logo {
-  opacity: 0;
+.search-icon-animated {
+  position: absolute;
+  top: 22.5px;
+  left: 250px;
+  z-index: 1000;
+  animation: spinner 1.5s ease-in-out infinite;
 }
 
-.search-input:focus ~ .search-icon {
-  opacity: 0;
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
 }
 
 .search-result-container {
@@ -119,12 +127,23 @@ span {
   text-decoration: none;
 }
 
+.gray-border {
+  display: flex;
+  flex-direction: row;
+  width: 490px;
+  border-bottom: 1px solid grey;
+}
+
 .search-result h2 {
   font-size: 1.5rem;
   font-weight: 500;
   margin: 0;
   padding: 3px;
   transition: all 0.1s linear;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 62%;
 }
 
 .liked-articles-title {

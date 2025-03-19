@@ -5,6 +5,7 @@ import { VscGithubInverted } from "react-icons/vsc";
 import { IoSearch } from "react-icons/io5";
 import { TbFileLike } from "react-icons/tb";
 import { RxCross1 } from "react-icons/rx";
+import { CgSpinnerTwo } from "react-icons/cg";
 
 import "./Header.css";
 import "./Header-mobile.css";
@@ -19,6 +20,7 @@ export default function Header() {
   const likedArticlesIconRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleSearchClick = () => {
     setShowInput(true);
@@ -49,23 +51,28 @@ export default function Header() {
     }
   };
 
-  const handleInputChange = async (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
-    if (term.trim() !== "") {
+  const handleSearch = async () => {
+    if (searchTerm.trim() !== "") {
+      setIsSearching(true);
+      setSearchResults([]);
       try {
         const res = await axios.get(
-          `/api/search?searchTerm=${encodeURIComponent(term)}`
+          `/api/search?searchTerm=${encodeURIComponent(searchTerm)}`
         );
 
         const data = res.data;
         const titles = data[1];
         const links = data[3];
+        const summary = data[4];
 
         const searchResultsFormatted = titles.map((title, index) => ({
           title,
           link: links[index],
+          summary: summary[index],
         }));
 
         setSearchResults(searchResultsFormatted);
@@ -73,6 +80,7 @@ export default function Header() {
         console.error("Search error:", err);
         setSearchResults([]);
       }
+      setIsSearching(false);
     } else {
       setSearchResults([]);
     }
@@ -132,47 +140,71 @@ export default function Header() {
   return (
     <header role="banner">
       {showInput && (
-        <input
-          type="text"
-          className="search-input"
-          maxLength="255"
-          placeholder="Search articles..."
-          title="Search for an article on Wikipedia"
-          aria-label="Search for an article on Wikipedia"
-          ref={inputRef}
-          autoFocus
-          onBlur={() => {
-            setTimeout(() => {
+        <>
+          <input
+            type="text"
+            className="search-input"
+            maxLength="255"
+            placeholder="Search articles..."
+            title="Search for an article on Wikipedia"
+            aria-label="Search for an article on Wikipedia"
+            ref={inputRef}
+            autoFocus
+            onBlur={() => {
               setSearchResults([]);
               setShowInput(false);
               setSearchTerm("");
-            }, 0);
-          }}
-          onChange={handleInputChange}
-          value={searchTerm}
-        />
+            }}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+            value={searchTerm}
+            disabled={isSearching}
+            style={{
+              width: isSearching && window.innerWidth > 900 ? "210px" : "",
+              padding:
+                isSearching && window.innerWidth > 900 ? "0 55px 0 18px" : "",
+            }}
+          />
+          {isSearching && (
+            <CgSpinnerTwo
+              color="#F8F8FF"
+              className="search-icon-animated"
+              size={window.innerWidth < 900 ? 19 : 24}
+            />
+          )}
+        </>
       )}
 
-      <div
-        className="header-logo-dim"
-        onClick={handleSearchClick}
-        onKeyDown={handleKeyDown}
-        role="button"
-        title="Open article search"
-        aria-label="Open article search input field"
-        tabIndex="0"
-      />
-      <div className="header-logo" aria-label="wikiarticles logo">
-        <span>wiki</span>articles
-      </div>
+      {!showInput ? (
+        <>
+          <div
+            className="header-logo-dim"
+            onClick={handleSearchClick}
+            onKeyDown={handleKeyDown}
+            role="button"
+            title="Open article search"
+            aria-label="Open article search input field"
+            tabIndex="0"
+          />
+          <div className="header-logo" aria-label="wikiarticles logo">
+            <span>wiki</span>articles
+          </div>
+          <IoSearch
+            color="#F8F8FF"
+            size={window.innerWidth < 900 ? 19 : 23}
+            className="search-icon"
+            aria-hidden="true"
+            onClick={handleSearchClick}
+          />
+        </>
+      ) : (
+        <></>
+      )}
 
-      <IoSearch
-        color="#F8F8FF"
-        size={window.innerWidth < 900 ? 19 : 23}
-        className="search-icon"
-        aria-hidden="true"
-        onClick={handleSearchClick}
-      />
       <button
         ref={likedArticlesIconRef}
         onClick={handleLikedArticlesClick}
@@ -227,9 +259,25 @@ export default function Header() {
                 title={`Open ${searchResult.title} on Wikipedia`}
                 aria-label={`Search result number ${index}: ${searchResult.title}. Click to open it on Wikipedia`}
               >
-                <h2 style={{ borderBottom: "1px solid gray" }}>
-                  {searchResult.title}
-                </h2>
+                <div className="gray-border" style={{ marginLeft: "-10px" }}>
+                  <h2
+                    style={{
+                      width: window.innerWidth > 900 ? "67%" : "40%",
+                      marginLeft: "5px",
+                    }}
+                  >
+                    {searchResult.title}
+                  </h2>
+                  <h3
+                    style={{
+                      textAlign: "right",
+                      width: window.innerWidth > 900 ? "" : "28%",
+                      right: window.innerWidth > 900 ? "10px" : "150px",
+                    }}
+                  >
+                    {searchResult.summary}
+                  </h3>
+                </div>
               </a>
             </div>
           ))}
@@ -262,14 +310,7 @@ export default function Header() {
                     title={`Open Wikipedia page for ${article.title}`}
                     aria-label={`Click to open Wikipedia page for liked article number ${index}: ${article.title}`}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "490px",
-                        borderBottom: "1px solid gray",
-                      }}
-                    >
+                    <div className="gray-border">
                       <button
                         onClick={(e) => {
                           e.preventDefault();
@@ -284,7 +325,7 @@ export default function Header() {
                       >
                         <RxCross1 />
                       </button>
-                      <h2 className="liked-articles-title">{article.title}</h2>
+                      <h2>{article.title}</h2>
                       <h3>{article.dateLiked} (UTC)</h3>
                     </div>
                   </a>

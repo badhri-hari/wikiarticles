@@ -10,6 +10,10 @@ import "./Chat-mobile.css";
 
 export default function Chat({ articleTitle, articleDescription, articleToc }) {
   const [articleContent, setArticleContent] = useState("");
+  const [articleLinks, setArticleLinks] = useState("");
+  const [articleTables, setArticleTables] = useState("");
+  const [articleTemplates, setArticleTemplates] = useState("");
+  const [articleInfoboxes, setArticleInfoboxes] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,6 +34,14 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
         const doc = await wtf.fetch(articleTitle, "en");
         const content = doc.text();
         setArticleContent(content);
+        const links = doc.links();
+        const tables = doc.tables();
+        const templates = doc.templates();
+        const infoboxes = doc.infoboxes();
+        setArticleLinks(JSON.stringify(links));
+        setArticleTables(JSON.stringify(tables));
+        setArticleTemplates(JSON.stringify(templates));
+        setArticleInfoboxes(JSON.stringify(infoboxes));
       } catch (error) {
         setChatMessages((prev) => [
           ...prev,
@@ -38,15 +50,20 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
             text: "Sorry, looks like there's a problem right now. Please try again later.",
           },
         ]);
-        console.error("Error fetching article content:", error);
+        setPlaceholderText(`Uh oh!`);
+        setTitleText(error);
+        setLoading(true);
       }
+      setPlaceholderText(`Ask anything about ${articleTitle}`);
+      setTitleText(`Type your question about ${articleTitle} in this field`);
+
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }, 50);
     }
     fetchArticleContent();
-    setTimeout(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, 50);
   }, [articleTitle]);
 
   const capitalizeFirstLetter = (inputValue) => {
@@ -58,30 +75,35 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
 
   const getSystemPrompt = () => {
     return `
-  ARTICLE CONTENT:
-  <h1>${articleTitle}</h1>
-  <p>${articleDescription}</p>
-  <p>Table of Contents: ${articleToc}</p>
-  <p>Article Content: ${articleContent}</p>
-  INSTRUCTIONS:
-  You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information regarding the subject of the given article in a friendly tone.
-  - Respond in TEXT ONLY (no HTML).
-  - Use the following custom formatting:
-    - *word* for italics
-    - **word** for bold
-    - When listing items in the format "subject: subject details", bold the subject (ex. **subject**: subject details)
-    - For bullet lists, start each item on a new line with '- '
-    - For numbered lists, start each item on a new line with '1) ', '2) ', etc.
-  Whenever you reference a fact or detail from the article, include a clickable website link formatted exactly as |display text__(websitelink)|, where “display text” is replaced by the descriptive text for that section and “websitelink” is replaced by an actual URL from the article. Ensure that if a specific section of the Wikipedia article is relevant, you use its exact URL rather than a generic link. Do not repeat the display text separately in the main text—use it only as the hyperlink's label. This link should point to the corresponding article section, further reading, or an external source.
-  Do not start with any greetings or introductions unless the user greets you.
-  Do not provide ANY information to the user about the article until they ask for it.
-  All lists must be both preceded and succeeded by at least one line or more.
-  Ensure your response is strictly under 150 words.
-  Use context clues and information from the article and your pre-existing knowledge database to give logical answers to creative or complex questions
-  You should answer questions not directly related to the subject of the article.
-  You should answer questions (even if the answer is not mentioned in the article) using your pre-existing knowledge database.
-  Now, please answer the following user query:
-    `;
+ARTICLE CONTENT:
+<h1>${articleTitle}</h1>
+<p>${articleDescription}</p>
+<p>Table of Contents: ${articleToc}</p>
+<p>Article Content: ${articleContent}</p>
+<p>Article Links: ${articleLinks}</p>
+<p>Article Tables: ${articleTables}</p>
+<p>Article Templates: ${articleTemplates}</p>
+<p>Article Infoboxes: ${articleInfoboxes}</p>
+
+INSTRUCTIONS:
+You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information regarding the subject of the given Wikipedia article in a friendly tone.
+- Respond in TEXT ONLY (no HTML).
+- Use the following custom formatting:
+  - *word* for italics
+  - **word** for bold
+  - When listing items in the format "subject: subject details", bold the subject (ex. **subject**: subject details)
+  - For bullet lists, start each item on a new line with '- '
+  - For numbered lists, start each item on a new line with '1) ', '2) ', etc.
+Whenever you reference a fact or detail from the article, include a clickable website link formatted exactly as |display text__(websitelink)|. **Only use links provided from the Article Links data above—do not generate or hallucinate new links.**
+Do not start with any greetings or introductions unless the user greets you.
+Do not provide ANY information to the user about the article until they ask for it.
+All lists must be both preceded and succeeded by at least one line or more.
+Ensure your response is strictly under 150 words.
+Use context clues and information from the article and your pre-existing knowledge database to give logical answers to creative or complex questions.
+You should answer questions not directly related to the subject of the article.
+You should answer questions (even if the answer is not mentioned in the article) using your pre-existing knowledge database.
+Now, please answer the following user query:
+  `;
   };
 
   function parseCustomFormatting(text) {
@@ -94,7 +116,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
     output = output.replace(
       /\|([^|]+?)__([^|]+?)\|/g,
       (match, displayText, websiteLink) => {
-        return `<a href="${websiteLink}" target="_blank" class="chat-message-link" rel="noopener noreferrer">${displayText}</a>`;
+        return `<a href="${websiteLink}" aria-label="Open ${websiteLink} in a new tab" class="chat-message-link" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
       }
     );
 
@@ -267,17 +289,13 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
                 <FiUser
                   className="chat-message-icons"
                   size="1.05rem"
-                  style={{
-                    top: window.innerWidth < 900 ? "2.42px" : "3.4px",
-                  }}
+                  style={{ top: window.innerWidth < 900 ? "2.42px" : "3.4px" }}
                 />
               ) : (
                 <SiGooglegemini
                   className="chat-message-icons"
                   size="1.04rem"
-                  style={{
-                    top: window.innerWidth < 900 ? "2.4px" : "3.6px",
-                  }}
+                  style={{ top: window.innerWidth < 900 ? "2.4px" : "3.6px" }}
                 />
               )}{" "}
               {msg.sender === "bot" ? (
@@ -317,7 +335,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
           }
         }}
         disabled={loading}
-        style={{ opacity: loading ? "0.5" : "1" }}
+        style={{ opacity: loading && "0.5" }}
         autoFocus
         maxLength="250"
         title={titleText}

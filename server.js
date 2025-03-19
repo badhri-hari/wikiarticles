@@ -8,6 +8,7 @@ import express from "express";
 import axios from "axios";
 import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
+import wtf from "wtf_wikipedia";
 
 dotenv.config();
 
@@ -120,7 +121,31 @@ app.get("/api/search", async (req, res) => {
     const wikipediaUrl = `https://en.wikipedia.org/w/api.php?action=opensearch&format=json&limit=5&profile=fuzzy&search=${encodeURIComponent(
       searchTerm
     )}&warningsaserror=true`;
+
+    wtf.extend((await import("wtf-plugin-summary")).default);
+    const opts = {
+      article: true,
+      template: true,
+      sentence: false,
+      category: false,
+    };
+
     const response = await axios.get(wikipediaUrl);
+    const articleTitles = response.data[1];
+
+    const summaries = [];
+    for (let i = 0; i < articleTitles.length; i++) {
+      try {
+        const doc = await wtf.fetch(articleTitles[i]);
+        const summary = doc.summary(opts);
+        summaries.push(summary);
+      } catch (error) {
+        console.error(`Error getting summary for ${articleTitles[i]}:`, error);
+        summaries.push("");
+      }
+    }
+
+    response.data[4] = summaries;
     res.status(200).json(response.data);
   } catch (err) {
     console.error("Error fetching Wikipedia opensearch:", err.message);

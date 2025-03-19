@@ -9,9 +9,30 @@ export default async function handler(req, res) {
       searchTerm
     )}&warningsaserror=true`;
 
-    const response = await fetch(wikipediaUrl);
-    const data = await response.json();
+    wtf.extend((await import("wtf-plugin-summary")).default);
+    const opts = {
+      article: true,
+      template: true,
+      sentence: false,
+      category: false,
+    };
 
+    const response = await axios.get(wikipediaUrl);
+    const articleTitles = response.data[1];
+
+    const summaries = [];
+    for (let i = 0; i < articleTitles.length; i++) {
+      try {
+        const doc = await wtf.fetch(articleTitles[i]);
+        const summary = doc.summary(opts);
+        summaries.push(summary);
+      } catch (error) {
+        console.error(`Error getting summary for ${articleTitles[i]}:`, error);
+        summaries.push("");
+      }
+    }
+
+    response.data[4] = summaries;
     return res.status(200).json(data);
   } catch (err) {
     console.error("Error fetching search results" + err);
