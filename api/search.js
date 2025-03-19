@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     }
 
     response.data[4] = summaries;
-    return res.status(200).json(data);
+    return res.status(200).json(response.data);
   } catch (err) {
     console.error("Error fetching search results" + err);
     return res.status(500).json({ error: err.message });
