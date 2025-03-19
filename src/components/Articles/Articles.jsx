@@ -38,7 +38,7 @@ export default function Articles() {
       setTimeout(() => {
         console.error("Error fetching articles:", error);
         setHasError(true);
-      }, 1000);
+      }, 5000);
     }
   };
 

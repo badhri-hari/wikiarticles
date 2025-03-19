@@ -1,3 +1,5 @@
+import wtf from "wtf_wikipedia";
+
 export default async function handler(req, res) {
   const { searchTerm } = req.query;
   if (!searchTerm) {
