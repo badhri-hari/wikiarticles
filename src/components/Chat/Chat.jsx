@@ -26,6 +26,12 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
   const inputRef = useRef(null);
 
   useEffect(() => {
+    if (loading && chatLogRef.current) {
+      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+    }
+  }, [chatMessages, loading]);
+
+  useEffect(() => {
     async function fetchArticleContent() {
       try {
         const doc = await wtf.fetch(articleTitle, "en");

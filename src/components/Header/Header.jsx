@@ -24,24 +24,8 @@ export default function Header() {
 
   const handleSearchClick = () => {
     setShowInput(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
-  };
-
-  const handleBlur = () => {
     setTimeout(() => {
-      const activeElement = document.activeElement;
-      if (
-        (inputRef.current && inputRef.current.contains(activeElement)) ||
-        (resultsContainerRef.current &&
-          resultsContainerRef.current.contains(activeElement)) ||
-        (likedArticlesContainerRef.current &&
-          likedArticlesContainerRef.current.contains(activeElement))
-      ) {
-        return;
-      }
-      setSearchResults([]);
-      setShowInput(false);
-      setShowLikedArticles(false);
+      if (inputRef.current) inputRef.current.focus();
     }, 0);
   };
 
@@ -111,8 +95,32 @@ export default function Header() {
     URL.revokeObjectURL(url);
   };
 
+  const handleRemoveLikedArticle = (articleToRemove) => {
+    const updatedArticles = likedArticles.filter(
+      (article) => article.link !== articleToRemove.link
+    );
+    setLikedArticles(updatedArticles);
+    localStorage.setItem("likedArticles", JSON.stringify(updatedArticles));
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
+      if (showInput) {
+        const clickedOutsideInput =
+          inputRef.current && !inputRef.current.contains(event.target);
+
+        const clickedOutsideResults =
+          !resultsContainerRef.current ||
+          (resultsContainerRef.current &&
+            !resultsContainerRef.current.contains(event.target));
+
+        if (clickedOutsideInput && clickedOutsideResults) {
+          setShowInput(false);
+          setSearchTerm("");
+          setSearchResults([]);
+        }
+      }
+
       if (
         showLikedArticles &&
         likedArticlesContainerRef.current &&
@@ -126,16 +134,7 @@ export default function Header() {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showLikedArticles]);
-
-  const handleRemoveLikedArticle = (articleToRemove) => {
-    const updatedArticles = likedArticles.filter(
-      (article) => article.link !== articleToRemove.link
-    );
-
-    setLikedArticles(updatedArticles);
-    localStorage.setItem("likedArticles", JSON.stringify(updatedArticles));
-  };
+  }, [showInput, showLikedArticles, searchResults.length]);
 
   return (
     <header role="banner">
@@ -150,11 +149,6 @@ export default function Header() {
             aria-label="Search for an article on Wikipedia"
             ref={inputRef}
             autoFocus
-            onBlur={() => {
-              setSearchResults([]);
-              setShowInput(false);
-              setSearchTerm("");
-            }}
             onChange={handleInputChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -247,7 +241,6 @@ export default function Header() {
           className="search-result-container"
           ref={resultsContainerRef}
           tabIndex="0"
-          onBlur={handleBlur}
           aria-label="List of search results"
         >
           {searchResults.map((searchResult, index) => (
@@ -288,7 +281,6 @@ export default function Header() {
         <div
           className="liked-articles-container"
           ref={likedArticlesContainerRef}
-          onBlur={handleBlur}
           aria-label="List of liked articles"
         >
           {likedArticles.length > 0 ? (
@@ -335,9 +327,11 @@ export default function Header() {
           ) : (
             <div className="search-result no-liked-articles-text">
               {window.innerWidth < 900 ? (
-                <h2>Double tap to like/unlike an article!</h2>
+                <h2 style={{ width: "99%" }}>
+                  Double tap to like/unlike an article!
+                </h2>
               ) : (
-                <h2>No liked articles.</h2>
+                <h2 style={{ width: "99%" }}>No liked articles.</h2>
               )}
             </div>
           )}
