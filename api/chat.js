@@ -73,36 +73,26 @@ export default async function handler(req, res) {
       content: message.text,
     }));
 
-    const openRouterResponse = await fetch(
+    const openRouterResponse = await post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        method: "POST",
+        model: "deepseek/deepseek-r1-distill-qwen-32b:free",
+        messages: messages,
+      },
+      {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
           "HTTP-Referer": "https://wikiarticles.vercel.app",
           "X-Title": "wikiarticles",
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          model: "deepseek/deepseek-r1-distill-qwen-32b:free",
-          messages: messages,
-          stream: true,
-        }),
       }
     );
 
     res.setHeader("Content-Type", "text/plain");
 
-    const reader = openRouterResponse.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const chunk = decoder.decode(value);
-      res.write(chunk);
-    }
-
-    res.end();
+    const responseText = openRouterResponse.data.choices[0].message.content;
+    res.send(responseText);
   } catch (error) {
     console.error("Chatbot error:", error);
     res.setHeader("Content-Type", "text/plain");
