@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config();
 
@@ -35,13 +36,15 @@ export default async function handler(req, res) {
       .json({ error: "oi stop messing around with my site" });
   }
 
-  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "")
+    .split(",")[0]
+    .trim();
   const key = `rate-limit-${ip}`;
 
   try {
     const count = await redis.incr(key);
     if (count === 1) {
-      await redis.expire(key, Math.ceil(TIME_WINDOW));
+      await redis.expire(key, TIME_WINDOW);
     }
     if (count > REQUEST_LIMIT) {
       return res.status(429).send("Too many questions, slow down!");
@@ -73,7 +76,7 @@ export default async function handler(req, res) {
       content: message.text,
     }));
 
-    const openRouterResponse = await post(
+    const openRouterResponse = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         model: "deepseek/deepseek-r1-distill-qwen-32b:free",
