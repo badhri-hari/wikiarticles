@@ -22,6 +22,32 @@
   margin-bottom: 15px;
 }
 
+.chat-thinking-text {
+  opacity: 0;
+  animation: fadeIn 1.5s ease-in forwards, opacityAnimation 2.5s infinite 1.5s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes opacityAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .chat-message-link {
   color: white;
   text-decoration-thickness: 1.18px;

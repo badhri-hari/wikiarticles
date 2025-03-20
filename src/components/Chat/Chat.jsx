@@ -15,6 +15,7 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
+  const [botThinking, setBotThinking] = useState(false);
   const [placeholderText, setPlaceholderText] = useState(
     `Ask anything about ${articleTitle}`
   );
@@ -95,7 +96,7 @@ You are communicating with the user on a website called wikiarticles. Your goal 
 
 4. **Links:**  
    - Always display links using the exact format:  
-     "|display text__(websitelink)|"
+     "|display text__websitelink|"
    - Use only the links provided from the article data; do not generate or hallucinate new URLs.
    - Integrate links naturally within the text following the formatting rules.
 
@@ -107,17 +108,12 @@ Now, please answer the following user query:
     let output = text;
 
     output = output.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-
     output = output.replace(/\*(.*?)\*/g, "<em>$1</em>");
 
     output = output.replace(
       /\|([^|]+?)__([^|]+?)\|/g,
       (match, displayText, websiteLink) => {
-        let finalLink = websiteLink;
-        if (!websiteLink.startsWith("http")) {
-          finalLink = "https://" + websiteLink;
-        }
-        return `<a href="${finalLink}" aria-label="Open ${finalLink} in a new tab" class="chat-message-link" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
+        return `<a href="${websiteLink}" aria-label="Open ${websiteLink} in a new tab" class="chat-message-link" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
       }
     );
 
@@ -190,6 +186,30 @@ Now, please answer the following user query:
       "Please wait for the bot to finish responding, it's rude to interrupt!"
     );
 
+    setBotThinking(true);
+    const botThinkingTexts = [
+      "Just a second…",
+      "Collecting information…",
+      "Thinking…",
+      "Reasoning…",
+      "Compiling response…",
+      "Processing request…",
+    ];
+
+    const botThinkingMessage = {
+      sender: "bot",
+      text: botThinkingTexts[
+        Math.floor(Math.random() * botThinkingTexts.length)
+      ],
+    };
+
+    const updatedChatMessagesWithBot = [
+      ...updatedChatMessages,
+      botThinkingMessage,
+    ];
+
+    setChatMessages(updatedChatMessagesWithBot);
+
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -200,13 +220,6 @@ Now, please answer the following user query:
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let botMessage = "";
-
-      const botPlaceholderMessage = { sender: "bot", text: "..." };
-      const updatedChatMessagesWithBot = [
-        ...updatedChatMessages,
-        botPlaceholderMessage,
-      ];
-      setChatMessages(updatedChatMessagesWithBot);
 
       const processStream = async () => {
         const { done, value } = await reader.read();
@@ -243,6 +256,7 @@ Now, please answer the following user query:
       };
 
       processStream();
+      setBotThinking(false);
     } catch (error) {
       setChatMessages((prev) => [
         ...prev,
@@ -253,6 +267,7 @@ Now, please answer the following user query:
       ]);
       setPlaceholderText(`Uh oh!`);
       setTitleText(error);
+      setBotThinking(false);
       setLoading(true);
     } finally {
       setMessageCount((prevCount) => {
@@ -262,6 +277,7 @@ Now, please answer the following user query:
             "You have exceeded the 20 prompts limit, try again later."
           );
           setTitleText("Close and reopen the chat to ask more questions.");
+          setBotThinking(false);
           setLoading(true);
         }
         return newCount;
@@ -309,6 +325,7 @@ Now, please answer the following user query:
               )}{" "}
               {msg.sender === "bot" ? (
                 <span
+                  className={botThinking ? "chat-thinking-text" : undefined}
                   style={{ fontWeight: "400" }}
                   dangerouslySetInnerHTML={{
                     __html: parseCustomFormatting(msg.text),
