@@ -111,7 +111,7 @@ Now, please answer the following user query:
         if (!websiteLink.startsWith("http")) {
           finalLink = "https://" + websiteLink;
         }
-        return `<a href="${finalLink}" ...>${displayText}</a>`;
+        return `<a href="${finalLink}" aria-label="Open ${finalLink} in a new tab" class="chat-message-link" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
       }
     );
 
@@ -286,8 +286,8 @@ Now, please answer the following user query:
                   className="chat-message-icons"
                   size="1.05rem"
                   style={{
-                    top: window.innerWidth < 900 ? "2.42px" : "3px",
-                    marginRight: "12px",
+                    top: window.innerWidth < 900 ? "1.4px" : "3px",
+                    marginRight: window.innerWidth < 900 ? "10px" : "12px",
                     marginLeft: "1px",
                   }}
                 />
@@ -296,8 +296,8 @@ Now, please answer the following user query:
                   className="chat-message-icons"
                   size="1.2rem"
                   style={{
-                    top: window.innerWidth < 900 ? "2.4px" : "2.5px",
-                    marginRight: "11px",
+                    top: window.innerWidth < 900 ? "2px" : "2px",
+                    marginRight: window.innerWidth < 900 ? "8px" : "11px",
                   }}
                 />
               )}{" "}

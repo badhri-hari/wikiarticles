@@ -334,7 +334,7 @@ export default function Articles() {
                             style={{
                               marginRight: "10px",
                               marginBottom:
-                                window.innerWidth > 900 ? "-3.5px" : "-0.5px",
+                                window.innerWidth > 900 ? "-3.5px" : "-1.35px",
                             }}
                             aria-hidden="true"
                           />
