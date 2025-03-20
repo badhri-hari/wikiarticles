@@ -3,17 +3,14 @@ import { useState, useEffect, useRef } from "react";
 import wtf from "wtf_wikipedia";
 
 import { FiUser } from "react-icons/fi";
-import { SiGooglegemini } from "react-icons/si";
+import { TbRobot } from "react-icons/tb";
 
 import "./Chat.css";
 import "./Chat-mobile.css";
 
 export default function Chat({ articleTitle, articleDescription, articleToc }) {
-  const [articleContent, setArticleContent] = useState("");
-  const [articleLinks, setArticleLinks] = useState("");
-  const [articleTables, setArticleTables] = useState("");
-  const [articleTemplates, setArticleTemplates] = useState("");
-  const [articleInfoboxes, setArticleInfoboxes] = useState("");
+  const [articleWikitext, setArticleWikitext] = useState("");
+  const [articleJSON, setArticleJSON] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,16 +29,8 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
     async function fetchArticleContent() {
       try {
         const doc = await wtf.fetch(articleTitle, "en");
-        const content = doc.text();
-        setArticleContent(content);
-        const links = doc.links();
-        const tables = doc.tables();
-        const templates = doc.templates();
-        const infoboxes = doc.infoboxes();
-        setArticleLinks(JSON.stringify(links));
-        setArticleTables(JSON.stringify(tables));
-        setArticleTemplates(JSON.stringify(templates));
-        setArticleInfoboxes(JSON.stringify(infoboxes));
+        setArticleWikitext(doc.wikitext());
+        setArticleJSON(doc.json());
       } catch (error) {
         setChatMessages((prev) => [
           ...prev,
@@ -79,29 +68,31 @@ ARTICLE CONTENT:
 <h1>${articleTitle}</h1>
 <p>${articleDescription}</p>
 <p>Table of Contents: ${articleToc}</p>
-<p>Article Content: ${articleContent}</p>
-<p>Article Links: ${articleLinks}</p>
-<p>Article Tables: ${articleTables}</p>
-<p>Article Templates: ${articleTemplates}</p>
-<p>Article Infoboxes: ${articleInfoboxes}</p>
+<p>Article Wikitext: ${articleWikitext}</p>
+<p>Article JSON: ${articleJSON}</p>
 
 INSTRUCTIONS:
-You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information regarding the subject of the given Wikipedia article in a friendly tone.
-- Respond in TEXT ONLY (no HTML).
-- Use the following custom formatting:
-  - *word* for italics
-  - **word** for bold
-  - When listing items in the format "subject: subject details", bold the subject (ex. **subject**: subject details)
-  - For bullet lists, start each item on a new line with '- '
-  - For numbered lists, start each item on a new line with '1) ', '2) ', etc.
-Whenever you reference a fact or detail from the article, include a clickable website link formatted exactly as |display text__(websitelink)|. **Only use links provided from the Article Links data above—do not generate or hallucinate new links.**
-Do not start with any greetings or introductions unless the user greets you.
-Do not provide ANY information to the user about the article until they ask for it.
-All lists must be both preceded and succeeded by at least one line or more.
-Ensure your response is strictly under 150 words.
-Use context clues and information from the article and your pre-existing knowledge database to give logical answers to creative or complex questions.
-You should answer questions not directly related to the subject of the article.
-You should answer questions (even if the answer is not mentioned in the article) using your pre-existing knowledge database.
+You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information about the subject of the given Wikipedia article in a friendly tone. Follow these rules precisely:
+
+1. **Response Format:**  
+   - Respond in TEXT ONLY (no HTML).  
+   - Use custom formatting: *word* for italics and **word** for bold.
+   - For bullet lists, start each item on a new line with "- ". For numbered lists, use "1) ", "2) ", etc.
+   - Keep every response under 150 words.
+
+2. **Content Boundaries:**  
+   - Do not reveal any details about the article unless the user explicitly asks.
+   - When the question goes beyond the article data, use your pre-existing knowledge while adhering to these rules.
+
+3. **Handling Data Types:**  
+   - If the article data includes tables, lists, images, or references, convert them into clear bullet or numbered lists as needed.
+
+4. **Links:**  
+   - Always display links using the exact format:  
+     "|display text__(websitelink)|"
+   - Use only the links provided from the article data; do not generate or hallucinate new URLs.
+   - Integrate links naturally within the text following the formatting rules.
+
 Now, please answer the following user query:
   `;
   };
@@ -256,11 +247,12 @@ Now, please answer the following user query:
     } finally {
       setMessageCount((prevCount) => {
         const newCount = prevCount + 1;
-        if (newCount > 30) {
+        if (newCount > 19) {
           setPlaceholderText(
-            "You have exceeded the 30 prompts limit, try again later."
+            "You have exceeded the 20 prompts limit, try again later."
           );
           setTitleText("Close and reopen the chat to ask more questions.");
+          setLoading(true);
         }
         return newCount;
       });
@@ -289,13 +281,20 @@ Now, please answer the following user query:
                 <FiUser
                   className="chat-message-icons"
                   size="1.05rem"
-                  style={{ top: window.innerWidth < 900 ? "2.42px" : "3.4px" }}
+                  style={{
+                    top: window.innerWidth < 900 ? "2.42px" : "3px",
+                    marginRight: "12px",
+                    marginLeft: "1px",
+                  }}
                 />
               ) : (
-                <SiGooglegemini
+                <TbRobot
                   className="chat-message-icons"
-                  size="1.04rem"
-                  style={{ top: window.innerWidth < 900 ? "2.4px" : "3.6px" }}
+                  size="1.2rem"
+                  style={{
+                    top: window.innerWidth < 900 ? "2.4px" : "2.5px",
+                    marginRight: "11px",
+                  }}
                 />
               )}{" "}
               {msg.sender === "bot" ? (
@@ -315,10 +314,10 @@ Now, please answer the following user query:
       <div
         className="prompt-count"
         style={{ display: loading && "none" }}
-        title={`You have ${30 - messageCount} prompts left`}
-        aria-label={`You have ${30 - messageCount} prompts left`}
+        title={`You have ${20 - messageCount} prompts left`}
+        aria-label={`You have ${20 - messageCount} prompts left`}
       >
-        {30 - messageCount}
+        {20 - messageCount}
       </div>
 
       <input

@@ -1,12 +1,7 @@
-import { GoogleGenAI } from "@google/genai";
 import { Redis } from "@upstash/redis";
 import dotenv from "dotenv";
 
 dotenv.config();
-
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
@@ -14,7 +9,7 @@ const redis = new Redis({
 });
 
 const REQUEST_LIMIT = 1;
-const TIME_WINDOW = 4;
+const TIME_WINDOW = 10;
 
 export default async function handler(req, res) {
   if (req.headers.origin !== "https://wikiarticles.vercel.app") {
@@ -73,20 +68,38 @@ export default async function handler(req, res) {
         .json({ error: "oi stop messing around with my site" });
     }
 
-    const formattedChatHistory = chatHistory.map((message) => ({
+    const messages = chatHistory.map((message) => ({
       role: message.sender === "user" ? "user" : "assistant",
-      parts: [{ text: message.text }],
+      content: message.text,
     }));
 
-    const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.0-flash",
-      contents: formattedChatHistory,
-    });
+    const openRouterResponse = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://wikiarticles.vercel.app",
+          "X-Title": "wikiarticles",
+        },
+        body: JSON.stringify({
+          model: "deepseek/deepseek-r1-distill-qwen-32b:free",
+          messages: messages,
+          stream: true,
+        }),
+      }
+    );
 
     res.setHeader("Content-Type", "text/plain");
 
-    for await (const chunk of responseStream) {
-      res.write(chunk.candidates[0].content.parts[0].text);
+    const reader = openRouterResponse.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value);
+      res.write(chunk);
     }
 
     res.end();

@@ -7,7 +7,6 @@
 import express from "express";
 import axios from "axios";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
 import wtf from "wtf_wikipedia";
 
 dotenv.config();
@@ -153,10 +152,6 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
-
 app.options("/api/chat", (req, res) => {
   res.header("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, x-api-key");
@@ -191,22 +186,31 @@ app.post("/api/chat", async (req, res) => {
         .json({ error: "oi stop messing around with my site" });
     }
 
-    const formattedChatHistory = chatHistory.map((message) => ({
+    const messages = chatHistory.map((message) => ({
       role: message.sender === "user" ? "user" : "assistant",
-      parts: [{ text: message.text }],
+      content: message.text,
     }));
 
-    const responseStream = await ai.models.generateContentStream({
-      model: "gemini-2.0-flash",
-      contents: formattedChatHistory,
-    });
+    const openRouterResponse = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "deepseek/deepseek-r1-distill-qwen-32b:free",
+        messages: messages,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "HTTP-Referer": "https://wikiarticles.vercel.app",
+          "X-Title": "wikiarticles",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     res.setHeader("Content-Type", "text/plain");
 
-    for await (const chunk of responseStream) {
-      res.write(chunk.candidates[0].content.parts[0].text);
-    }
-    res.end();
+    const responseText = openRouterResponse.data.choices[0].message.content;
+    res.send(responseText);
   } catch (error) {
     console.error("Chatbot error:", error);
     res.setHeader("Content-Type", "text/plain");

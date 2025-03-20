@@ -4,7 +4,7 @@ import axios from "axios";
 import { TbWorldSearch } from "react-icons/tb";
 import { BiLike, BiSolidLike } from "react-icons/bi";
 import { FaWikipediaW } from "react-icons/fa6";
-import { SiGooglegemini } from "react-icons/si";
+import { TbRobot } from "react-icons/tb";
 import { RxCross1 } from "react-icons/rx";
 
 import Chat from "../Chat/Chat";
@@ -287,7 +287,7 @@ export default function Articles() {
                     >
                       <TbWorldSearch
                         size="1.5rem"
-                        style={{ marginRight: "15px" }}
+                        style={{ marginRight: "13px" }}
                         aria-hidden="true"
                       />
                       <span className="search-text search-online-text">
@@ -295,7 +295,7 @@ export default function Articles() {
                       </span>
                     </a>
                   </h2>
-                  <h2 style={{ marginLeft: "-6px" }}>
+                  <h2 style={{ marginLeft: "-8px" }}>
                     <button
                       onClick={() => {
                         setCurrentArticleTitle(title);
@@ -329,9 +329,13 @@ export default function Articles() {
                           title={`Talk with a chatbot about ${title}`}
                           aria-label={`Click to talk with a chatbot about ${title}`}
                         >
-                          <SiGooglegemini
-                            size="1.5rem"
-                            style={{ marginRight: "15px" }}
+                          <TbRobot
+                            size="1.7rem"
+                            style={{
+                              marginRight: "10px",
+                              marginBottom:
+                                window.innerWidth > 900 ? "-3.5px" : "-0.5px",
+                            }}
                             aria-hidden="true"
                           />
                           <span className="search-text search-liked-text">
@@ -360,7 +364,7 @@ export default function Articles() {
                         <>
                           <BiSolidLike
                             size="1.5rem"
-                            style={{ marginRight: "15px" }}
+                            style={{ marginRight: "14px" }}
                             aria-hidden="true"
                           />
                           <span className="search-text search-liked-text">
@@ -371,7 +375,7 @@ export default function Articles() {
                         <>
                           <BiLike
                             size="1.5rem"
-                            style={{ marginRight: "15px" }}
+                            style={{ marginRight: "14px" }}
                             aria-hidden="true"
                           />
                           <span className="search-text search-liked-text">
