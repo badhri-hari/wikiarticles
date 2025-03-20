@@ -107,7 +107,11 @@ Now, please answer the following user query:
     output = output.replace(
       /\|([^|]+?)__([^|]+?)\|/g,
       (match, displayText, websiteLink) => {
-        return `<a href="${websiteLink}" aria-label="Open ${websiteLink} in a new tab" class="chat-message-link" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
+        let finalLink = websiteLink;
+        if (!websiteLink.startsWith("http")) {
+          finalLink = "https://" + websiteLink;
+        }
+        return `<a href="${finalLink}" ...>${displayText}</a>`;
       }
     );
 
