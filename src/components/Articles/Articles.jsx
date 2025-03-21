@@ -150,7 +150,7 @@ export default function Articles() {
     const diffInSeconds = Math.floor((now - pastDate) / 1000);
 
     if (diffInSeconds < 60) {
-      return `Just now`;
+      return `just now`;
     }
 
     const diffInMinutes = Math.floor(diffInSeconds / 60);

@@ -47,7 +47,7 @@
 
   .description {
     box-shadow: none;
-    top: calc(46.5% - 21px);
+    top: 44.5%;
     right: 0;
     left: 3.5vw;
     height: 26%;
@@ -69,14 +69,14 @@
   }
 
   .view-count {
-    left: 3.5%;
-    bottom: 8.5%;
-    width: 130px;
+    left: 3.75%;
+    bottom: 9.25%;
+    width: 120px;
     padding: 8px 12px;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
     background-color: rgba(17, 25, 40, 0.5);
-    border-radius: 100px;
+    border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.125);
     font-size: 0.85rem;
     text-align: center;
@@ -84,13 +84,13 @@
   }
 
   .last-edited {
-    right: 3.5%;
-    bottom: 8.5%;
+    right: 3.75%;
+    bottom: 9.25%;
     padding: 8px 12px;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
     background-color: rgba(17, 25, 40, 0.5);
-    border-radius: 100px;
+    border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.125);
     font-size: 0.85rem;
     z-index: 600;
@@ -171,12 +171,12 @@
     right: 0;
     left: 3.5vw;
     height: 3vh;
-    width: 80.5vw;
+    width: 79.5vw;
     z-index: 600;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
     background-color: rgba(17, 25, 40, 0.65);
-    border-radius: 100px;
+    border-radius: 25px;
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
 }

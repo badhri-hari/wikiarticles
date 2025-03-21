@@ -113,6 +113,10 @@
   margin-bottom: 16px;
 }
 
+.description p {
+  margin-bottom: 0;
+}
+
 .view-count {
   position: absolute;
   bottom: 1.5%;

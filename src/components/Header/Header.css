@@ -146,13 +146,6 @@ span {
   width: 62%;
 }
 
-.liked-articles-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 62%;
-}
-
 .search-result:hover {
   opacity: 0.7;
 }
