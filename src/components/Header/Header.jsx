@@ -244,7 +244,11 @@ export default function Header() {
           aria-label="List of search results"
         >
           {searchResults.map((searchResult, index) => (
-            <div key={index} className="search-result">
+            <div
+              key={index}
+              className="search-result"
+              style={{ height: "11%" }}
+            >
               <a
                 href={searchResult.link}
                 target="_blank"

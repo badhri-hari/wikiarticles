@@ -196,7 +196,11 @@ export default function Articles() {
       >
         {articles.length === 0 ? (
           <div className="image-carousel-slide">
-            <img src="/default-image.jpg" alt="Loading..." />
+            <img
+              src="/default-image.jpg"
+              style={{ filter: "none" }}
+              aria-disabled
+            />
             <div className="description">
               <h2>{hasError ? "Uh Oh!" : "Please wait..."}</h2>
               <p>

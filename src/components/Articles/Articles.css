@@ -1,16 +1,9 @@
-* {
-  scrollbar-width: none;
-}
-
-*::-webkit-scrollbar {
-  display: none;
-}
-
 .image-container {
   height: 100vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   margin-top: -70px;
+  scrollbar-width: none;
 }
 
 .like-overlay {
@@ -42,10 +35,10 @@
   position: absolute;
   top: 20%;
   left: 2%;
-  height: calc(25px + 55%);
+  height: calc(24px + 55%);
   width: 12.5vw;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
+  clip-path: inset(0 round 15px);
   padding: 25px;
   padding-top: 0;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -96,7 +89,7 @@
   height: 55%;
   width: 40.5vw;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 15px;
+  clip-path: inset(0 round 15px);
   padding: 25px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);

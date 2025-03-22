@@ -99,11 +99,10 @@ span {
   height: 45vh;
   width: 500px;
   background: rgba(0, 0, 0, 0.8);
-  border-radius: 10px;
+  clip-path: inset(0 round 10px);
   padding: 15px;
   overflow-x: hidden;
   overflow-y: scroll;
-  scrollbar-width: none;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -120,6 +119,7 @@ span {
   scrollbar-width: none;
   cursor: pointer;
   flex-shrink: 0;
+  clip-path: inset(0 round 10px);
 }
 
 .search-result a {
@@ -178,11 +178,10 @@ span {
   height: 45vh;
   width: 500px;
   background: rgba(0, 0, 0, 0.8);
-  border-radius: 10px;
+  clip-path: inset(0 round 10px);
   padding: 15px;
   overflow-x: hidden;
   overflow-y: scroll;
-  scrollbar-width: none;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -226,7 +225,7 @@ span {
 
 .search-result h3 {
   position: absolute;
-  bottom: -5px;
+  bottom: -7px;
   left: 340px;
   font-size: 0.9rem;
   font-weight: 400;

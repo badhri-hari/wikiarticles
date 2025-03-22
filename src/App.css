@@ -2,6 +2,25 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+*::-webkit-scrollbar {
+  width: 6px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-button {
+  height: 0;
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
 html,
 body {
   overflow-x: hidden;
@@ -17,4 +36,10 @@ html::-webkit-scrollbar {
 
 body::-webkit-scrollbar {
   display: none;
+}
+
+@media only screen and (max-width: 900px) {
+  *::-webkit-scrollbar {
+    display: none;
+  }
 }
