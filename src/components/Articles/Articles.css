@@ -82,6 +82,10 @@
   opacity: 0.7;
 }
 
+.toc::-webkit-scrollbar-button {
+  height: 5px;
+}
+
 .description {
   position: absolute;
   top: 20%;
@@ -109,6 +113,10 @@
 
 .description p {
   margin-bottom: 0;
+}
+
+.description::-webkit-scrollbar-button {
+  height: 3px;
 }
 
 .view-count {

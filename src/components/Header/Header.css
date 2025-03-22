@@ -188,6 +188,14 @@ span {
   margin-left: 5px;
 }
 
+.liked-articles-container::-webkit-scrollbar-button {
+  height: 1px;
+}
+
+.liked-articles-container::-webkit-scrollbar {
+  width: 6px;
+}
+
 .download-liked-articles-button {
   padding: 8px 12px;
   background: rgba(0, 0, 0, 0);

@@ -443,7 +443,7 @@ export default function Articles() {
                 <footer>
                   <div className="view-count">
                     <a
-                      href={`https://pageviews.wmcloud.org/?project=en.wikipedia.org&platform=all-access&agent=user&redirects=1&range=all-time&pages=${article.title}`}
+                      href={`https://pageviews.wmcloud.org/?project=en.wikipedia.org&platform=all-access&agent=user&redirects=1&start=earliest&end=latest&pages=${article.title}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       title="View historical pageview data"
