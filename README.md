@@ -3,3 +3,5 @@
 </p>
 
 A scroll-based interface for exploring random wikis from around 30 (mostly) Wikimedia sites.
+
+See the [NOTICE](./NOTICE.md) file for legal information. All rights reserved.

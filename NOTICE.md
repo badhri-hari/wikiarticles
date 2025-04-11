@@ -33,7 +33,7 @@ These sources use open licenses that allow redistribution, modification, and dis
 - **[SCP Foundation](https://scpwiki.com "Visit SCP Wiki")**
 - License: [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)
 - Guide: [SCP Licensing Guide](https://scpwiki.com/licensing-guide "SCP Licensing Guide")
-- **[UNOP Chronicles](https://meta.wikimedia.org/wiki/UNOP "Visit UNOP (fictional Wikimedia)")**
+- **[UNOP Chronicles](https://www.unop-chronicles.com/Main_Page "Visit UNOP (fictional Wikimedia)")**
 - License: [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)
 - **[Know Your Meme](https://knowyourmeme.com "Visit Know Your Meme")**
 - License: Generally [CC BY-SA](https://creativecommons.org/licenses/by-sa/3.0/) (Check individual pages)
