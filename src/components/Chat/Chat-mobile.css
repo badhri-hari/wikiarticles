@@ -9,6 +9,15 @@
     margin-bottom: 15px;
   }
 
+  .user-icon {
+    top: 1.4px;
+    margin-right: 10px;
+  }
+
+  .bot-icon {
+    margin-right: 8px;
+  }
+
   .bot {
     padding-bottom: 10px;
     margin-bottom: 18px;
@@ -21,15 +30,30 @@
     padding: 0 40px 0 15px;
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
-    background-color: rgba(17, 25, 40, 0.5);
+    background-color: rgba(var(--bg-color), 0.5);
+    border: 1px solid transparent;
     border-radius: 13px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
     font-size: 0.83rem;
+  }
+
+  .chat-input-area:focus {
+    border: 3.5px solid rgba(255, 255, 255, 0.25);
   }
 
   .prompt-count {
     bottom: 18px;
     right: 23px;
     font-size: 13px;
+  }
+
+  .image-toggle-button {
+    bottom: 40px;
+    left: 1px;
+    padding: 6px 12px;
+    font-size: 0.7rem;
+  }
+
+  .image-toggle-button:hover {
+    opacity: 1;
   }
 }

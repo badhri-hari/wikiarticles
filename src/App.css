@@ -1,10 +1,20 @@
+:root {
+  --bg-color: 17, 25, 40;
+}
+
 * {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  background-color: rgba(0, 0, 0, 0.1);
+  width: 7px;
+  height: 7px;
+  background-color: rgba(var(--bg-color), 0.2);
+}
+
+*::-webkit-scrollbar:hover {
+  background-color: rgba(var(--bg-color), 1);
 }
 
 *::-webkit-scrollbar-thumb {
@@ -12,13 +22,12 @@
   border-radius: 10px;
 }
 
-*::-webkit-scrollbar-button {
-  height: 0;
-  background-color: transparent;
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 1);
 }
 
-*::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.7);
+a:hover {
+  opacity: 0.7;
 }
 
 html,
@@ -28,18 +37,106 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   margin: 0;
+  background-color: black;
 }
 
-html::-webkit-scrollbar {
-  display: none;
-}
-
+html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
 }
 
+body.custom-cursor-enabled
+  *:not(input):not(textarea):not(button):not([tabindex]) {
+  cursor: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.install-button {
+  position: absolute;
+  bottom: 1.5%;
+  left: calc(50% - 50px);
+  z-index: 4000;
+}
+
+.install-button button {
+  font-size: large;
+  color: white;
+  opacity: 1;
+  border: none;
+  cursor: pointer;
+  background: rgba(var(--bg-color), 0.6);
+  border-radius: 12px;
+  padding: 8px 25px;
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  transition: all 0.1s linear;
+}
+
+.install-button button:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.press-feedback {
+  animation: pressFeedback 0.2s ease-out;
+}
+
+@keyframes pressFeedback {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media only screen and (max-width: 900px) {
-  *::-webkit-scrollbar {
-    display: none;
+  a:hover {
+    opacity: 1 !important;
+  }
+
+  button,
+  a {
+    touch-action: manipulation;
+  }
+
+  html,
+  body {
+    backdrop-filter: blur(7px) saturate(200%);
+    -webkit-backdrop-filter: blur(7px) saturate(200%);
+    background-color: rgba(var(--bg-color), 0.5);
+  }
+
+  .install-button {
+    bottom: 56.5%;
+    left: 70%;
+  }
+
+  .install-button button {
+    width: 100px;
+    padding: 8px 12px;
+    backdrop-filter: blur(7px) saturate(200%);
+    -webkit-backdrop-filter: blur(7px) saturate(200%);
+    background-color: rgba(var(--bg-color), 0.5);
+    border-radius: 15px;
+    font-size: 0.8rem;
+    z-index: 700;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  .install-button button:hover {
+    color: rgba(255, 255, 255, 0.7);
   }
 }

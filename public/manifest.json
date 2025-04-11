@@ -1,14 +1,68 @@
 {
   "name": "wikiarticles",
   "short_name": "wikiarticles",
-  "description": "A scroll-based interface for exploring random Wikipedia articles.",
+  "description": "A scroll-based interface for exploring random wikis from (mostly) Wikimedia sites.",
+  "version": "2.0.0",
   "start_url": ".",
+  "id": "/",
   "scope": ".",
-  "background_color": "#111928",
-  "theme_color": "#111928",
-  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "portrait",
   "lang": "en-US",
+  "display": "fullscreen",
+  "display_override": ["fullscreen"],
+  "handle_links": "preferred",
+  "screenshots": [
+    {
+      "src": "AppImages/pwa_install/narrow/brand-splash-mobile.png",
+      "sizes": "320x669",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "AppImages/pwa_install/narrow/shot_1.png",
+      "sizes": "320x669",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "AppImages/brand-splash.png",
+      "sizes": "1919x906",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "AppImages/pwa_install/wide/shot_1.png",
+      "sizes": "1919x906",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "AppImages/pwa_install/wide/shot_2.png",
+      "sizes": "1919x906",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "AppImages/pwa_install/wide/shot_3.png",
+      "sizes": "1919x906",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "AppImages/pwa_install/wide/shot_4.png",
+      "sizes": "876x414",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "AppImages/pwa_install/wide/shot_5.png",
+      "sizes": "876x414",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
   "icons": [
     {
       "src": "AppImages/android/android-launchericon-512-512.png",

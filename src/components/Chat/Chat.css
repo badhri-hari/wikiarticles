@@ -1,3 +1,7 @@
+.chat-log::-webkit-scrollbar {
+  display: none;
+}
+
 .chat-log {
   height: calc(69% + 8px);
   margin-top: -10px;
@@ -17,6 +21,27 @@
 .chat-thinking-text {
   opacity: 0;
   animation: fadeIn 1.5s ease-in forwards, opacityAnimation 2.5s infinite 1.5s;
+}
+
+.loading-dots {
+  display: inline-block;
+  margin-left: -3px;
+  letter-spacing: -2px;
+}
+
+.dot {
+  opacity: 0;
+  animation: blink 1.6s infinite both;
+}
+
+.dot-1 {
+  animation-delay: 0s;
+}
+.dot-2 {
+  animation-delay: 0.3s;
+}
+.dot-3 {
+  animation-delay: 0.5s;
 }
 
 @keyframes fadeIn {
@@ -40,19 +65,39 @@
   }
 }
 
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .chat-message-link {
   color: white;
   text-decoration-thickness: 1.18px;
   text-underline-offset: 2px;
-}
-
-.chat-message-link:hover {
-  opacity: 0.7;
+  transition: all 0.1s linear;
 }
 
 .chat-message-icons {
   position: relative;
   flex-shrink: 0;
+}
+
+.user-icon {
+  top: 3px;
+  margin-right: 12px;
+  margin-left: 1px;
+}
+
+.bot-icon {
+  top: 2px;
+  margin-right: 11px;
 }
 
 .bot {
@@ -65,11 +110,11 @@
   position: absolute;
   bottom: 12px;
   left: 8.5px;
-  height: 60px;
-  width: 87.65%;
-  padding: 0 50.2px 0 15px;
-  background-color: rgba(0, 0, 0, 0.7);
-  border: none;
+  height: 55.75px;
+  width: 88.55%;
+  padding: 0 46.7px 0 11.5px;
+  background-color: rgba(var(--bg-color), 0.7);
+  border: 3.5px solid transparent;
   border-radius: 10px;
   color: white;
   outline: none;
@@ -77,6 +122,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: all 0.1s linear;
+}
+
+.chat-input-area:focus {
+  border: 3.5px solid rgba(255, 255, 255, 0.5);
 }
 
 ::placeholder {
@@ -95,4 +145,25 @@
   right: 28px;
   font-size: 20px;
   z-index: 1000;
+}
+
+.image-toggle-button {
+  position: absolute;
+  bottom: 70px;
+  left: 1px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: none;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  transition: all 0.1s linear;
+}
+
+.image-toggle-button:hover {
+  opacity: 0.7;
+}
+
+.image-toggle-button i {
+  text-decoration: none;
 }

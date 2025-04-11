@@ -7,9 +7,10 @@
     left: 3.5vw;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(17, 25, 40, 0.5);
+    background-color: rgba(var(--bg-color), 0.25);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
+    border: 1px solid rgba(var(--bg-color), 0.125);
+    z-index: 900;
   }
 
   .header-logo {
@@ -18,42 +19,21 @@
     font-size: 24.5px;
   }
 
-  span {
+  .header-logo a span {
     font-weight: 600;
   }
 
-  .search-icon {
-    top: 14px;
-    left: 165px;
+  .legal-notice {
+    font-size: 10px;
+    left: 24%;
+    margin-top: -12px;
   }
 
-  .header-logo-dim {
-    top: 1px;
-    left: 9px;
-    height: 45px;
-    width: 175px;
+  .legal-icon {
+    display: none;
   }
 
-  .search-input {
-    height: 32px;
-    width: 60%;
-    padding: 0 10px;
-    top: 6.5px;
-    left: 12px;
-    font-size: 16px;
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
-    background-color: rgba(17, 25, 40, 0.5);
-    border-radius: 13px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-  }
-
-  .search-icon-animated {
-    top: 13.5px;
-    left: 225px;
-  }
-
-  .search-result-container {
+  .list-box-container {
     position: absolute;
     top: 95px;
     left: 0px;
@@ -63,56 +43,54 @@
     gap: 10px;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(17, 25, 40, 0.8);
+    background-color: rgba(var(--bg-color), 0.7);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
+    border: 1px solid rgba(var(--bg-color), 0.125);
+    z-index: 7000;
   }
 
-  .search-result {
+  @keyframes slideDown {
+    from {
+      height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      height: 210px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      height: 210px;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      height: 0;
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  .list-box {
     max-width: 490px;
     padding: 5px;
   }
 
-  .search-result h2 {
+  .list-box h2 {
     font-size: 1rem;
     font-weight: 400;
     width: 30%;
   }
 
-  .search-result:hover {
+  .list-box:hover {
     opacity: 1;
   }
 
-  .header-icon {
-    top: 9px;
-    right: 11px;
-    font-size: 0.7rem;
-  }
-
-  .liked-articles-icon {
-    right: 58px;
-  }
-
-  .liked-articles-container {
-    top: 95px;
-    left: -5px;
-    height: 210px;
-    width: 87vw;
-    padding: 10px;
-    backdrop-filter: blur(7px) saturate(200%);
-    -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(10, 15, 24, 0.8);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-  }
-
-  .download-liked-articles-button {
-    font-size: 1rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.125);
-  }
-
-  .search-result button {
+  .list-box button {
     position: absolute;
     bottom: 7px;
     left: -1px;
@@ -120,11 +98,11 @@
     color: rgb(255, 53, 53);
   }
 
-  .search-result div h2 {
+  .list-box div h2 {
     margin-left: 20px;
   }
 
-  .search-result h3 {
+  .list-box h3 {
     bottom: -8px;
     left: auto;
     right: 33%;
@@ -132,5 +110,141 @@
     font-weight: 400;
     color: rgb(234, 234, 234);
     padding-bottom: 3px;
+  }
+
+  .header-icon {
+    top: 9px;
+    font-size: 0.7rem;
+  }
+
+  .header-icon:hover {
+    opacity: 1;
+  }
+
+  .change-source-button {
+    top: 9.1px;
+    right: 143px;
+  }
+
+  .change-source-icon {
+    bottom: 0;
+  }
+
+  .source-selection-container {
+    left: -5px;
+  }
+
+  .source-selection {
+    height: 42px;
+  }
+
+  .source-selection div {
+    width: 97.5%;
+  }
+
+  .source-selection h2 {
+    width: 45%;
+  }
+
+  .source-selection h3 {
+    height: 30px;
+    width: 30%;
+    right: 150px;
+    text-align: end;
+    align-content: end;
+  }
+
+  .fandom-input {
+    top: 0px;
+    left: 8px;
+    height: 30px;
+    width: 67%;
+    padding: 0 8px;
+    background-color: rgba(var(--bg-color), 1);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    border-radius: 13px;
+    font-size: 0.83rem;
+  }
+
+  .fandom-input:focus {
+    border: 1px solid rgba(var(--bg-color), 0.75);
+  }
+
+  .change-bgcolor-button {
+    top: 13.9px;
+    right: 55px;
+  }
+
+  .change-bgcolor-icon {
+    position: relative;
+    bottom: 5px;
+  }
+
+  .color-picker-container {
+    left: -5px;
+    height: 37vh;
+  }
+
+  .color-input-row {
+    display: none;
+  }
+
+  .preset-theme-buttons {
+    gap: 5px;
+  }
+
+  .preset-theme-button {
+    height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .preset-theme-button:hover {
+    opacity: 1;
+  }
+
+  .change-lang-button {
+    right: 11px;
+  }
+
+  .change-lang-icon {
+    bottom: 0;
+  }
+
+  .lang-sub-group h3 {
+    width: 45%;
+    right: 30px;
+  }
+
+  .liked-articles-button {
+    right: 98px;
+  }
+
+  .liked-articles-icon {
+    bottom: 0;
+  }
+
+  .liked-articles-container {
+    left: -5px;
+  }
+
+  .download-liked-articles-button {
+    font-size: 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(var(--bg-color), 0.125);
+  }
+
+  .no-liked-articles-text h2 {
+    width: 99%;
+  }
+
+  .gray-border-search-results h2 {
+    width: 40%;
+  }
+
+  .gray-border-search-results h3 {
+    width: 28%;
+    right: 150px;
   }
 }

@@ -1,35 +1,43 @@
 import { useRef, useState, useEffect } from "react";
 import CountUp from "react-countup";
 
-const ViewCountAnimator = ({ end, duration, ...rest }) => {
+export default function ViewCountAnimator({ end, duration, ...rest }) {
   const [inView, setInView] = useState(false);
-  const ref = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setInView(true);
-          observer.unobserve(ref.current);
+          observer.disconnect();
         }
       },
       { threshold: 0.6 }
     );
-    if (ref.current) observer.observe(ref.current);
+
+    if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={ref}>
-      {inView ? (
-        <div style={{ textDecoration: "none" }}>
-          <CountUp start={0} end={end} duration={duration} {...rest} /> views
-        </div>
-      ) : (
-        <span>0</span>
-      )}
+    <div
+      ref={containerRef}
+      style={{ textDecoration: "none", fontWeight: "lighter" }}
+    >
+      {inView && end !== null && (
+        <CountUp start={0} end={end} duration={duration} {...rest}>
+          {({ countUpRef }) => (
+            <span
+              ref={countUpRef}
+              style={{ textDecoration: "none", fontWeight: "lighter" }}
+            >
+              {end}
+            </span>
+          )}
+        </CountUp>
+      )}{" "}
+      views
     </div>
   );
-};
-
-export default ViewCountAnimator;
+}

@@ -1,3 +1,9 @@
+i {
+  font-style: italic !important;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+}
+
 .image-container {
   height: 100vh;
   overflow-y: scroll;
@@ -12,23 +18,154 @@
 
 .image-carousel-slide {
   height: 100vh;
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
   scroll-snap-align: start;
   position: relative;
+  background-attachment: fixed;
+  background-color: black;
 }
 
-.image-carousel-slide img {
+.image-carousel-slide img,
+.image-carousel-slide video {
   width: 100%;
   height: 100%;
-  filter: brightness(0.78) blur(1px) contrast(1.2) saturate(1.2);
+  filter: brightness(0.78) contrast(1.25) saturate(1.25);
   object-fit: cover;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   pointer-events: none;
+  background-attachment: fixed;
+}
+
+.image-carousel-slide.loading {
+  animation: alternatingBackground 2s ease-in-out infinite;
+}
+
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.9s ease-in;
+}
+
+.fade-in.loaded {
+  opacity: 1;
+}
+
+@keyframes alternatingBackground {
+  0% {
+    background-color: #1a1a1a;
+  }
+  50% {
+    background-color: #000;
+  }
+  100% {
+    background-color: #1a1a1a;
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: white;
+  font-size: 1.2rem;
+  overflow: hidden;
+  z-index: 20000;
+  background: rgba(var(--bg-color), 0.5);
+  opacity: 1;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  align-content: center;
+  cursor: wait;
+  transition: all 0.5s cubic-bezier(0, 0, 0.58, 1);
+}
+
+.loading-overlay div {
+  margin-top: -15px;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.19);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.loading-overlay p {
+  position: absolute;
+  bottom: 5px;
+  width: 99vw;
+  text-align: center;
+}
+
+.iframe-button-wrapper .iframe-toggle-button {
+  opacity: 0.1;
+  transition: opacity 0.2s ease;
+}
+
+.iframe-button-wrapper:hover .iframe-toggle-button {
+  opacity: 1;
+}
+
+.iframe-toggle-button {
+  position: absolute;
+  bottom: 12.5%;
+  left: 2%;
+  padding: 8px 15px;
+  background: rgba(var(--bg-color), 0.8);
+  border: none;
+  border-radius: 8px;
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.1s linear;
+}
+
+.iframe-toggle-button span {
+  transition: all 0.1s linear;
+}
+
+.iframe-toggle-button:hover span {
+  opacity: 0.7;
+}
+
+.iframe {
+  position: absolute;
+  top: 20%;
+  left: 19.8%;
+  height: calc(59.2% + 19.5px);
+  width: calc(42.5vw + 20px);
+  clip-path: inset(0 round 15px);
+  background-color: rgba(var(--bg-color), 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  align-content: center;
+  text-align: center;
+  transition: all 0.1s linear;
+}
+
+.iframe iframe {
+  height: 99.25%;
+  width: 99.5%;
+  margin-bottom: 1%;
+  clip-path: inset(5px round 10px);
+  color: white;
+  font-size: 1.45rem;
 }
 
 .toc {
@@ -37,16 +174,17 @@
   left: 2%;
   height: calc(24px + 55%);
   width: 12.5vw;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(var(--bg-color), 0.5);
   clip-path: inset(0 round 15px);
   padding: 25px;
   padding-top: 0;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   font-size: 1.21rem;
   overflow-y: scroll;
   overflow-x: hidden;
+  transition: all 0.1s linear;
 }
 
 .toc h3 {
@@ -78,30 +216,26 @@
   text-decoration: none;
 }
 
-.toc a:hover {
-  opacity: 0.7;
-}
-
-.toc::-webkit-scrollbar-button {
-  height: 5px;
-}
-
 .description {
   position: absolute;
   top: 20%;
   left: 19.8%;
   height: 55%;
   width: 40.5vw;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(var(--bg-color), 0.5);
   clip-path: inset(0 round 15px);
   padding: 25px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: white;
   font-size: 1.2rem;
+  text-wrap: pretty;
+  text-align: justify;
+  hyphens: auto;
   overflow-x: hidden;
   overflow-y: scroll;
+  transition: all 0.1s linear;
 }
 
 .description h2 {
@@ -109,6 +243,9 @@
   text-decoration: bold;
   margin-top: 4px;
   margin-bottom: 16px;
+  text-align: left;
+  text-wrap: none;
+  hyphens: manual;
 }
 
 .description p {
@@ -119,11 +256,60 @@
   height: 3px;
 }
 
+.description-link {
+  position: relative;
+  color: white;
+  text-decoration: none;
+}
+
+.description-link::before,
+.description-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.description-link::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    white -3px,
+    white 3px,
+    transparent 3px,
+    transparent 10px
+  );
+  bottom: 0;
+  height: 1px;
+  transition: opacity 0.2s ease;
+}
+
+.description-link::after {
+  bottom: -2px;
+  height: 4px;
+  background-color: white;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.description-link:hover::before {
+  opacity: 0;
+}
+
+.description-link:hover {
+  opacity: 1;
+}
+
+.description-link:hover::after {
+  opacity: 1;
+}
+
 .view-count {
   position: absolute;
   bottom: 1.5%;
   left: 1%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--bg-color), 0.6);
   border-radius: 12px;
   padding: 8px 15px;
   backdrop-filter: blur(2.5px);
@@ -135,17 +321,14 @@
 .view-count a {
   color: white;
   text-decoration: none;
-}
-
-.view-count a:hover {
-  opacity: 0.7;
+  transition: all 0.1s linear;
 }
 
 .last-edited {
   position: absolute;
   bottom: 1.5%;
   right: 1%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--bg-color), 0.6);
   border-radius: 12px;
   padding: 8px 15px;
   backdrop-filter: blur(2.5px);
@@ -157,10 +340,7 @@
 .last-edited a {
   color: white;
   text-decoration: none;
-}
-
-.last-edited a:hover {
-  opacity: 0.7;
+  transition: all 0.1s linear;
 }
 
 .search {
@@ -169,16 +349,20 @@
   right: 2%;
   height: 40%;
   width: calc(29vw + 25px);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
-  padding: 10px 0 0 25px;
+  padding: 0 0 10px 25px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: white;
   font-size: 1.19rem;
   overflow: hidden;
   align-content: center;
+}
+
+.search-text {
+  font-weight: 500;
 }
 
 .search h2 {
@@ -188,8 +372,58 @@
   margin-bottom: 22px;
 }
 
+.search h2:nth-child(1) {
+  margin-bottom: -2px;
+}
+
+.search h2:nth-child(2) {
+  margin-left: -8px;
+}
+
+.search h2:nth-child(3) {
+  margin-left: -6px;
+}
+
+.search h2:nth-child(4) {
+  margin-left: -8px;
+  margin-right: 12px;
+  padding-bottom: 3px;
+  height: 37.5px;
+  width: 205px;
+}
+
 .search h2:hover .search-online-text {
   opacity: 0.7;
+}
+
+.search a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.search h2:nth-child(1) .search-box-icons {
+  margin-right: 9px;
+  margin-bottom: -1px;
+}
+
+.search h2:nth-child(2) .search-box-icons {
+  margin-right: 10px;
+  margin-bottom: -3.5px;
+}
+
+.close-chat-icon {
+  margin-right: 15px;
+}
+
+.search h2:nth-child(3) .search-box-icons {
+  margin-right: 14px;
+}
+
+.search h2:nth-child(4) .search-box-icons {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  margin-right: 11.5px;
 }
 
 .like-button {
@@ -200,7 +434,6 @@
   font-size: 2rem;
   text-decoration: bold;
   margin-top: 8px;
-  margin-bottom: 22px;
 }
 
 .search button:hover .search-liked-text {
@@ -214,12 +447,12 @@
   height: 11vh;
   width: 29vw;
   margin-top: 10px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
   padding: 25px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: white;
   font-size: 1.21rem;
   overflow: hidden;
@@ -229,9 +462,78 @@
 }
 
 .article-link:hover {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(var(--bg-color), 0.75);
 }
 
+.article-link > * {
+  transition: opacity 0.1s linear;
+}
+
+.article-link:hover > * {
+  opacity: 0.7;
+}
+
+.more-loading-overlay {
+  cursor: default;
+  position: absolute;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  color: white;
+  font-size: 1.3rem;
+  z-index: 20000;
+  background: linear-gradient(
+    to top,
+    rgba(var(--bg-color), 1) 0%,
+    rgba(var(--bg-color), 0) 90%
+  );
+  opacity: 1;
+  bottom: 0;
+  left: 0;
+  height: 75px;
+  width: 100vw;
+  text-align: center;
+  align-content: center;
+  cursor: progress;
+  transition: all 0.5s cubic-bezier(0, 0, 0.58, 1);
+}
+
+.more-loading-overlay span {
+  margin: 0 0 0 1px;
+  opacity: 0;
+  animation: blink 1.4s infinite both;
+}
+
+.more-loading-overlay span span:nth-child(1) {
+  margin: 0;
+  animation-delay: 0s;
+}
+.more-loading-overlay span span:nth-child(2) {
+  margin: 0;
+  animation-delay: 0.2s;
+}
+.more-loading-overlay span span:nth-child(3) {
+  margin: 0;
+  animation-delay: 0.4s;
+}
+
+.hidden {
+  transition-delay: 1s;
+  z-index: -1000;
+  opacity: 0;
+  transition: all 0.1s linear;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 @media only screen and (max-width: 1181px) {
   .toc {
     left: 1.5%;

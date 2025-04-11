@@ -1,19 +1,44 @@
 import { useState, useEffect, useRef } from "react";
-
-import wtf from "wtf_wikipedia";
-
 import { FiUser } from "react-icons/fi";
 import { TbRobot } from "react-icons/tb";
+import DOMPurify from "dompurify";
+
+const API_URL = import.meta.env.VITE_CHAT_API;
 
 import "./Chat.css";
 import "./Chat-mobile.css";
 
-export default function Chat({ articleTitle, articleDescription, articleToc }) {
-  const [articleWikitext, setArticleWikitext] = useState("");
-  const [articleJSON, setArticleJSON] = useState("");
+import {
+  handleSendMessage,
+  fetchAndConvertImageOnMount,
+  parseChatbotResponse,
+} from "./chatHelpers";
+
+import useChatStream from "../../../hooks/Chat/useChatStream";
+import useWindowSize from "../../../hooks/useWindowSize";
+
+export default function Chat({
+  articleTitle,
+  articleDescription,
+  articleImage,
+  articleToc,
+  articleUrl,
+  selectedSource,
+  selectedLang,
+}) {
+  const { sendChatMessage, loading: streamLoading } = useChatStream(API_URL);
+  const { width } = useWindowSize();
+
+  const chatLogRef = useRef(null);
+  const inputRef = useRef(null);
+
   const [chatMessages, setChatMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imageAllowed, setImageAllowed] = useState(
+    selectedSource.startsWith("Wikimedia")
+  );
+  const [imageToggleVisible, setImageToggleVisible] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const [botThinking, setBotThinking] = useState(false);
   const [placeholderText, setPlaceholderText] = useState(
@@ -23,328 +48,114 @@ export default function Chat({ articleTitle, articleDescription, articleToc }) {
     `Type your question about ${articleTitle} in this field`
   );
 
-  const chatLogRef = useRef(null);
-  const inputRef = useRef(null);
-
   useEffect(() => {
-    if (loading && chatLogRef.current) {
+    if (chatLogRef.current) {
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
     }
-  }, [chatMessages, loading]);
+  }, [chatMessages]);
 
-  useEffect(() => {
-    async function fetchArticleContent() {
-      try {
-        const doc = await wtf.fetch(articleTitle, "en");
-        setArticleWikitext(doc.wikitext());
-        setArticleJSON(doc.json());
-      } catch (error) {
-        setChatMessages((prev) => [
-          ...prev,
-          {
-            sender: "bot",
-            text: "Sorry, looks like there's a problem right now. Please try again later.",
-          },
-        ]);
-        setPlaceholderText(`Uh oh!`);
-        setTitleText(error);
-        setLoading(true);
-      }
-      setPlaceholderText(`Ask anything about ${articleTitle}`);
-      setTitleText(`Type your question about ${articleTitle} in this field`);
-
-      setTimeout(() => {
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
-      }, 50);
-    }
-    fetchArticleContent();
-  }, [articleTitle]);
-
-  const capitalizeFirstLetter = (inputValue) => {
-    if (inputValue) {
-      return inputValue.charAt(0).toUpperCase() + inputValue.slice(1);
-    }
-    return inputValue;
-  };
-
-  const getSystemPrompt = () => {
-    return `
-ARTICLE CONTENT:
-<h1>${articleTitle}</h1>
-<p>${articleDescription}</p>
-<p>Table of Contents: ${articleToc}</p>
-<p>Article Wikitext: ${articleWikitext}</p>
-<p>Article JSON: ${articleJSON}</p>
-
-INSTRUCTIONS:
-You are communicating with the user on a website called wikiarticles. Your goal is to provide factual information about the subject of the given Wikipedia article in a friendly tone. Follow these rules precisely:
-
-1. **Response Format:**  
-   - Respond in TEXT ONLY (no HTML).  
-   - Use custom formatting: *word* for italics and **word** for bold. Only use bolded words for headings, not hashtags.
-   - For bullet lists, start each item on a new line with "- ". For numbered lists, use "1) ", "2) ", etc.
-   - Keep every response under 150 words.
-
-2. **Content Boundaries:**  
-   - Do not reveal any details about the article unless the user explicitly asks.
-   - When the question goes beyond the article data, use your pre-existing knowledge while adhering to these rules.
-
-3. **Handling Data Types:**  
-   - If the article data includes tables, lists, images, or references, convert them into clear bullet or numbered lists as needed.
-
-4. **Links:**  
-   - Always display links using the exact format:  
-     "|display text__websitelink|"
-   - Use only the links provided from the article data; do not generate or hallucinate new URLs.
-   - Integrate links naturally within the text following the formatting rules.
-
-Now, please answer the following user query:
-  `;
-  };
-
-  function parseCustomFormatting(text) {
-    let output = text;
-
-    output = output.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    output = output.replace(/\*(.*?)\*/g, "<em>$1</em>");
-
-    output = output.replace(
-      /\|([^|]+?)__([^|]+?)\|/g,
-      (match, displayText, websiteLink) => {
-        return `<a href="${websiteLink}" aria-label="Open ${websiteLink} in a new tab" class="chat-message-link" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
-      }
-    );
-
-    const lines = output.split("\n");
-    let inUl = false;
-    let inOl = false;
-    let finalLines = [];
-
-    lines.forEach((line) => {
-      const trimmedLine = line.trim();
-
-      if (trimmedLine.startsWith("- ")) {
-        if (!inUl) {
-          finalLines.push("<ul>");
-          inUl = true;
-        }
-        finalLines.push("<li>" + trimmedLine.slice(2) + "</li>");
-      } else {
-        if (inUl) {
-          finalLines.push("</ul>");
-          inUl = false;
-        }
-
-        const numberedMatch = trimmedLine.match(/^(\d+)\)\s+(.*)$/);
-        if (numberedMatch) {
-          if (!inOl) {
-            finalLines.push("<ol>");
-            inOl = true;
-          }
-          finalLines.push("<li>" + numberedMatch[2] + "</li>");
-        } else {
-          if (inOl) {
-            finalLines.push("</ol>");
-            inOl = false;
-          }
-          finalLines.push(line);
-        }
-      }
+  const onSendMessage = () =>
+    handleSendMessage({
+      userInput,
+      chatMessages,
+      setChatMessages,
+      setUserInput,
+      setLoading,
+      setPlaceholderText,
+      setTitleText,
+      setBotThinking,
+      sendChatMessage,
+      articleImage,
+      imageAllowed,
+      setImageToggleVisible,
+      setMessageCount,
+      articleTitle,
+      articleDescription,
+      articleToc,
+      articleUrl,
+      selectedLang,
     });
 
-    if (inUl) finalLines.push("</ul>");
-    if (inOl) finalLines.push("</ol>");
+  useEffect(() => {
+    fetchAndConvertImageOnMount(articleImage, setImageToggleVisible);
+  }, [articleImage]);
 
-    return finalLines.join("\n");
-  }
-
-  const handleSendMessage = async () => {
-    if (!userInput.trim()) return;
-
-    const capitalizedInput = capitalizeFirstLetter(userInput);
-
-    let updatedChatMessages;
-    if (chatMessages.length === 0) {
-      updatedChatMessages = [
-        { sender: "system", text: getSystemPrompt() },
-        { sender: "user", text: capitalizedInput },
-      ];
-    } else {
-      updatedChatMessages = [
-        ...chatMessages,
-        { sender: "user", text: capitalizedInput },
-      ];
+  useEffect(() => {
+    if (streamLoading) {
+      setPlaceholderText("Bot is responding...");
+    } else if (!loading && !streamLoading) {
+      setPlaceholderText(`Ask anything about ${articleTitle}`);
     }
-
-    setChatMessages(updatedChatMessages);
-    setUserInput("");
-    setLoading(true);
-    setPlaceholderText("Bot is responding...");
-    setTitleText(
-      "Please wait for the bot to finish responding, it's rude to interrupt!"
-    );
-
-    setBotThinking(true);
-    const botThinkingTexts = [
-      "Just a second…",
-      "Collecting information…",
-      "Thinking…",
-      "Reasoning…",
-      "Compiling response…",
-      "Processing request…",
-    ];
-
-    const botThinkingMessage = {
-      sender: "bot",
-      text: botThinkingTexts[
-        Math.floor(Math.random() * botThinkingTexts.length)
-      ],
-    };
-
-    const updatedChatMessagesWithBot = [
-      ...updatedChatMessages,
-      botThinkingMessage,
-    ];
-
-    setChatMessages(updatedChatMessagesWithBot);
-
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chatHistory: updatedChatMessages }),
-      });
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let botMessage = "";
-
-      const processStream = async () => {
-        const { done, value } = await reader.read();
-        if (done) {
-          setLoading(false);
-          setPlaceholderText(`Ask anything about ${articleTitle}`);
-          setTitleText(
-            `Type your question about ${articleTitle} in this field`
-          );
-          setTimeout(() => {
-            if (inputRef.current) {
-              inputRef.current.focus();
-            }
-          }, 50);
-          return;
-        }
-
-        const chunkText = decoder.decode(value, { stream: true });
-        const words = chunkText.split(" ");
-
-        for (let word of words) {
-          botMessage += word + " ";
-          setChatMessages((prev) => {
-            const newMessages = [...prev];
-            newMessages[newMessages.length - 1] = {
-              sender: "bot",
-              text: botMessage,
-            };
-            return newMessages;
-          });
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-        processStream();
-      };
-
-      processStream();
-      setBotThinking(false);
-    } catch (error) {
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          sender: "bot",
-          text: "Sorry, looks like there's a problem right now. Please try again later.",
-        },
-      ]);
-      setPlaceholderText(`Uh oh!`);
-      setTitleText(error);
-      setBotThinking(false);
-      setLoading(true);
-    } finally {
-      setMessageCount((prevCount) => {
-        const newCount = prevCount + 1;
-        if (newCount > 19) {
-          setPlaceholderText(
-            "You have exceeded the 20 prompts limit, try again later."
-          );
-          setTitleText("Close and reopen the chat to ask more questions.");
-          setBotThinking(false);
-          setLoading(true);
-        }
-        return newCount;
-      });
-    }
-  };
+  }, [streamLoading, loading, articleTitle]);
 
   return (
     <>
       <h2
         style={{
-          display: window.innerWidth < 900 ? "none" : "block",
+          display: width < 900 ? "none" : "block",
+          cursor: botThinking && "progress",
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
           paddingBottom: "10px",
         }}
+        aria-hidden
       >
         {articleTitle}
       </h2>
-      <div className="chat-log" ref={chatLogRef}>
-        {chatMessages
-          .filter((msg) => msg.sender !== "system")
-          .map((msg, idx) => (
-            <div key={idx} className={`chat-message ${msg.sender}`}>
-              {msg.sender === "user" ? (
-                <FiUser
-                  className="chat-message-icons"
-                  size="1.05rem"
-                  style={{
-                    top: window.innerWidth < 900 ? "1.4px" : "3px",
-                    marginRight: window.innerWidth < 900 ? "10px" : "12px",
-                    marginLeft: "1px",
-                  }}
-                />
-              ) : (
-                <TbRobot
-                  className="chat-message-icons"
-                  size="1.2rem"
-                  style={{
-                    top: window.innerWidth < 900 ? "2px" : "2px",
-                    marginRight: window.innerWidth < 900 ? "8px" : "11px",
-                  }}
-                />
-              )}{" "}
-              {msg.sender === "bot" ? (
-                <span
-                  className={botThinking ? "chat-thinking-text" : undefined}
-                  style={{ fontWeight: "400" }}
-                  dangerouslySetInnerHTML={{
-                    __html: parseCustomFormatting(msg.text),
-                  }}
-                />
-              ) : (
-                <span style={{ fontWeight: "400" }}>{msg.text}</span>
-              )}
-            </div>
-          ))}
-      </div>
 
       <div
-        className="prompt-count"
-        style={{ display: loading && "none" }}
-        title={`You have ${20 - messageCount} prompts left`}
-        aria-label={`You have ${20 - messageCount} prompts left`}
+        ref={chatLogRef}
+        className="chat-log"
+        style={{ cursor: botThinking && "progress" }}
+        role="log"
+        aria-live="polite"
+        aria-relevant="additions"
+        aria-label="Chat conversation log between the user and the chatbot"
       >
-        {20 - messageCount}
+        <div role="list">
+          {chatMessages
+            .filter((msg) => msg.sender !== "system")
+            .map((msg, idx) => (
+              <div
+                key={idx}
+                className={`chat-message ${msg.sender}`}
+                aria-label={
+                  msg.sender === "user" ? "User message" : "Bot message"
+                }
+                role="listitem"
+              >
+                {msg.sender === "user" ? (
+                  <FiUser
+                    className="chat-message-icons user-icon"
+                    size="1.05rem"
+                    aria-hidden
+                  />
+                ) : (
+                  <TbRobot
+                    className="chat-message-icons bot-icon"
+                    size="1.2rem"
+                    aria-hidden
+                  />
+                )}{" "}
+                {msg.sender === "bot" ? (
+                  <span
+                    aria-disabled={botThinking}
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        parseChatbotResponse(msg.text),
+                        {
+                          ADD_ATTR: ["target"],
+                        }
+                      ),
+                    }}
+                  />
+                ) : (
+                  <span>{msg.text}</span>
+                )}
+              </div>
+            ))}
+        </div>
       </div>
 
       <input
@@ -356,17 +167,59 @@ Now, please answer the following user query:
         onChange={(e) => setUserInput(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            handleSendMessage();
+            onSendMessage();
             setUserInput("");
           }
         }}
-        disabled={loading}
-        style={{ opacity: loading && "0.5" }}
+        disabled={loading || streamLoading}
+        style={{
+          opacity: loading || streamLoading ? "0.5" : "1",
+          cursor: loading || streamLoading ? "not-allowed" : "auto",
+        }}
         autoFocus
-        maxLength="250"
+        required
+        inputMode="text"
+        spellCheck
+        autoCapitalize="sentences"
+        tabIndex={0}
+        minLength="1"
+        maxLength="200"
         title={titleText}
-        aria-label={`Type your question about ${articleTitle} to the chatbot in this field`}
+        aria-label={`Type your question about ${articleTitle} to the chatbot in this field and then press enter once you're done.`}
       />
+
+      <div
+        className="prompt-count"
+        style={{
+          display: loading || streamLoading ? "none" : "block",
+          cursor: loading || streamLoading ? "not-allowed" : "auto",
+        }}
+        title={`You have ${20 - messageCount} prompts left`}
+        aria-label={`You have ${20 - messageCount} prompts left`}
+      >
+        {20 - messageCount}
+      </div>
+
+      {imageToggleVisible && chatMessages.length === 0 && (
+        <button
+          onClick={() => {
+            setImageAllowed((prev) => !prev);
+            inputRef.current?.focus();
+          }}
+          className="image-toggle-button"
+          aria-label={
+            imageAllowed
+              ? "Click to stop sending image with your question to the chatbot (faster response time)"
+              : "Click to send image with your question to the chatbot (slower response time)"
+          }
+          aria-pressed={imageAllowed}
+        >
+          {imageAllowed
+            ? "Don't send image to chatbot"
+            : "Send image to chatbot?"}
+          <i>{imageAllowed ? " (faster)" : " (slower)"}</i>
+        </button>
+      )}
     </>
   );
 }

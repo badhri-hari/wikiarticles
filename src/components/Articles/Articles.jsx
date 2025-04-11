@@ -1,11 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import DOMPurify from "dompurify";
 
-import { TbWorldSearch } from "react-icons/tb";
+const API_URL = import.meta.env.VITE_ARTICLES_API;
+
+import { renderLogo } from "../../../data/sourceOptions.jsx";
+
+import {
+  isArticleLiked,
+  handleLikeArticle,
+  handleLikeOverlayClick,
+  handleShareLink,
+  fixRelativeLinks,
+  getTimeAgo,
+} from "./articleHelpers.js";
+
+import useFetchArticles from "../../../hooks/Articles/useFetchArticles.js";
+import useWindowSize from "../../../hooks/useWindowSize.js";
+import useLazyLoadArticles from "../../../hooks/Articles/useLazyLoadArticles.js";
+
+import { FiExternalLink } from "react-icons/fi";
 import { BiLike, BiSolidLike } from "react-icons/bi";
-import { FaWikipediaW } from "react-icons/fa6";
 import { TbRobot } from "react-icons/tb";
 import { RxCross1 } from "react-icons/rx";
+import { GiShare } from "react-icons/gi";
 
 import Chat from "../Chat/Chat";
 import ViewCountAnimator from "./ViewCountAnimator";
@@ -13,237 +30,258 @@ import ViewCountAnimator from "./ViewCountAnimator";
 import "./Articles.css";
 import "./Articles-mobile.css";
 
-export default function Articles() {
+export default function Articles({
+  selectedSource,
+  fandomQuery,
+  selectedLang,
+}) {
+  const { width } = useWindowSize();
+
   const containerRef = useRef(null);
   const slidesRef = useRef([]);
-  const sentinelRef = useRef(null);
-  const [articles, setArticles] = useState([]);
-  const [likedArticlesUpdate, setLikedArticlesUpdate] = useState(0);
-  const [hasError, setHasError] = useState(false);
+
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [isFirstTap, setIsFirstTap] = useState(false);
   const [articleLiked, setArticleLiked] = useState(false);
   const [lastLikeAction, setLastLikeAction] = useState(null);
+  const [showIframe, setShowIframe] = useState(false);
+  const [showToc, setShowToc] = useState(true);
+
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [currentArticleTitle, setCurrentArticleTitle] = useState("");
   const [currentArticleDescription, setCurrentArticleDescription] =
     useState("");
+  const [currentArticleImage, setCurrentArticleImage] = useState("");
   const [currentArticleToc, setCurrentArticleToc] = useState([]);
+  const [currentArticleUrl, setCurrentArticleUrl] = useState("");
+  const [currentArticleSource, setCurrentArticleSource] = useState("");
+  const [currentArticleLang, setCurrentArticleLang] = useState("");
 
-  const fetchArticles = async () => {
-    try {
-      const response = await axios.get("/api/articles");
-      setArticles((prev) => [...prev, ...response.data.articles]);
-      setHasError(false);
-    } catch (error) {
-      setTimeout(() => {
-        console.error("Error fetching articles:", error);
-        setHasError(true);
-      }, 10000);
-    }
-  };
+  const {
+    articles,
+    totalArticles,
+    isLoading,
+    isLoadingMore,
+    hasError,
+    fetchArticles,
+  } = useFetchArticles(API_URL, selectedSource, fandomQuery, selectedLang);
 
   useEffect(() => {
     fetchArticles();
-  }, []);
+    setIsChatOpen(false);
+    setShowIframe(false);
+    setShowToc(true);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          fetchArticles();
-        }
-      },
-      { threshold: 0, rootMargin: "400px" }
-    );
-    if (sentinelRef.current) observer.observe(sentinelRef.current);
-    return () => {
-      if (sentinelRef.current) observer.unobserve(sentinelRef.current);
-    };
-  }, []);
+    return () => {};
+  }, [selectedSource, selectedLang]);
 
-  useEffect(() => {
-    const urlObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const titleEl = entry.target.querySelector(".description h2");
-            if (titleEl) {
-              const title = titleEl.textContent;
-              const formattedTitle = title.replace(/\s+/g, "_");
-              const newUrl = window.location.origin + "/" + formattedTitle;
-              window.history.replaceState(null, "", newUrl);
-            }
-          }
-        });
-      },
-      { threshold: 0.6 }
-    );
-    slidesRef.current.forEach((slide) => {
-      if (slide) urlObserver.observe(slide);
-    });
-    return () => {
-      slidesRef.current.forEach((slide) => {
-        if (slide) urlObserver.unobserve(slide);
-      });
-    };
-  }, [articles]);
-
-  const createLink = (baseUrl, title, extra = "") =>
-    `${baseUrl}${encodeURIComponent(title)}${extra}`;
-
-  const isArticleLiked = (pageUrl) => {
-    const likedArticles =
-      JSON.parse(localStorage.getItem("likedArticles")) || [];
-    return likedArticles.some((item) => item.link === pageUrl);
-  };
-
-  const handleLikeArticle = (article) => {
-    let likedArticles = JSON.parse(localStorage.getItem("likedArticles")) || [];
-    const index = likedArticles.findIndex(
-      (item) => item.link === article.pageUrl
-    );
-    let actionType = null;
-
-    if (index === -1) {
-      likedArticles.push({
-        title: article.title,
-        link: article.pageUrl,
-        dateLiked: new Date().toLocaleString("en-US", {
-          timeZone: "UTC",
-          hour12: false,
-        }),
-      });
-      actionType = "like";
-    } else {
-      likedArticles.splice(index, 1);
-      actionType = "unlike";
-    }
-
-    localStorage.setItem("likedArticles", JSON.stringify(likedArticles));
-    setLikedArticlesUpdate((prev) => prev + 1);
-
-    setArticleLiked(true);
-    setLastLikeAction(actionType);
-
-    if (navigator.vibrate) {
-      navigator.vibrate(50);
-    }
-
-    setTimeout(() => {
-      setArticleLiked(false);
-    }, 690);
-  };
-
-  const handleLikeOverlayClick = ({ title, pageUrl }) => {
-    if (isFirstTap) {
-      handleLikeArticle({ title, pageUrl });
-      setIsFirstTap(false);
-    } else {
-      setIsFirstTap(true);
-      setTimeout(() => setIsFirstTap(false), 400);
-    }
-  };
-
-  function getTimeAgo(timestamp) {
-    const now = new Date();
-    const pastDate = new Date(timestamp);
-    const diffInSeconds = Math.floor((now - pastDate) / 1000);
-
-    if (diffInSeconds < 60) {
-      return `just now`;
-    }
-
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) {
-      return `Last edited ${diffInMinutes} minute${
-        diffInMinutes > 1 ? "s" : ""
-      } ago`;
-    }
-
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) {
-      return `Last edited ${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
-    }
-
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) {
-      return `Last edited ${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
-    }
-
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    if (diffInWeeks < 4) {
-      return `Last edited ${diffInWeeks} week${diffInWeeks > 1 ? "s" : ""} ago`;
-    }
-
-    const diffInMonths = Math.floor(diffInDays / 30.44);
-    if (diffInMonths < 12) {
-      return `Last edited ${diffInMonths} month${
-        diffInMonths > 1 ? "s" : ""
-      } ago`;
-    }
-
-    const diffInYears = Math.floor(diffInDays / 365.25);
-    return `Last edited ${diffInYears} year${diffInYears > 1 ? "s" : ""} ago`;
-  }
+  useLazyLoadArticles({
+    slidesRef,
+    articles,
+    isLoading,
+    isLoadingMore,
+    totalArticles,
+    fetchArticles,
+  });
 
   return (
     <>
-      <div
-        className="image-container"
-        ref={containerRef}
-        role="region"
-        aria-label="Page container"
-      >
-        {articles.length === 0 ? (
-          <div className="image-carousel-slide">
-            <img
-              src="/default-image.jpg"
-              style={{ filter: "none" }}
-              aria-disabled
-            />
-            <div className="description">
-              <h2>{hasError ? "Uh Oh!" : "Please wait..."}</h2>
-              <p>
-                {hasError
-                  ? "Looks like there's a problem with the server right now, please try again later."
-                  : "Fetching articles..."}
-              </p>
-            </div>
-            <div className="toc"></div>
-            <div className="search"></div>
-            <div
-              className="article-link"
-              style={{ display: window.innerWidth < 900 ? "none" : "block" }}
-            ></div>
-            <div className="more-like-this" style={{ display: "none" }}></div>
-            <div className="last-edited" style={{ display: "none" }}></div>
-            <div className="view-count" style={{ display: "none" }}></div>
+      <div className="image-container" ref={containerRef} role="region">
+        <div
+          className={
+            isLoading || hasError ? "loading-overlay" : "loading-overlay hidden"
+          }
+          style={{ cursor: hasError && "auto" }}
+        >
+          <div style={{ animation: hasError && "none" }}>
+            {renderLogo(selectedSource, isLoading || hasError)}
           </div>
+          <h2>{hasError ? "Uh Oh!" : "Please wait..."}</h2>
+          <p>
+            {hasError && !navigator.onLine
+              ? "You need an internet connection to continue!"
+              : hasError
+              ? "Looks like there's a problem with the server right now, please try again later."
+              : `Getting content from ${selectedSource}... (${articles.length}/${totalArticles})`}
+          </p>
+        </div>
+
+        {isLoading ? (
+          <div className="image-carousel-slide"></div>
         ) : (
           articles.map((article, index) => {
-            const title = article.title;
-            const pageUrl =
-              article.content_urls?.desktop?.page ||
-              `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
-            const imageUrl = article.thumbnail?.source || "/default-image.jpg";
             return (
               <div
                 className="image-carousel-slide"
                 key={index}
                 ref={(el) => (slidesRef.current[index] = el)}
+                data-baseurl={article.pageUrl}
               >
-                <img src={imageUrl} alt={`Slide ${index + 1}`} />
-                {!isChatOpen && (
-                  <div className="description">
-                    <h2>{title}</h2>
-                    <p>{article.extract}</p>
+                {article.thumbnail?.source && (
+                  <div
+                    className={`image-carousel-slide ${
+                      isImageLoaded ? "" : "loading"
+                    }`}
+                  >
+                    <img
+                      src={`${API_URL}/image?url=${encodeURIComponent(
+                        article.thumbnail?.source
+                      )}`}
+                      alt={`Image for ${article.title}`}
+                      loading="lazy"
+                      className={`fade-in ${isImageLoaded ? "loaded" : ""}`}
+                      onLoad={() => setIsImageLoaded(true)}
+                    />
                   </div>
                 )}
-                {/* {!isChatOpen && ( */}
-                <div className="toc" aria-label="Table of contents">
-                  {article.toc && article.toc.length > 0 ? (
+
+                <div
+                  className={index >= 3 ? "iframe-button-wrapper" : undefined}
+                  style={{
+                    display:
+                      (selectedSource.startsWith("Wikihow") ||
+                        selectedSource.startsWith("Know") ||
+                        selectedSource.startsWith("MickeyWiki") ||
+                        selectedSource.startsWith("Minecraft") ||
+                        selectedSource.startsWith("SCP") ||
+                        selectedSource.startsWith("Poland")) &&
+                      "none",
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      if (!showIframe && !isChatOpen) {
+                        setShowIframe(true);
+                      } else if (showIframe && !isChatOpen) {
+                        setShowIframe(false);
+                      } else if (showIframe && isChatOpen) {
+                        setIsChatOpen(false);
+                      } else if (!showIframe && isChatOpen) {
+                        setIsChatOpen(false);
+                        setShowIframe(true);
+                      }
+                    }}
+                    className="iframe-toggle-button"
+                    style={{
+                      bottom:
+                        width > 900
+                          ? undefined
+                          : showIframe
+                          ? "80.71%"
+                          : "56.5%",
+                    }}
+                    aria-label="Toggle article iframe"
+                  >
+                    <span>Toggle article frame</span>
+                  </button>
+                  {showIframe && width > 900 && (
+                    <button
+                      onClick={() => setShowToc((prev) => !prev)}
+                      className="iframe-toggle-button"
+                      style={{ left: "12.5%" }}
+                      aria-label="Toggle table of contents"
+                    >
+                      <span>Toggle Table of Contents</span>
+                    </button>
+                  )}
+                </div>
+                <div
+                  className={
+                    showIframe && !isChatOpen ? "iframe" : "iframe hidden"
+                  }
+                  style={
+                    width > 900
+                      ? {
+                          left: !showToc && "2%",
+                          width: !showToc && "61.5vw",
+                        }
+                      : { zIndex: "650" }
+                  }
+                >
+                  <iframe
+                    src={article.pageUrl}
+                    loading="lazy"
+                    sandbox="allow-downloads allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-scripts allow-same-origin"
+                    title={`Page for ${article.title} (using the iframe element)`}
+                  >
+                    upgrade your browser dawg
+                  </iframe>
+                </div>
+
+                {!isChatOpen && (
+                  <div
+                    className={
+                      showIframe ? "description hidden" : "description"
+                    }
+                    style={{ zIndex: width < 900 && !showIframe && "650" }}
+                  >
+                    <h2>{article.title}</h2>
+                    {article.extractDataType === "array" ? (
+                      Array.isArray(article.extract) &&
+                      article.extract.map((text, idx) => {
+                        const fixedHtml = fixRelativeLinks(
+                          text,
+                          article.pageUrl
+                        );
+                        const htmlString = DOMPurify.sanitize(fixedHtml, {
+                          ADD_ATTR: ["target"],
+                        });
+
+                        return (
+                          <p
+                            key={idx}
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                idx === 0 &&
+                                selectedSource.startsWith("Wikinews")
+                                  ? `<i>${htmlString}</i>`
+                                  : htmlString,
+                            }}
+                          />
+                        );
+                      })
+                    ) : (
+                      <p>{article.extract}</p>
+                    )}
+                  </div>
+                )}
+
+                <div
+                  className={
+                    showIframe ? (showToc ? "toc" : "toc hidden") : "toc"
+                  }
+                  aria-label={
+                    selectedSource.startsWith("Wikimedia")
+                      ? "Metadata of the media file (if available)"
+                      : selectedSource.startsWith("Wikidata")
+                      ? "Data item information"
+                      : "Table of contents"
+                  }
+                  style={{
+                    paddingTop:
+                      selectedSource.startsWith("Wikimedia") &&
+                      article.toc.length > 0 &&
+                      "10px",
+                    height:
+                      selectedSource.startsWith("Wikimedia") &&
+                      article.toc.length > 0 &&
+                      "calc(14px + 55%)",
+                    paddingLeft:
+                      selectedSource.startsWith("Wikimedia") &&
+                      article.toc.length > 0 &&
+                      "0px",
+                    width:
+                      selectedSource.startsWith("Wikimedia") &&
+                      article.toc.length > 0 &&
+                      "calc(12.5vw + 25px)",
+                    overflowX:
+                      selectedSource.startsWith("Wikimedia") ||
+                      (selectedSource.startsWith("Wikidata") && "scroll"),
+                  }}
+                >
+                  {article.toc.length > 0 ? (
                     article.toc.map((section, idx) => {
-                      let Tag = "h5";
+                      let Tag = "h3";
                       if (section.toclevel == 1 || section.toclevel === "1") {
                         Tag = "h3";
                       } else if (
@@ -260,11 +298,48 @@ export default function Articles() {
                       return (
                         <Tag key={idx}>
                           <a
-                            href={`${pageUrl}#${section.anchor}`}
+                            href={
+                              !(
+                                selectedSource.startsWith("Wikimedia") ||
+                                selectedSource.startsWith("Wikidata")
+                              )
+                                ? `${article.pageUrl}#${section.anchor}`
+                                : undefined
+                            }
                             target="_blank"
                             rel="noopener noreferrer"
-                            title={`Open section "${section.line}" on Wikipedia`}
-                            aria-label={`Click to open ${section.line} section in Wikipedia`}
+                            title={
+                              !(
+                                selectedSource.startsWith("Wikimedia") ||
+                                selectedSource.startsWith("Wikidata")
+                              )
+                                ? `Open section "${section.line}" on ${
+                                    selectedSource.split(" ")[0]
+                                  }`
+                                : `${section.anchor}`
+                            }
+                            aria-label={
+                              !(
+                                selectedSource.startsWith("Wikimedia") ||
+                                selectedSource.startsWith("Wikidata")
+                              )
+                                ? `Click to open ${section.line} section in ${
+                                    selectedSource.split(" ")[0]
+                                  }`
+                                : undefined
+                            }
+                            style={{
+                              opacity:
+                                selectedSource.startsWith("Wikimedia") ||
+                                selectedSource.startsWith("Wikidata")
+                                  ? "1"
+                                  : undefined,
+                              cursor:
+                                selectedSource.startsWith("Wikimedia") ||
+                                selectedSource.startsWith("Wikidata")
+                                  ? "default"
+                                  : undefined,
+                            }}
                           >
                             {section.line}
                           </a>
@@ -272,43 +347,44 @@ export default function Articles() {
                       );
                     })
                   ) : (
-                    <h3>No sections available</h3>
+                    <h3 style={{ cursor: "default" }}>No sections available</h3>
                   )}
                 </div>
-                {/* )} */}
+
                 <div className="search">
                   <h2>
                     <a
-                      href={createLink(
-                        "https://www.google.com/search?q=",
-                        title
-                      )}
+                      href={`https://www.google.com/search?q=${encodeURIComponent(
+                        article.title
+                      )}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      title={`Search ${title} online`}
-                      aria-label={`Search ${title} online`}
+                      title={`Search ${article.title} online`}
+                      aria-label={`Click to search ${article.title} online`}
                     >
-                      <TbWorldSearch
-                        size="1.5rem"
-                        style={{ marginRight: "13px" }}
-                        aria-hidden="true"
+                      <FiExternalLink
+                        size="1.65rem"
+                        className="search-box-icons"
+                        aria-hidden
                       />
                       <span className="search-text search-online-text">
                         Online
                       </span>
                     </a>
                   </h2>
-                  <h2 style={{ marginLeft: "-8px" }}>
+                  <h2>
                     <button
                       onClick={() => {
-                        setCurrentArticleTitle(title);
+                        setCurrentArticleTitle(article.title);
                         setCurrentArticleDescription(article.extract);
-                        setCurrentArticleToc(article.toc || []);
+                        setCurrentArticleImage(article.thumbnail?.source);
+                        setCurrentArticleToc(article.toc);
+                        setCurrentArticleUrl(article.pageUrl);
+                        setCurrentArticleSource(selectedSource);
+                        setCurrentArticleLang(selectedLang);
                         setIsChatOpen((prev) => !prev);
                       }}
                       className="like-button"
-                      style={{ marginBottom: "0" }}
                     >
                       {isChatOpen ? (
                         <div
@@ -316,13 +392,9 @@ export default function Articles() {
                           aria-label="Click to close chat"
                         >
                           <RxCross1
-                            size={window.innerWidth < 900 ? 21.5 : 24}
-                            style={{
-                              marginRight: "15px",
-                              marginBottom:
-                                window.innerWidth < 900 ? "1.95px" : "",
-                            }}
-                            aria-hidden="true"
+                            size={width < 900 ? 21.5 : 24}
+                            className="close-chat-icon"
+                            aria-hidden
                           />
                           <span className="search-text search-liked-text">
                             Close Chat
@@ -330,17 +402,13 @@ export default function Articles() {
                         </div>
                       ) : (
                         <div
-                          title={`Talk with a chatbot about ${title}`}
-                          aria-label={`Click to talk with a chatbot about ${title}`}
+                          title={`Talk with a chatbot about ${article.title}`}
+                          aria-label={`Click to talk with a chatbot about ${article.title}`}
                         >
                           <TbRobot
                             size="1.7rem"
-                            style={{
-                              marginRight: "10px",
-                              marginBottom:
-                                window.innerWidth > 900 ? "-3.5px" : "-1.35px",
-                            }}
-                            aria-hidden="true"
+                            className="search-box-icons"
+                            aria-hidden
                           />
                           <span className="search-text search-liked-text">
                             Chat
@@ -349,27 +417,36 @@ export default function Articles() {
                       )}
                     </button>
                   </h2>
-                  <h2 style={{ marginLeft: "-6px" }}>
+                  <h2>
                     <button
-                      onClick={() => handleLikeArticle({ title, pageUrl })}
                       className="like-button"
+                      onClick={() =>
+                        handleLikeArticle(
+                          {
+                            title: article.title,
+                            pageUrl: article.pageUrl,
+                          },
+                          setArticleLiked,
+                          setLastLikeAction
+                        )
+                      }
                       title={
-                        isArticleLiked(pageUrl)
+                        isArticleLiked(article.pageUrl)
                           ? "This article has been liked!"
                           : "Like this article"
                       }
                       aria-label={
-                        isArticleLiked(pageUrl)
+                        isArticleLiked(article.pageUrl)
                           ? "This article has been liked!"
                           : "Like this article"
                       }
                     >
-                      {isArticleLiked(pageUrl) ? (
+                      {isArticleLiked(article.pageUrl) ? (
                         <>
                           <BiSolidLike
                             size="1.5rem"
-                            style={{ marginRight: "14px" }}
-                            aria-hidden="true"
+                            className="search-box-icons"
+                            aria-hidden
                           />
                           <span className="search-text search-liked-text">
                             Liked!
@@ -379,8 +456,8 @@ export default function Articles() {
                         <>
                           <BiLike
                             size="1.5rem"
-                            style={{ marginRight: "14px" }}
-                            aria-hidden="true"
+                            className="search-box-icons"
+                            aria-hidden
                           />
                           <span className="search-text search-liked-text">
                             Like
@@ -389,13 +466,35 @@ export default function Articles() {
                       )}
                     </button>
                   </h2>
+
+                  {width < 900 && (
+                    <h2>
+                      <a
+                        onClick={() => {
+                          handleShareLink(
+                            article.pageUrl,
+                            article.title,
+                            article.thumbnail?.source
+                          );
+                        }}
+                        className="search-box-icons"
+                      >
+                        <GiShare size="1.55rem" />
+                      </a>
+                    </h2>
+                  )}
                 </div>
-                {window.innerWidth < 900 && (
+                {width < 900 && (
                   <>
                     <div
                       className="like-overlay"
-                      onClick={() => handleLikeOverlayClick({ title, pageUrl })}
-                      aria-hidden="true"
+                      onClick={() =>
+                        handleLikeOverlayClick({
+                          title: article.title,
+                          pageUrl: article.pageUrl,
+                        })
+                      }
+                      aria-hidden
                     ></div>
                     {articleLiked &&
                       (lastLikeAction === "like" ? (
@@ -405,7 +504,7 @@ export default function Articles() {
                         >
                           <BiSolidLike
                             size="3rem"
-                            aria-hidden="true"
+                            aria-hidden
                             style={{ color: "white" }}
                           />
                         </div>
@@ -416,84 +515,243 @@ export default function Articles() {
                         >
                           <BiLike
                             size="3rem"
-                            aria-hidden="true"
+                            aria-hidden
                             style={{ color: "white" }}
                           />
                         </div>
                       ))}
                   </>
                 )}
+                <div
+                  className="sr-only"
+                  aria-live="assertive"
+                  aria-atomic="true"
+                >
+                  {articleLiked &&
+                    (lastLikeAction === "like"
+                      ? "Article has been liked successfully"
+                      : "Article has been unliked successfully")}
+                </div>
 
                 <a
-                  href={pageUrl}
+                  href={article.pageUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={`Open article page for ${title} on Wikipedia`}
-                  aria-label={`Open article page for ${title} on Wikipedia`}
+                  title={`Open page for ${article.title} on ${selectedSource}`}
+                  aria-label={`Click to open page for ${article.title} on ${selectedSource}`}
+                  style={{ opacity: 1 }}
                 >
                   <div className="article-link">
-                    <FaWikipediaW
-                      size="2rem"
-                      style={{ marginLeft: "10px" }}
-                      aria-hidden="true"
-                    />
+                    {renderLogo(selectedSource, isLoading)}
                   </div>
                 </a>
 
                 <footer>
-                  <div className="view-count">
-                    <a
-                      href={`https://pageviews.wmcloud.org/?project=en.wikipedia.org&platform=all-access&agent=user&redirects=1&start=earliest&end=latest&pages=${article.title}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="View historical pageview data"
-                      aria-label={`This article has ${article.viewCount} views. Click on this to see historical pageview data`}
-                    >
-                      {window.innerWidth < 900 ? (
-                        <ViewCountAnimator
-                          start={0}
-                          end={article.viewCount}
-                          duration={2}
-                          separator=","
-                          enableScrollSpy={true}
-                          scrollSpyOnce={true}
-                          style={{ fontWeight: "normal" }}
-                          aria-hidden={true}
-                        />
-                      ) : (
-                        <> {article.viewCount.toLocaleString()} views </>
-                      )}
-                    </a>
-                  </div>
-                  <div className="last-edited">
-                    <a
-                      href={`https://en.wikipedia.org/w/index.php?title=${encodeURIComponent(
-                        title
-                      )}&action=history`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="View article edit history"
-                      aria-label="View article edit history"
-                    >
-                      {getTimeAgo(article.timestamp)}
-                    </a>
-                  </div>
+                  {article.viewCount && (
+                    <div className="view-count">
+                      <a
+                        href={article.pageViewsLink || undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          opacity: !article.pageViewsLink && 1,
+                          cursor: article.pageViewsLink ? "pointer" : "default",
+                        }}
+                        title={
+                          article.pageViewsLink
+                            ? "View historical pageview data"
+                            : undefined
+                        }
+                        aria-label={
+                          article.pageViewsLink
+                            ? "Click on this to see historical pageview data"
+                            : undefined
+                        }
+                        aria-readonly={!article.pageViewsLink}
+                      >
+                        {selectedSource.startsWith("SCP") ? (
+                          <div>
+                            Rating: {article.viewCount.toLocaleString()}
+                          </div>
+                        ) : width < 900 ? (
+                          <ViewCountAnimator
+                            start={0}
+                            end={article.viewCount}
+                            duration={2}
+                            separator=","
+                            enableScrollSpy
+                            scrollSpyOnce
+                            style={{ fontWeight: "100" }}
+                            aria-disabled
+                          />
+                        ) : (
+                          <div>{article.viewCount.toLocaleString()} views</div>
+                        )}
+                      </a>
+                    </div>
+                  )}
+                  {article.timestamp && (
+                    <div className="last-edited">
+                      <a
+                        href={
+                          selectedSource.startsWith("SCP") ||
+                          selectedSource.startsWith("Know") ||
+                          selectedSource.startsWith("Wikihow")
+                            ? undefined
+                            : selectedSource.startsWith("Wikimedia")
+                            ? `${article.pageUrl}#Summary`
+                            : (() => {
+                                try {
+                                  const url = new URL(article.pageUrl);
+
+                                  if (selectedSource.startsWith("Fandom")) {
+                                    return `${
+                                      url.origin
+                                    }/wiki/${encodeURIComponent(
+                                      article.title
+                                    )}?action=history`;
+                                  }
+
+                                  if (
+                                    selectedSource.startsWith("Edramatica") ||
+                                    selectedSource.startsWith("Incel") ||
+                                    selectedSource.startsWith("Micronations")
+                                  ) {
+                                    return `${
+                                      url.origin
+                                    }/index.php?title=${encodeURIComponent(
+                                      article.title
+                                    )}&action=history`;
+                                  }
+
+                                  if (selectedSource.startsWith("Metapedia")) {
+                                    return `${
+                                      url.origin
+                                    }/m/index.php?title=${encodeURIComponent(
+                                      article.title
+                                    )}&action=history`;
+                                  }
+
+                                  return `${
+                                    url.origin
+                                  }/w/index.php?action=history&title=${encodeURIComponent(
+                                    article.title
+                                  )}`;
+                                } catch {
+                                  return article.pageUrl;
+                                }
+                              })()
+                        }
+                        style={{
+                          opacity:
+                            (selectedSource.startsWith("SCP") ||
+                              selectedSource.startsWith("Know") ||
+                              selectedSource.startsWith("Wikihow")) &&
+                            "1",
+                          cursor:
+                            (selectedSource.startsWith("SCP") ||
+                              selectedSource.startsWith("Know") ||
+                              selectedSource.startsWith("Wikihow")) &&
+                            "default",
+                        }}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={
+                          selectedSource.startsWith("SCP") ||
+                          selectedSource.startsWith("Know")
+                            ? undefined
+                            : "View article edit/upload history"
+                        }
+                        aria-label={
+                          selectedSource.startsWith("SCP") ||
+                          selectedSource.startsWith("Know")
+                            ? undefined
+                            : "Click to view article edit/upload history"
+                        }
+                      >
+                        {(() => {
+                          const isLastEditedSource = [
+                            "Wikipedia",
+                            "Wikivoyage",
+                            "RationalWiki",
+                            "Edramatica",
+                            "Micronations",
+                            "Every",
+                            "Polandball",
+                            "Polcompball",
+                            "Wikispecies",
+                            "Hetero",
+                            "IncelWiki",
+                            "MickeyWiki",
+                            "Metapedia",
+                            "Illogic",
+                            "Minecraft",
+                            "SCP",
+                            "Uncyclo",
+                            "UNOP",
+                            "Pornopedia",
+                            "Conservapedia",
+                            "Fandom",
+                          ].some((s) => selectedSource.includes(s));
+
+                          const isPublishedSource = [
+                            "Wikinews",
+                            "Wikibooks",
+                          ].some((s) => selectedSource.startsWith(s));
+
+                          if (isLastEditedSource) return "Last edited";
+                          if (isPublishedSource) return "Published";
+                          if (selectedSource.startsWith("Wikidata"))
+                            return "From";
+                          return "Uploaded";
+                        })()}{" "}
+                        {getTimeAgo(article.timestamp)}
+                      </a>
+                    </div>
+                  )}
                 </footer>
+
+                <div
+                  className={
+                    isLoadingMore && index === articles.length - 1
+                      ? "more-loading-overlay"
+                      : "more-loading-overlay hidden"
+                  }
+                >
+                  Getting more content
+                  <span>
+                    <span>.</span>
+                    <span>.</span>
+                    <span>.</span>
+                  </span>
+                </div>
               </div>
             );
           })
         )}
       </div>
-      <div ref={sentinelRef} style={{ height: "1px" }} aria-hidden="true"></div>
       {isChatOpen && (
         <div
           className="description"
-          // style={{ width: "58.5vw", left: "2%" }}
+          style={{
+            top: width < 900 && showIframe && "18.5%",
+            height:
+              width > 900
+                ? showIframe && !showToc && "54.82%"
+                : showIframe && "52%",
+            width: showIframe && !showToc && "58.2vw",
+            left: showIframe && !showToc && "2%",
+            zIndex: width < 900 && "650",
+          }}
         >
           <Chat
             articleTitle={currentArticleTitle}
             articleDescription={currentArticleDescription}
+            articleImage={currentArticleImage}
             articleToc={currentArticleToc}
+            articleUrl={currentArticleUrl}
+            selectedSource={currentArticleSource}
+            selectedLang={currentArticleLang}
           />
         </div>
       )}

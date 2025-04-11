@@ -1,0 +1,25 @@
+const presetThemes = [
+  { name: "Midnight Black", value: "0, 0, 0" },
+  { name: "Obsidian Core", value: "12, 12, 14" },
+  { name: "Carbon Code", value: "24, 24, 27" },
+  { name: "Iron Fog", value: "55, 58, 65" },
+  { name: "Slate Night", value: "38, 44, 55" },
+  { name: "Phantom Blue", value: "18, 28, 50" },
+  { name: "Moonlit Lake", value: "20, 32, 44" },
+  { name: "Deep Current", value: "15, 35, 48" },
+  { name: "Steel Mirage", value: "40, 48, 54" },
+  { name: "Shadow Mauve", value: "58, 42, 55" },
+  { name: "Noir Plum", value: "50, 20, 45" },
+  { name: "Inkwell", value: "22, 18, 30" },
+  { name: "Twilight Moss", value: "30, 45, 34" },
+  { name: "Pine Shadow", value: "26, 38, 34" },
+  { name: "Forest Veil", value: "34, 46, 36" },
+  { name: "Canyon Stone", value: "60, 40, 35" },
+  { name: "Velvet Rust", value: "74, 36, 30" },
+  { name: "Dust Storm", value: "78, 60, 52" },
+  { name: "Burnt Sienna", value: "85, 45, 35" },
+  { name: "Ash Ember", value: "68, 54, 48" },
+  { name: "Crimson Soil", value: "82, 38, 42" },
+];
+
+export default presetThemes;
