@@ -567,7 +567,6 @@ export default function Articles({
                             ? "Click on this to see historical pageview data"
                             : undefined
                         }
-                        aria-readonly={!article.pageViewsLink}
                       >
                         {selectedSource.startsWith("SCP") ? (
                           <div>
