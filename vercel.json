@@ -1,12 +1,9 @@
 {
+  "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/proxy.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/api/:match*",
+      "destination": "/api/proxy"
     }
   ],
   "headers": [

@@ -87,7 +87,7 @@ export default function Header({
     if (!hasVisited) {
       setShowLegalNotice(true);
       localStorage.setItem("hasVisitedBefore", "true");
-      const timer = setTimeout(() => setShowLegalNotice(false), 20000);
+      const timer = setTimeout(() => setShowLegalNotice(false), 30000);
       return () => clearTimeout(timer);
     }
   }, []);

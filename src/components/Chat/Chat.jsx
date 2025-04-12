@@ -3,7 +3,7 @@ import { FiUser } from "react-icons/fi";
 import { TbRobot } from "react-icons/tb";
 import DOMPurify from "dompurify";
 
-const API_URL = import.meta.env.VITE_CHAT_API;
+const API_URL = import.meta.env.VITE_BACKEND_API;
 
 import "./Chat.css";
 import "./Chat-mobile.css";
@@ -217,7 +217,11 @@ export default function Chat({
           {imageAllowed
             ? "Don't send image to chatbot"
             : "Send image to chatbot?"}
-          <i>{imageAllowed ? " (faster)" : " (slower)"}</i>
+          <i>
+            {imageAllowed
+              ? " (faster, lower chance of errors)"
+              : " (slower, still in development)"}
+          </i>
         </button>
       )}
     </>

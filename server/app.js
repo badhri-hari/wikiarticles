@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+
 import setupRoutes from "./routes/setup.js";
 import { routeConfigs } from "./routes/routes.js";
 import chatRouter from "./routes/chat.js";
@@ -9,21 +11,21 @@ import fandomRouter from "./routes/fandomSearch.js";
 dotenv.config();
 const app = express();
 
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(express.json({ limit: "2mb" }));
 app.use((req, res, next) => {
-  const secret = req.get("X-APP-SECRET");
-
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-APP-SECRET");
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
-  }
-
-  if (secret !== process.env.APP_SECRET_HEADER) {
-    // Comment out for development
-    return res.status(403).json({ error: "Unauthorized" });
   }
 
   next();

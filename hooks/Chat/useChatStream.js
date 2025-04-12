@@ -7,7 +7,7 @@ export default function useChatStream(apiUrl) {
     setLoading(true);
 
     try {
-      const response = await fetch(apiUrl, {
+      const response = await fetch(`${apiUrl}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatHistory, imageBase64 }),

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 
-const API_URL = import.meta.env.VITE_ARTICLES_API;
+const API_URL = import.meta.env.VITE_BACKEND_API;
 
 import { renderLogo } from "../../../data/sourceOptions.jsx";
 

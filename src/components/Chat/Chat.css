@@ -1,12 +1,14 @@
-.chat-log::-webkit-scrollbar {
-  display: none;
-}
-
 .chat-log {
   height: calc(69% + 8px);
   margin-top: -10px;
   overflow-x: hidden;
   overflow-y: scroll;
+  text-wrap: unset;
+  text-align: left;
+}
+
+.chat-log::-webkit-scrollbar {
+  display: none;
 }
 
 .chat-message {
