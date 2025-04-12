@@ -1,6 +1,6 @@
 import { load } from "cheerio";
 
-export function extractParagraphs($) {
+export function extractParagraphs($, source = null) {
   const content = [];
 
   $(
@@ -47,6 +47,14 @@ export function extractParagraphs($) {
   $("table.cquote").each((_, el) => {
     const $table = $(el);
     const $quoteDiv = $table.find("td > div").first();
+    $quoteDiv.find("span").each((_, span) => {
+      const $span = $(span);
+      const text = $span.text().trim();
+      if (text === "“" || text === "”") {
+        $span.remove();
+      }
+    });
+
     const quoteHtml = $quoteDiv.html()?.trim();
 
     const $cite = $table.find("cite").first();
@@ -56,10 +64,8 @@ export function extractParagraphs($) {
 
     if (quoteHtml) {
       const styledQuote = `
-        <blockquote style="padding:4px 50px;position:relative;">
-          <span style="position:absolute;left:10px;top:-6px;z-index:1;font-family:'Times New Roman',serif;font-weight:bold;color:#B2B7F2;font-size:36px">“</span>
+        <blockquote>
           ${quoteHtml}
-          <span style="position:absolute;right:10px;bottom:-20px;z-index:1;font-family:'Times New Roman',serif;font-weight:bold;color:#B2B7F2;font-size:36px">”</span>
           ${sourceHtml}
         </blockquote>
       `;
@@ -89,9 +95,30 @@ export function extractParagraphs($) {
     }
   });
 
-  $("h1, h2, h3, h4, h5, h6, p, ul, ol").each((_, el) => {
+  $("h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote").each((_, el) => {
     const $el = $(el);
-    $el.find("img").remove();
+
+    const existingStyle = $el.attr("style") || "";
+    const transparentStyle = existingStyle
+      .replace(/background[^;]*;?/gi, "")
+      .trim();
+    $el.attr(
+      "style",
+      `${transparentStyle}; background: transparent; background-color: transparent;`.trim()
+    );
+
+    if (source === "polandball") {
+      $el.find("a:has(img)").each((_, link) => {
+        const $link = $(link);
+        const $img = $link.find("img").first();
+
+        $img.attr("style", "display:inline; width:17px; height:17px;");
+        $link.replaceWith($img);
+      });
+    } else {
+      $el.find("img").remove();
+    }
+
     const html = $el.html()?.trim();
     if (html) {
       content.push(`<${el.tagName}>${html}</${el.tagName}>`);

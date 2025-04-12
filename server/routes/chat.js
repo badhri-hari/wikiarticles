@@ -20,10 +20,10 @@ chatRouter.post("/", async (req, res) => {
       role: m.sender === "user" ? "user" : "assistant",
       content: m.text,
     }));
-    let model = "google/gemini-2.0-flash-exp:free";
+    let model = "google/gemini-2.5-pro-exp-03-25:free";
     let payload = { model, messages };
     if (req.body.imageBase64) {
-      model = "google/gemini-2.0-flash-exp:free";
+      model = "google/gemini-2.5-pro-exp-03-25:free";
       payload = {
         model,
         messages: [

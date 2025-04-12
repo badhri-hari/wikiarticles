@@ -1,5 +1,5 @@
 // If you do not have a locally running redis instance:
-// Comment out imports and lines 30-47 in dev environments (and in line 49, replace 'uniqueItems' with 'items')
+// Comment out imports and lines 34-47 in dev environments (and in line 49, replace 'uniqueItems' with 'items')
 
 import Redis from "ioredis";
 const redis = new Redis(process.env.REDIS_URL);

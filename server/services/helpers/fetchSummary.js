@@ -51,7 +51,7 @@ export async function fetchSummary({
 
         const paragraphs = extractParagraphs($);
         const stopIndex = paragraphs.findIndex((t) =>
-          /^Have an opinion|Share this:|This page is archived|Please note that due to our archival policy, we will not alter or update the content of articles that are archived, but will only accept requests to make grammatical and formatting corrections\.|Got a correction\? Add the template {{editprotected}} to the talk page along with your corrections, and it will be brought to the attention of the administrators\./.test(
+          /^Have an opinion|HAVE YOUR SAY|Share this:|This page is archived|Please note that due to our archival policy, we will not alter or update the content of articles that are archived, but will only accept requests to make grammatical and formatting corrections\.|Got a correction\? Add the template {{editprotected}} to the talk page along with your corrections, and it will be brought to the attention of the administrators\./.test(
             t
           )
         );

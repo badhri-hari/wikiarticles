@@ -41,9 +41,26 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
 
   if (source === "edramatica") {
     $(".sitenotice").remove();
-  }
+  } else if (source === "polandball") {
+    const classesToRemove = [
+      "wds-tabs",
+      "wds-list",
+      "cosmos-dropdown-list",
+      "pi-data-label",
+      "pi-font",
+      "pi-secondary-font",
+      "cosmos-toolbar-tools",
+      "recentchanges-module",
+    ];
 
-  if (source === "illogic") {
+    classesToRemove.forEach((className) => {
+      $(`.${className}`).remove();
+    });
+
+    $("#Gallery").remove();
+
+    $("footer").remove();
+  } else if (source === "illogic") {
     $('span.quoteline[style*="background-color"]').each((_, el) => {
       const style = $(el).attr("style");
       const cleanedStyle = style
@@ -52,9 +69,7 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
         .join(";");
       $(el).attr("style", cleanedStyle);
     });
-  }
-
-  if (source === "xxx") {
+  } else if (source === "xxx") {
     const classesToRemove = [
       "vector-menu-content-list",
       "vector-pinnable-header",
@@ -69,9 +84,7 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
     });
 
     $("footer").remove();
-  }
-
-  if (source === "rational") {
+  } else if (source === "rational") {
     $("p span[style*='color']").each((_, el) => {
       const style = $(el).attr("style");
       const cleanedStyle = style
@@ -91,7 +104,7 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
   }
 
   const titleExtracted = getTitleFromHtml($);
-  let paragraphs = extractParagraphs($);
+  let paragraphs = extractParagraphs($, source);
 
   if (source === "everybodywiki") {
     paragraphs = paragraphs.slice(3);
@@ -129,7 +142,7 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
       "•",
       "Missing something? You can help by ",
     ],
-    polandball: ["•", "←", "↓", "→", "File:", "This article is a "],
+    polandball: ["•", "←", "↓", "→", "This article is a "],
     incel: ["•"],
     xxx: ["You can help Pornopedia by "],
     everybodywiki: [

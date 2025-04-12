@@ -9,7 +9,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import "./Header.css";
 import "./Header-mobile.css";
 
-const API_URL = import.meta.env.VITE_ARTICLES_API;
+const API_URL = import.meta.env.VITE_BACKEND_API;
 
 import { sourceOptionsImport } from "../../../data/sourceOptions.jsx";
 import { langOptionsImport } from "../../../data/langOptions.jsx";
@@ -452,7 +452,6 @@ export default function Header({
                               placeholder="Enter fandom (ex. 'Star Wars')"
                               aria-label="Type a fandom name"
                               autoFocus
-                              spellCheck
                               required
                               disabled={isFandomSearching}
                               inputMode="text"
