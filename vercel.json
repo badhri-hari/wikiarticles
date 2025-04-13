@@ -4,6 +4,10 @@
     {
       "source": "/api/:match*",
       "destination": "/api/proxy"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [

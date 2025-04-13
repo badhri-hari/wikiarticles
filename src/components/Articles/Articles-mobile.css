@@ -29,10 +29,10 @@
     position: absolute;
     top: 14.5vh;
     left: 0;
-    height: 23.5vh;
+    height: 80vh;
     width: 100vw;
     background-color: transparent;
-    z-index: 700;
+    z-index: 600;
   }
 
   .like-feedback {
@@ -83,7 +83,7 @@
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
-  .iframe-toggle-button:hover span {
+  .iframe-toggle-button:focus span {
     opacity: 1;
   }
 
@@ -105,12 +105,12 @@
   }
 
   .iframe iframe {
-    height: 98%;
-    width: 98%;
-    margin-top: 2.75px;
-    margin-bottom: 0;
+    height: 98.25%;
+    width: 98.25%;
+    margin-top: 3px;
+    margin-bottom: -1px;
     border: none;
-    clip-path: inset(0px round 20px);
+    clip-path: inset(0px round 15px);
     font-size: 1.25rem;
   }
 
@@ -219,15 +219,16 @@
     margin-left: 10px;
     margin-right: 13px;
     width: 200px;
-    padding-top: 0.25px;
+    padding-top: 0px;
+    padding-bottom: 0.8px;
   }
 
   .search h2:nth-child(4) {
-    padding: 0px;
-  }
-
-  .close-chat-icon {
-    margin-bottom: 1.95px;
+    margin-bottom: 15px;
+    margin-right: 10px;
+    width: 200px;
+    padding-top: 0px;
+    padding-bottom: 3.25px;
   }
 
   @keyframes tapEffect {

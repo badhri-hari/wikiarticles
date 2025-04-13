@@ -155,10 +155,10 @@
   }
 
   .fandom-input {
-    top: 0px;
-    left: 8px;
+    top: 0;
+    left: 0;
     height: 30px;
-    width: 67%;
+    width: 66%;
     padding: 0 8px;
     background-color: rgba(var(--bg-color), 1);
     backdrop-filter: blur(7px);
@@ -184,11 +184,34 @@
 
   .color-picker-container {
     left: -5px;
-    height: 37vh;
+    overflow: auto;
   }
 
-  .color-input-row {
-    display: none;
+  .color-input-manual {
+    bottom: 9px;
+    height: 32px;
+    width: 79.5%;
+    padding: 0 40px 0 15px;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    background-color: rgba(var(--bg-color), 1);
+    border: 1px solid transparent;
+    border-radius: 13px;
+    font-size: 0.83rem;
+  }
+
+  .color-input-manual:focus {
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .reset-bgcolor-button {
+    height: 34px;
+    padding: 0 20px;
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+    background-color: rgba(var(--bg-color), 1);
+    border-radius: 13px;
+    font-size: 0.85rem;
   }
 
   .preset-theme-buttons {
@@ -212,9 +235,13 @@
     bottom: 0;
   }
 
+  .lang-sub-group h2 {
+    width: 140px;
+  }
+
   .lang-sub-group h3 {
-    width: 45%;
-    right: 30px;
+    width: 50%;
+    right: 20px;
   }
 
   .liked-articles-button {
@@ -232,7 +259,8 @@
   .download-liked-articles-button {
     font-size: 1rem;
     border-radius: 20px;
-    border: 1px solid rgba(var(--bg-color), 0.125);
+    background-color: rgba(var(--bg-color), 1);
+    border: 1px solid rgba(var(--bg-color), 1);
   }
 
   .no-liked-articles-text h2 {

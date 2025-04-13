@@ -39,9 +39,9 @@ export default function Articles({
 
   const containerRef = useRef(null);
   const slidesRef = useRef([]);
+  const isFirstTapRef = useRef(false);
 
   const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const [isFirstTap, setIsFirstTap] = useState(false);
   const [articleLiked, setArticleLiked] = useState(false);
   const [lastLikeAction, setLastLikeAction] = useState(null);
   const [showIframe, setShowIframe] = useState(false);
@@ -195,7 +195,7 @@ export default function Articles({
                           left: !showToc && "2%",
                           width: !showToc && "61.5vw",
                         }
-                      : { zIndex: "650" }
+                      : { zIndex: showIframe ? "650" : "0" }
                   }
                 >
                   <iframe
@@ -489,10 +489,16 @@ export default function Articles({
                     <div
                       className="like-overlay"
                       onClick={() =>
-                        handleLikeOverlayClick({
-                          title: article.title,
-                          pageUrl: article.pageUrl,
-                        })
+                        handleLikeOverlayClick(
+                          { title: article.title, pageUrl: article.pageUrl },
+                          isFirstTapRef,
+                          (a) =>
+                            handleLikeArticle(
+                              a,
+                              setArticleLiked,
+                              setLastLikeAction
+                            )
+                        )
                       }
                       aria-hidden
                     ></div>

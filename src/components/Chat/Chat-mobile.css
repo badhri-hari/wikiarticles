@@ -37,7 +37,7 @@
   }
 
   .chat-input-area:focus {
-    border: 3.5px solid rgba(255, 255, 255, 0.25);
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
   }
 
   .prompt-count {

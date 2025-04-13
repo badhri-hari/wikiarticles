@@ -82,16 +82,17 @@ export const handleLikeArticle = (
 
 export const handleLikeOverlayClick = (
   article,
-  isFirstTap,
-  setIsFirstTap,
+  isFirstTapRef,
   handleLikeArticle
 ) => {
-  if (isFirstTap) {
+  if (isFirstTapRef.current) {
     handleLikeArticle(article);
-    setIsFirstTap(false);
+    isFirstTapRef.current = false;
   } else {
-    setIsFirstTap(true);
-    setTimeout(() => setIsFirstTap(false), 400);
+    isFirstTapRef.current = true;
+    setTimeout(() => {
+      isFirstTapRef.current = false;
+    }, 400);
   }
 };
 

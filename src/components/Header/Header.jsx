@@ -49,6 +49,8 @@ export default function Header({
   const [likedButtonRef, triggerLikedButton] = usePressFeedback();
   const [changeSourceRef, triggerChangeSource] = usePressFeedback();
   const [changeBgColorRef, triggerChangeBgColor] = usePressFeedback();
+  const [resetBgColorRef, triggerResetBgColor] = usePressFeedback();
+  const presetThemeFeedbacks = presetThemes.map(() => usePressFeedback());
   const [changeLangRef, triggerChangeLang] = usePressFeedback();
   const [downloadRef, triggerDownload] = usePressFeedback();
 
@@ -600,7 +602,7 @@ export default function Header({
                     }
                   : {}
               }
-              type="text"
+              type="number"
               onChange={(e) => {
                 const val = e.target.value;
                 setColorInputValue(val);
@@ -617,8 +619,12 @@ export default function Header({
             />
 
             <button
+              ref={resetBgColorRef}
               className="reset-bgcolor-button"
-              onClick={() => setUserBgColor(initialBgColor)}
+              onClick={() => {
+                triggerResetBgColor();
+                setUserBgColor(initialBgColor);
+              }}
               title={`Reset to color before opening picker: ${initialBgColor}`}
               aria-label={`Click to reset background color to previous color: ${initialBgColor}`}
             >
@@ -627,18 +633,26 @@ export default function Header({
           </div>
 
           <div className="preset-theme-buttons">
-            {presetThemes.map((theme, idx) => (
-              <button
-                key={idx}
-                onClick={() => setUserBgColor(theme.value)}
-                className="preset-theme-button"
-                style={{ backgroundColor: `rgb(${theme.value})` }}
-                title={theme.value}
-                aria-label={`Click to apply the ${theme.name} background theme`}
-              >
-                {theme.name}
-              </button>
-            ))}
+            {presetThemes.map((theme, idx) => {
+              const [ref, trigger] = presetThemeFeedbacks[idx];
+
+              return (
+                <button
+                  key={idx}
+                  ref={ref}
+                  onClick={() => {
+                    trigger();
+                    setUserBgColor(theme.value);
+                  }}
+                  className="preset-theme-button"
+                  style={{ backgroundColor: `rgb(${theme.value})` }}
+                  title={theme.value}
+                  aria-label={`Click to apply the ${theme.name} background theme`}
+                >
+                  {theme.name}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -723,7 +737,7 @@ export default function Header({
                   >
                     <div
                       className={
-                        !lang.isGroupStart ? "source-sub-group" : undefined
+                        !lang.isGroupStart ? "lang-sub-group" : undefined
                       }
                     >
                       <h2>
