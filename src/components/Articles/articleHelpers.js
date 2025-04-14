@@ -96,19 +96,13 @@ export const handleLikeOverlayClick = (
   }
 };
 
-export const handleShareLink = async (pageUrl, title, imageUrl) => {
+export const handleShareLink = async (pageUrl, title) => {
   if (navigator.share) {
     try {
-      const thumbnail = await fetch(imageUrl).then((res) => res.blob());
       await navigator.share({
         title: title,
-        text: title,
+        text: pageUrl,
         url: pageUrl,
-        files: [
-          new File([thumbnail], title, {
-            type: thumbnail.type,
-          }),
-        ],
       });
     } catch (error) {
       console.error("Error sharing article link:", error);

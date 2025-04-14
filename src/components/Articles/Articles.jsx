@@ -96,14 +96,20 @@ export default function Articles({
           <div style={{ animation: hasError && "none" }}>
             {renderLogo(selectedSource, isLoading || hasError)}
           </div>
-          <h2>{hasError ? "Uh Oh!" : "Please wait..."}</h2>
+          <h2>
+            {hasError
+              ? "Uh Oh!"
+              : totalArticles === 0
+              ? "Just a minute..."
+              : "Please wait..."}
+          </h2>
           <p>
             {hasError && !navigator.onLine
               ? "You need an internet connection to continue!"
               : hasError
               ? "Looks like there's a problem with the server right now, please try again later."
               : totalArticles === 0
-              ? "Connecting to server, please wait..."
+              ? "Spinning up a new server instance just for you..."
               : `Getting content from ${selectedSource}... (${articles.length}/${totalArticles})`}
           </p>
         </div>
@@ -473,11 +479,7 @@ export default function Articles({
                     <h2>
                       <a
                         onClick={() => {
-                          handleShareLink(
-                            article.pageUrl,
-                            article.title,
-                            article.thumbnail?.source
-                          );
+                          handleShareLink(article.pageUrl, article.title);
                         }}
                         className="search-box-icons"
                       >
