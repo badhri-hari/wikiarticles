@@ -18,6 +18,7 @@ import cursorHoverImage from "../assets/cursorHoverImage.png";
 DOMPurify.addHook("uponSanitizeElement", (node) => {
   if (node.tagName === "A" && node.hasAttribute("href")) {
     const href = node.getAttribute("href");
+    node.setAttribute("class", "description-link");
     node.setAttribute("title", href);
     node.setAttribute("aria-label", `Click on this link to open ${href}`);
     node.setAttribute("target", "_blank");

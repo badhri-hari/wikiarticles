@@ -79,13 +79,6 @@
   }
 }
 
-.chat-message-link {
-  color: white;
-  text-decoration-thickness: 1.18px;
-  text-underline-offset: 2px;
-  transition: all 0.1s linear;
-}
-
 .chat-message-icons {
   position: relative;
   flex-shrink: 0;

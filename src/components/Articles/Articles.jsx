@@ -102,6 +102,8 @@ export default function Articles({
               ? "You need an internet connection to continue!"
               : hasError
               ? "Looks like there's a problem with the server right now, please try again later."
+              : totalArticles === 0
+              ? "Connecting to server, please wait..."
               : `Getting content from ${selectedSource}... (${articles.length}/${totalArticles})`}
           </p>
         </div>

@@ -602,7 +602,9 @@ export default function Header({
                     }
                   : {}
               }
-              type="number"
+              value={colorInputValue}
+              type="text"
+              inputMode="numeric"
               onChange={(e) => {
                 const val = e.target.value;
                 setColorInputValue(val);
