@@ -65,7 +65,7 @@ body.custom-cursor-enabled
   position: absolute;
   bottom: 1.5%;
   left: calc(50% - 50px);
-  z-index: 4000;
+  z-index: 898;
 }
 
 .install-button button {

@@ -37,7 +37,7 @@ export function getTimeAgo(timestamp) {
     return `${diffInYears} year${diffInYears > 1 ? "s" : ""} ago`;
   }
 
-  return "(idk)";
+  return `¯\_(ツ)_/¯`;
 }
 
 export const isArticleLiked = (pageUrl) => {

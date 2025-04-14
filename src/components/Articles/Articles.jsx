@@ -91,7 +91,7 @@ export default function Articles({
           className={
             isLoading || hasError ? "loading-overlay" : "loading-overlay hidden"
           }
-          style={{ cursor: hasError && "auto" }}
+          style={{ cursor: hasError && "auto", zIndex: hasError && 899 }}
         >
           <div style={{ animation: hasError && "none" }}>
             {renderLogo(selectedSource, isLoading || hasError)}
