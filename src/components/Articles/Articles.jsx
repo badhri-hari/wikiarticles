@@ -239,9 +239,14 @@ export default function Articles({
                         : "description"
                     }
                     style={{
-                      left: !showToc && "2%",
-                      width: !showToc && "58.5vw",
-                      zIndex: width < 900 && !showIframe && "650",
+                      top: width < 900 && !showToc && "19.8%",
+                      left: !showToc && "3.5vw",
+                      height: width < 900 && !showToc && "50.5%",
+                      width: width > 900 && !showToc && "58.5vw",
+                      zIndex:
+                        width < 900 && !showIframe
+                          ? "650"
+                          : selectedSource.startsWith("SCP") && "650",
                     }}
                   >
                     <h2>{article.title}</h2>
