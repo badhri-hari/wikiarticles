@@ -40,15 +40,27 @@ async function convertImageToBase64(url) {
 
 export const fetchAndConvertImageOnMount = async (
   articleImage,
-  setImageToggleVisible
+  setImageToggleVisible,
+  setImageLoadingStatus
 ) => {
-  if (!articleImage) return;
+  if (!articleImage) {
+    setImageLoadingStatus("error");
+    return;
+  }
 
   try {
     const base64 = await convertImageToBase64(articleImage);
-    if (base64) setImageToggleVisible(true);
+    if (base64) {
+      setImageToggleVisible(true);
+      setImageLoadingStatus("success");
+    } else {
+      setImageToggleVisible(false);
+      setImageLoadingStatus("error");
+    }
   } catch (err) {
     console.error("Failed to prepare image for chatbot:", err);
+    setImageToggleVisible(false);
+    setImageLoadingStatus("error");
   }
 };
 

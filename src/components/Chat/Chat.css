@@ -2,7 +2,7 @@
   height: calc(69% + 8px);
   margin-top: -10px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   text-wrap: unset;
   text-align: left;
 }

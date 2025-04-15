@@ -38,6 +38,7 @@ export default function Chat({
   const [imageAllowed, setImageAllowed] = useState(
     selectedSource.startsWith("Wikimedia")
   );
+  const [imageLoadingStatus, setImageLoadingStatus] = useState("loading");
   const [imageToggleVisible, setImageToggleVisible] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const [botThinking, setBotThinking] = useState(false);
@@ -47,12 +48,7 @@ export default function Chat({
   const [titleText, setTitleText] = useState(
     `Type your question about ${articleTitle} in this field`
   );
-
-  useEffect(() => {
-    if (chatLogRef.current) {
-      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
-    }
-  }, [chatMessages]);
+  const [userScrolledUp, setUserScrolledUp] = useState(false);
 
   const onSendMessage = () =>
     handleSendMessage({
@@ -77,7 +73,11 @@ export default function Chat({
     });
 
   useEffect(() => {
-    fetchAndConvertImageOnMount(articleImage, setImageToggleVisible);
+    fetchAndConvertImageOnMount(
+      articleImage,
+      setImageToggleVisible,
+      setImageLoadingStatus
+    );
   }, [articleImage]);
 
   useEffect(() => {
@@ -87,6 +87,26 @@ export default function Chat({
       setPlaceholderText(`Ask anything about ${articleTitle}`);
     }
   }, [streamLoading, loading, articleTitle]);
+
+  useEffect(() => {
+    const chatLog = chatLogRef.current;
+    if (!chatLog) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = chatLog;
+      const isAtBottom = scrollHeight - scrollTop <= clientHeight;
+      setUserScrolledUp(!isAtBottom);
+    };
+
+    chatLog.addEventListener("scroll", handleScroll);
+    return () => chatLog.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (chatLogRef.current && !userScrolledUp) {
+      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+    }
+  }, [chatMessages, userScrolledUp]);
 
   return (
     <>
@@ -200,29 +220,47 @@ export default function Chat({
         {20 - messageCount}
       </div>
 
-      {imageToggleVisible && chatMessages.length === 0 && (
-        <button
-          onClick={() => {
-            setImageAllowed((prev) => !prev);
-            inputRef.current?.focus();
-          }}
-          className="image-toggle-button"
-          aria-label={
-            imageAllowed
-              ? "Click to stop sending image with your question to the chatbot (faster response time)"
-              : "Click to send image with your question to the chatbot (slower response time)"
-          }
-          aria-pressed={imageAllowed}
-        >
-          {imageAllowed
-            ? "Don't send image to chatbot"
-            : "Send image to chatbot?"}
-          <i>
-            {imageAllowed
-              ? " (faster, lower chance of errors)"
-              : " (slower, still in development)"}
-          </i>
-        </button>
+      {chatMessages.length === 0 && (
+        <>
+          {imageLoadingStatus === "loading" && (
+            <button
+              className="image-toggle-button"
+              style={{
+                opacity: 0.75,
+                pointerEvents: "none",
+              }}
+              disabled
+              aria-hidden
+            >
+              Fetching image...
+            </button>
+          )}
+
+          {imageLoadingStatus === "success" && imageToggleVisible && (
+            <button
+              onClick={() => {
+                setImageAllowed((prev) => !prev);
+                inputRef.current?.focus();
+              }}
+              className="image-toggle-button"
+              aria-label={
+                imageAllowed
+                  ? "Click to stop sending image with your question to the chatbot (faster response time)"
+                  : "Click to send image with your question to the chatbot (slower response time)"
+              }
+              aria-pressed={imageAllowed}
+            >
+              {imageAllowed
+                ? "Don't send image to chatbot"
+                : "Send image to chatbot?"}
+              <i>
+                {imageAllowed
+                  ? " (faster, lower chance of errors)"
+                  : " (slower, still in development)"}
+              </i>
+            </button>
+          )}
+        </>
       )}
     </>
   );

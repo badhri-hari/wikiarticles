@@ -57,13 +57,13 @@ i {
 
 @keyframes alternatingBackground {
   0% {
-    background-color: #1a1a1a;
+    background-color: #222222;
   }
   50% {
     background-color: #000;
   }
   100% {
-    background-color: #1a1a1a;
+    background-color: #222222;
   }
 }
 
@@ -175,14 +175,14 @@ i {
   height: calc(24px + 55%);
   width: 12.5vw;
   background: rgba(var(--bg-color), 0.5);
-  clip-path: inset(0 round 15px);
+  border-radius: 15px;
   padding: 25px;
   padding-top: 0;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   font-size: 1.21rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   transition: all 0.1s linear;
 }
@@ -223,9 +223,9 @@ i {
   height: 55%;
   width: 40.5vw;
   background: rgba(var(--bg-color), 0.5);
-  clip-path: inset(0 round 15px);
+  border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   color: white;
@@ -234,7 +234,7 @@ i {
   text-align: justify;
   hyphens: auto;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: all 0.1s linear;
 }
 
@@ -362,7 +362,7 @@ i {
   background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
   padding: 0 0 10px 25px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   color: white;
@@ -460,7 +460,7 @@ i {
   background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   color: white;
@@ -544,6 +544,7 @@ i {
     opacity: 0;
   }
 }
+
 @media only screen and (max-width: 1181px) {
   .toc {
     left: 1.5%;

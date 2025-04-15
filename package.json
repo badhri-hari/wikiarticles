@@ -3,7 +3,7 @@
   "description": "A scroll-based interface for exploring random wikis from (mostly) Wikimedia sites.",
   "author": "Badhri N. Hari",
   "private": true,
-  "version": "2.4.2",
+  "version": "2.4.3",
   "type": "module",
   "main": "server/app.js",
   "scripts": {
@@ -34,9 +34,9 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
-    "@types/react": "^19.1.1",
+    "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^4.4.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.2",
     "eslint": "^9.24.0",

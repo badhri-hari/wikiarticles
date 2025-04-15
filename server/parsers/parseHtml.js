@@ -2,6 +2,7 @@ import { load } from "cheerio";
 
 export function extractParagraphs($, source = null) {
   const content = [];
+  const seenTexts = new Set();
 
   $(
     "#toc, .infobox, .navbox, .metadata, .catlinks, .mw-references-wrap, .reflist, .vertical-navbox, .sidebar"
@@ -120,8 +121,10 @@ export function extractParagraphs($, source = null) {
     }
 
     const html = $el.html()?.trim();
-    if (html) {
+    const text = $el.text().trim();
+    if (html && text && !seenTexts.has(text)) {
       content.push(`<${el.tagName}>${html}</${el.tagName}>`);
+      seenTexts.add(text);
     }
   });
 

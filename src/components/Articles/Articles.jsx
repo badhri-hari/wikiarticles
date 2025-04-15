@@ -41,7 +41,7 @@ export default function Articles({
   const slidesRef = useRef([]);
   const isFirstTapRef = useRef(false);
 
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [imageLoadedMap, setImageLoadedMap] = useState({});
   const [articleLiked, setArticleLiked] = useState(false);
   const [lastLikeAction, setLastLikeAction] = useState(null);
   const [showIframe, setShowIframe] = useState(false);
@@ -69,8 +69,14 @@ export default function Articles({
   useEffect(() => {
     fetchArticles();
     setIsChatOpen(false);
-    setShowIframe(false);
-    setShowToc(true);
+
+    if (selectedSource.startsWith("SCP")) {
+      setShowToc(false);
+      setShowIframe(true);
+    } else {
+      setShowToc(true);
+      setShowIframe(false);
+    }
 
     return () => {};
   }, [selectedSource, selectedLang]);
@@ -128,7 +134,7 @@ export default function Articles({
                 {article.thumbnail?.source && (
                   <div
                     className={`image-carousel-slide ${
-                      isImageLoaded ? "" : "loading"
+                      imageLoadedMap[article.pageUrl] ? "" : "loading"
                     }`}
                   >
                     <img
@@ -137,8 +143,15 @@ export default function Articles({
                       )}`}
                       alt={`Image for ${article.title}`}
                       loading="lazy"
-                      className={`fade-in ${isImageLoaded ? "loaded" : ""}`}
-                      onLoad={() => setIsImageLoaded(true)}
+                      className={`fade-in ${
+                        imageLoadedMap[article.pageUrl] ? "loaded" : ""
+                      }`}
+                      onLoad={() =>
+                        setImageLoadedMap((prev) => ({
+                          ...prev,
+                          [article.pageUrl]: true,
+                        }))
+                      }
                     />
                   </div>
                 )}
@@ -193,35 +206,43 @@ export default function Articles({
                     </button>
                   )}
                 </div>
-                <div
-                  className={
-                    showIframe && !isChatOpen ? "iframe" : "iframe hidden"
-                  }
-                  style={
-                    width > 900
-                      ? {
-                          left: !showToc && "2%",
-                          width: !showToc && "61.5vw",
-                        }
-                      : { zIndex: showIframe ? "650" : "0" }
-                  }
-                >
-                  <iframe
-                    src={article.pageUrl}
-                    loading="lazy"
-                    sandbox="allow-downloads allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-scripts allow-same-origin"
-                    title={`Page for ${article.title} (using the iframe element)`}
+                {!selectedSource.startsWith("SCP") && (
+                  <div
+                    className={
+                      showIframe && !isChatOpen ? "iframe" : "iframe hidden"
+                    }
+                    style={
+                      width > 900
+                        ? {
+                            left: !showToc && "2%",
+                            width: !showToc && "61.5vw",
+                          }
+                        : { zIndex: showIframe ? "650" : "0" }
+                    }
                   >
-                    upgrade your browser dawg
-                  </iframe>
-                </div>
+                    <iframe
+                      src={article.pageUrl}
+                      loading="lazy"
+                      sandbox="allow-downloads allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-scripts allow-same-origin"
+                      title={`Page for ${article.title} (using the iframe element)`}
+                    >
+                      upgrade your browser dawg
+                    </iframe>
+                  </div>
+                )}
 
                 {!isChatOpen && (
                   <div
                     className={
-                      showIframe ? "description hidden" : "description"
+                      showIframe && !selectedSource.startsWith("SCP")
+                        ? "description hidden"
+                        : "description"
                     }
-                    style={{ zIndex: width < 900 && !showIframe && "650" }}
+                    style={{
+                      left: !showToc && "2%",
+                      width: !showToc && "58.5vw",
+                      zIndex: width < 900 && !showIframe && "650",
+                    }}
                   >
                     <h2>{article.title}</h2>
                     {article.extractDataType === "array" ? (

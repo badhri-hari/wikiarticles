@@ -183,8 +183,18 @@
   }
 
   .color-picker-container {
+    min-height: 290px;
     left: -5px;
-    overflow: auto;
+    overflow-y: auto;
+  }
+
+  .color-picker-box {
+    max-height: 150px;
+    min-width: 70%;
+  }
+
+  .color-input-row {
+    margin-top: 1px;
   }
 
   .color-input-manual {

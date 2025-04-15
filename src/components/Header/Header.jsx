@@ -589,6 +589,7 @@ export default function Header({
               .map((x) => (+x).toString(16).padStart(2, "0"))
               .join("")}`}
             onChange={(hex) => setUserBgColor(hexToRgbString(hex))}
+            className="color-picker-box"
           />
 
           <div className="color-input-row">
