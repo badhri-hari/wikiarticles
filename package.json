@@ -3,7 +3,7 @@
   "description": "A scroll-based interface for exploring random wikis from (mostly) Wikimedia sites.",
   "author": "Badhri N. Hari",
   "private": true,
-  "version": "2.4.4",
+  "version": "2.4.5",
   "type": "module",
   "main": "server/app.js",
   "scripts": {

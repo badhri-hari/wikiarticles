@@ -119,6 +119,7 @@
   }
 
   .description {
+    scrollbar-width: auto;
     box-shadow: none;
     top: 44.5%;
     right: 0;

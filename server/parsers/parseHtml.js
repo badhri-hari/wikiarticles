@@ -96,8 +96,10 @@ export function extractParagraphs($, source = null) {
     }
   });
 
-  $("h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote").each((_, el) => {
+  $("h1, h2, h3, h4, h5, h6, blockquote, p, ul, ol").each((_, el) => {
     const $el = $(el);
+    const html = $el.html()?.trim();
+    const text = $el.text().trim();
 
     const existingStyle = $el.attr("style") || "";
     const transparentStyle = existingStyle
@@ -120,8 +122,12 @@ export function extractParagraphs($, source = null) {
       $el.find("img").remove();
     }
 
-    const html = $el.html()?.trim();
-    const text = $el.text().trim();
+    if (
+      $el.parents("blockquote").length > 0 &&
+      el.tagName.toLowerCase() === "p"
+    )
+      return;
+
     if (html && text && !seenTexts.has(text)) {
       content.push(`<${el.tagName}>${html}</${el.tagName}>`);
       seenTexts.add(text);
