@@ -23,16 +23,6 @@
     font-weight: 600;
   }
 
-  .legal-notice {
-    font-size: 10px;
-    left: 24%;
-    margin-top: -12px;
-  }
-
-  .legal-icon {
-    display: none;
-  }
-
   .list-box-container {
     position: absolute;
     top: 95px;

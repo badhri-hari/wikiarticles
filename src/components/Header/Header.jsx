@@ -4,7 +4,6 @@ import { RxCross1 } from "react-icons/rx";
 import { GrResources } from "react-icons/gr";
 import { IoLanguage, IoColorFilterOutline } from "react-icons/io5";
 import { HexColorPicker } from "react-colorful";
-import { FaArrowLeftLong } from "react-icons/fa6";
 
 import "./Header.css";
 import "./Header-mobile.css";
@@ -54,8 +53,6 @@ export default function Header({
   const [changeLangRef, triggerChangeLang] = usePressFeedback();
   const [downloadRef, triggerDownload] = usePressFeedback();
 
-  const [showLegalNotice, setShowLegalNotice] = useState(false);
-
   const [showSourceSelectionBox, setShowSourceSelectionBox] = useState(false);
   const [sourceOptions, setSourceOptions] = useState([]);
   const [animateSourceBox, setAnimateSourceBox] = useState("");
@@ -83,16 +80,6 @@ export default function Header({
   const [initialBgColor, setInitialBgColor] = useState(userBgColor);
   const [colorInputValue, setColorInputValue] = useState(userBgColor);
   const [isColorInputValid, setIsColorInputValid] = useState(true);
-
-  useEffect(() => {
-    const hasVisited = localStorage.getItem("hasVisitedBefore");
-    if (!hasVisited) {
-      setShowLegalNotice(true);
-      localStorage.setItem("hasVisitedBefore", "true");
-      const timer = setTimeout(() => setShowLegalNotice(false), 30000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   const handleChangeSourceClick = () => {
     if (!showSourceSelectionBox) {
@@ -214,30 +201,11 @@ export default function Header({
         target="_blank"
         rel="noreferrer noopener"
         className="header-logo"
-        title="View source code on GitHub"
-        aria-label="Click to view source code on GitHub"
+        title="View source code and legal statements on GitHub"
+        aria-label="Click to view source code and legal statements on GitHub"
       >
         <span>wiki</span>articles
       </a>
-
-      {showLegalNotice && (
-        <a
-          href="https://github.com/badhri-hari/wikiarticles"
-          target="_blank"
-          rel="noreferrer noopener"
-          title="View source code on GitHub"
-          aria-label="Click to view source code on GitHub"
-          className="legal-notice"
-        >
-          <FaArrowLeftLong
-            color="#F8F8FF"
-            size="15"
-            aria-hidden
-            className="legal-icon"
-          />
-          legal stuff
-        </a>
-      )}
 
       <button
         ref={(el) => {
