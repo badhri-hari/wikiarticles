@@ -532,44 +532,61 @@ export const routeConfigs = [
         }
       }
 
-      if (req.query.type) {
-        return await fetchUnusualWikiArticles(
-          req.query.type === "unusual"
-            ? `https://${lang}.wikipedia.org/wiki/Wikipedia:Unusual_articles`
-            : `https://${lang}.wikipedia.org/wiki/Wikipedia:Unusual_place_names`,
-          10,
-          `https://${lang}.wikipedia.org`,
-          `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${lang}.wikipedia/all-access/all-agents`
-        );
-      } else {
-        const response = await axios.get(
-          `https://${lang}.wikipedia.org/w/api.php`,
-          {
-            params: {
-              action: "query",
-              format: "json",
-              list: "random",
-              rnnamespace: 0,
-              rnlimit: 10,
-            },
-          }
-        );
+      const response = await axios.get(
+        `https://${lang}.wikipedia.org/w/api.php`,
+        {
+          params: {
+            action: "query",
+            format: "json",
+            list: "random",
+            rnnamespace: 0,
+            rnlimit: 10,
+          },
+        }
+      );
 
-        const titles = response.data.query?.random.map((i) => i.title) || [];
+      const titles = response.data.query?.random.map((i) => i.title) || [];
 
-        return await Promise.all(
-          titles.map((title) =>
-            getData({
-              title,
-              lang,
-              baseUrl: `https://${lang}.wikipedia.org`,
-              metricsUrl: `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${lang}.wikipedia/all-access/all-agents`,
-              source: "articles",
-            })
-          )
-        );
-      }
+      return await Promise.all(
+        titles.map((title) =>
+          getData({
+            title,
+            lang,
+            baseUrl: `https://${lang}.wikipedia.org`,
+            metricsUrl: `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${lang}.wikipedia/all-access/all-agents`,
+            source: "articles",
+          })
+        )
+      );
     },
     noDataError: "No valid Wikipedia articles found",
+  },
+  {
+    path: "/api/wikipedia_unusual",
+    total: 10,
+    customFetchFn: async (req) => {
+      const lang = req.query.lang === "simple" ? "simple" : "en";
+      return await fetchUnusualWikiArticles(
+        `https://${lang}.wikipedia.org/wiki/Wikipedia:Unusual_articles`,
+        10,
+        `https://${lang}.wikipedia.org`,
+        `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${lang}.wikipedia/all-access/all-agents`
+      );
+    },
+    noDataError: "No unusual Wikipedia articles found",
+  },
+  {
+    path: "/api/wikipedia_unusual_places",
+    total: 10,
+    customFetchFn: async (req) => {
+      const lang = req.query.lang === "simple" ? "simple" : "en";
+      return await fetchUnusualWikiArticles(
+        `https://${lang}.wikipedia.org/wiki/Wikipedia:Unusual_place_names`,
+        10,
+        `https://${lang}.wikipedia.org`,
+        `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/${lang}.wikipedia/all-access/all-agents`
+      );
+    },
+    noDataError: "No unusual place names found",
   },
 ];

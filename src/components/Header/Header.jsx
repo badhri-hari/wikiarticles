@@ -393,7 +393,7 @@ export default function Header({
 
                       if (selectedSource === source.displayName) return;
 
-                      setSelectedSource(source.displayName);
+                      setSelectedSource(source.name);
                       setShowSourceSelectionBox(false);
                     }}
                     aria-label={`Click to ${

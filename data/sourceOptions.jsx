@@ -39,8 +39,8 @@ const ICONS = {
   Edramatica: TbRating21Plus,
   Metapedia: GiCaesar,
   Micronations: RiGlobeLine,
-  Unusual: LuCornerDownRight,
-  "Unusual Places": LuCornerDownRight,
+  Unusual: FaWikipediaW,
+  "Unusual Places": FaWikipediaW,
   EverybodyWiki: MdPeopleAlt,
   "Polandball Wiki": GiPlainCircle,
   "Polcompball Wiki": PiGridFourLight,
@@ -162,7 +162,7 @@ export const sourceOptionsImport = [
     icon: <LuCornerDownRight />,
     description: "Humorous articles",
     isGroupStart: false,
-    path: "/articles?type=unusual",
+    path: "/wikipedia_unusual",
   },
   {
     name: "Unusual Places",
@@ -170,7 +170,7 @@ export const sourceOptionsImport = [
     icon: <LuCornerDownRight />,
     description: "Humorous places",
     isGroupStart: false,
-    path: "/articles?type=places",
+    path: "/wikipedia_unusual_places",
   },
   {
     name: "Simple English",

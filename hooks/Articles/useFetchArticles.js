@@ -31,7 +31,7 @@ export default function useFetchArticles(
 
     const selectedOption = sourceOptionsImport.find(
       (option) =>
-        option.displayName.toLowerCase() === selectedSource.toLowerCase()
+        option.name.toLowerCase() === selectedSource.toLowerCase()
     );
 
     if (!selectedOption) {

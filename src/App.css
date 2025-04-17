@@ -12,6 +12,14 @@ a:hover {
   opacity: 0.7;
 }
 
+@media only screen and (min-width: 901px) {
+  ::selection {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: rgba(var(--bg-color), 1);
+    text-shadow: 3px 3px 5px rgba(var(--bg-color), 0.4);
+  }
+}
+
 html,
 body {
   overflow-x: hidden;
