@@ -14,6 +14,7 @@
   .loading-overlay h2 {
     margin-top: 30px;
     margin-bottom: -5px;
+    padding-left: 8px;
     font-size: 1.25rem;
   }
 
