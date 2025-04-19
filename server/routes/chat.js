@@ -31,17 +31,13 @@ chatRouter.post("/", async (req, res) => {
             role: "user",
             content: [
               { type: "text", text: messages[messages.length - 1].content },
-              {
-                type: "image",
-                image_url: {
-                  url: `${req.body.imageBase64}`,
-                },
-              },
+              { type: "image_url", image_url: { url: base64 } },
             ],
           },
         ],
       };
     }
+
     const r = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       payload,
@@ -52,16 +48,34 @@ chatRouter.post("/", async (req, res) => {
           "X-Title": "wikiarticles",
           "Content-Type": "application/json",
         },
+        validateStatus: () => true,
+        decompress: false,
       }
     );
-    res.setHeader("Content-Type", "text/plain");
-    if (r.data?.choices?.[0]?.message?.content) {
-      res.status(200).send(r.data?.choices?.[0]?.message?.content);
-    } else {
-      return res.status(500).send("Chatbot response is invalid or empty.");
+
+    if (r.status >= 400) {
+      console.error("OpenRouter error:", r.status, r.data);
+      return res
+        .status(r.status)
+        .json(
+          typeof r.data === "string"
+            ? { error: r.data }
+            : r.data?.error || { error: "Upstream error" }
+        );
     }
+
+    const content = r.data?.choices?.[0]?.message?.content;
+    if (!content) {
+      return res.status(502).json({ error: "Empty response from model." });
+    }
+
+    res.type("text/plain").send(content);
   } catch (e) {
-    console.error("Chatbot error:", e);
+    console.error("Chatbot error:", {
+      status: err.response?.status,
+      message: err.response?.data?.error?.message ?? err.message,
+    });
+
     res.setHeader("Content-Type", "text/plain");
     return res.status(500).send("Chatbot error: " + e.message);
   }

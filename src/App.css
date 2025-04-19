@@ -16,7 +16,7 @@ a:hover {
   ::selection {
     background-color: rgba(255, 255, 255, 0.5);
     color: rgba(var(--bg-color), 1);
-    text-shadow: 3px 3px 5px rgba(var(--bg-color), 0.4);
+    text-shadow: 3px 3px 5px rgba(var(--bg-color), 0.2);
   }
 }
 

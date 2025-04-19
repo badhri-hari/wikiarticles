@@ -115,7 +115,7 @@ export default function Articles({
               : hasError
               ? "Looks like there's a problem with the server right now, please try again later."
               : totalArticles === 0
-              ? "Spinning up a new server instance just for you..."
+              ? "Spinning up a new server instance just for you... (can take up to 30 seconds)"
               : `Getting content from ${selectedSource}... (${articles.length}/${totalArticles})`}
           </p>
         </div>

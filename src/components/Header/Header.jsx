@@ -574,19 +574,44 @@ export default function Header({
               value={colorInputValue}
               type="text"
               inputMode="numeric"
-              onChange={(e) => {
-                const val = e.target.value;
-                setColorInputValue(val);
-                const isValid =
-                  /^(\d{1,3}),\s?(\d{1,3}),\s?(\d{1,3})$/.test(val) &&
-                  val.split(",").every((num) => +num >= 0 && +num <= 255);
-                setIsColorInputValid(isValid);
-                if (isValid) {
-                  setUserBgColor(val);
+              onFocus={(e) => {
+                if (e.target.value) {
+                  setColorInputValue("");
                 }
               }}
-              placeholder="Any color in RGB format like 100,150,200"
-              aria-label="Input a color in RGB format like 100,150,200"
+              onChange={(e) => {
+                let raw = e.target.value.replace(/\D/g, "");
+
+                let groups = raw.match(/.{1,3}/g) || [];
+
+                if (groups.length > 3) {
+                  groups = groups.slice(0, 3);
+                }
+
+                const formatted = groups.join(", ");
+
+                setColorInputValue(formatted);
+
+                const isValid =
+                  groups.length === 3 &&
+                  groups.every((num) => {
+                    const val = parseInt(num, 10);
+                    return val >= 0 && val <= 255;
+                  });
+
+                setIsColorInputValid(isValid);
+                if (isValid) {
+                  setUserBgColor(formatted);
+                }
+              }}
+              onBlur={(e) => {
+                if (e.target.value.trim() === "") {
+                  setColorInputValue(userBgColor);
+                  setIsColorInputValid(true);
+                }
+              }}
+              placeholder="Only the numbers (ex. 01810090 -> 18, 100, 90)"
+              aria-label="Input a color in RGB format. But only the numbers, the commas will be inputted automatically. For example, 01810090 will become 18, 100, 90)"
             />
 
             <button
@@ -617,8 +642,8 @@ export default function Header({
                   }}
                   className="preset-theme-button"
                   style={{ backgroundColor: `rgb(${theme.value})` }}
-                  title={theme.value}
-                  aria-label={`Click to apply the ${theme.name} background theme`}
+                  title={`rgb(${theme.value})`}
+                  aria-label={`Click to apply the ${theme.name} background theme, which has a RGB value of ${theme.value}`}
                 >
                   {theme.name}
                 </button>
