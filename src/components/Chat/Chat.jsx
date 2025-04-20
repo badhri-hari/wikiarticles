@@ -25,6 +25,7 @@ export default function Chat({
   articleUrl,
   selectedSource,
   selectedLang,
+  showToc,
 }) {
   const { sendChatMessage, loading: streamLoading } = useChatStream(API_URL);
   const { width } = useWindowSize();
@@ -195,6 +196,7 @@ export default function Chat({
         style={{
           opacity: loading || streamLoading ? "0.5" : "1",
           cursor: loading || streamLoading ? "not-allowed" : "auto",
+          width: !showToc && "91%",
         }}
         autoFocus
         required

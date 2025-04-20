@@ -113,8 +113,8 @@ i {
 
 .loading-overlay-dots {
   display: inline-block;
-  margin-left: 3.5px;
-  letter-spacing: 0.5px;
+  margin-left: 2.5px;
+  letter-spacing: 1px;
 }
 
 .iframe-button-wrapper .iframe-toggle-button {
@@ -128,18 +128,19 @@ i {
 
 .iframe-toggle-button {
   position: absolute;
-  bottom: 12.5%;
+  bottom: 11.75%;
   left: 2%;
   padding: 8px 15px;
   background: rgba(var(--bg-color), 0.8);
-  border: none;
   border-radius: 8px;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
   color: white;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.1s linear;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.35);
+  backdrop-filter: blur(4px) saturate(1.5);
+  -webkit-backdrop-filter: blur(4px) saturate(1.5);
 }
 
 .iframe-toggle-button span {
@@ -184,13 +185,22 @@ i {
   border-radius: 15px;
   padding: 25px;
   padding-top: 0;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.35);
+  backdrop-filter: blur(4px) saturate(1.5);
+  -webkit-backdrop-filter: blur(4px) saturate(1.5);
   font-size: 1.21rem;
   overflow-y: auto;
   overflow-x: hidden;
   transition: all 0.1s linear;
+  transition: border 0.25s linear, box-shadow 0.25s linear,
+    background 0.25s linear;
+}
+
+.toc:hover {
+  background: rgba(var(--bg-color), 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.7);
 }
 
 .toc h3 {
@@ -231,9 +241,10 @@ i {
   background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.35);
+  backdrop-filter: blur(4px) saturate(1.5);
+  -webkit-backdrop-filter: blur(4px) saturate(1.5);
   color: white;
   font-size: 1.2rem;
   text-wrap: pretty;
@@ -328,10 +339,16 @@ i {
   background: rgba(var(--bg-color), 0.6);
   border-radius: 12px;
   padding: 8px 15px;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
   color: white;
   font-size: large;
+  border: 0.05px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.25);
+  backdrop-filter: blur(3px) saturate(1.5);
+  -webkit-backdrop-filter: blur(3px) saturate(1.5);
+}
+
+.view-count:hover {
+  border: 0.05px solid rgba(255, 255, 255, 0.4);
 }
 
 .view-count a {
@@ -347,10 +364,16 @@ i {
   background: rgba(var(--bg-color), 0.6);
   border-radius: 12px;
   padding: 8px 15px;
-  backdrop-filter: blur(2.5px);
-  -webkit-backdrop-filter: blur(2.5px);
   color: white;
   font-size: large;
+  border: 0.05px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.25);
+  backdrop-filter: blur(3px) saturate(1.5);
+  -webkit-backdrop-filter: blur(3px) saturate(1.5);
+}
+
+.last-edited:hover {
+  border: 0.05px solid rgba(255, 255, 255, 0.4);
 }
 
 .last-edited a {
@@ -368,13 +391,14 @@ i {
   background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
   padding: 0 0 10px 25px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   color: white;
   font-size: 1.19rem;
   overflow: hidden;
   align-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.35);
+  backdrop-filter: blur(4px) saturate(1.5);
+  -webkit-backdrop-filter: blur(4px) saturate(1.5);
 }
 
 .search-text {
@@ -466,19 +490,21 @@ i {
   background: rgba(var(--bg-color), 0.5);
   border-radius: 15px;
   padding: 25px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   color: white;
   font-size: 1.21rem;
   overflow: hidden;
   text-align: center;
   align-content: center;
-  transition: background 0.1s linear;
+  transition: all 0.1s linear;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(var(--bg-color), 0.35);
+  backdrop-filter: blur(4px) saturate(1.5);
+  -webkit-backdrop-filter: blur(4px) saturate(1.5);
 }
 
 .article-link:hover {
-  background: rgba(var(--bg-color), 0.75);
+  background: rgba(var(--bg-color), 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .article-link > * {

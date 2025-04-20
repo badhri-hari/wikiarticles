@@ -106,8 +106,8 @@ export default function Articles({
             {hasError
               ? "Uh Oh!"
               : totalArticles === 0
-              ? "Just a minute"
-              : "Please wait"}
+              ? "Just a minute..."
+              : "Please wait..."}
           </h2>
           <p>
             {hasError && !navigator.onLine
@@ -203,11 +203,11 @@ export default function Articles({
                   >
                     <span>Toggle article frame</span>
                   </button>
-                  {showIframe && width > 900 && (
+                  {width > 900 && (
                     <button
                       onClick={() => setShowToc((prev) => !prev)}
                       className="iframe-toggle-button"
-                      style={{ left: "12.5%" }}
+                      style={{ left: "12.75%" }}
                       aria-label="Toggle table of contents"
                     >
                       <span>Toggle Table of Contents</span>
@@ -249,7 +249,8 @@ export default function Articles({
                     style={{
                       top: width < 900 && !showToc && "19.8%",
                       left:
-                        !showToc && selectedSource.startsWith("SCP")
+                        !showToc &&
+                        (!showIframe || selectedSource.startsWith("SCP"))
                           ? width > 900 && "2.0vw"
                           : !showToc && "3.5vw",
                       height: width < 900 && !showToc && "50.5%",
@@ -257,7 +258,8 @@ export default function Articles({
                       zIndex:
                         width < 900 && !showIframe
                           ? "650"
-                          : selectedSource.startsWith("SCP") && "650",
+                          : (!showIframe || selectedSource.startsWith("SCP")) &&
+                            "650",
                     }}
                   >
                     <h2>{article.title}</h2>
@@ -292,9 +294,7 @@ export default function Articles({
                 )}
 
                 <div
-                  className={
-                    showIframe ? (showToc ? "toc" : "toc hidden") : "toc"
-                  }
+                  className={showToc ? "toc" : "toc hidden"}
                   aria-label={
                     selectedSource.startsWith("Wikimedia")
                       ? "Metadata of the media file (if available)"
@@ -595,7 +595,13 @@ export default function Articles({
 
                 <footer>
                   {article.viewCount && (
-                    <div className="view-count">
+                    <div
+                      className="view-count"
+                      style={{
+                        border:
+                          !article.pageViewsLink && "0.05px solid transparent",
+                      }}
+                    >
                       <a
                         href={article.pageViewsLink || undefined}
                         target="_blank"
@@ -637,7 +643,16 @@ export default function Articles({
                     </div>
                   )}
                   {article.timestamp && (
-                    <div className="last-edited">
+                    <div
+                      className="last-edited"
+                      style={{
+                        border:
+                          (selectedSource.startsWith("SCP") ||
+                            selectedSource.startsWith("Know") ||
+                            selectedSource.startsWith("Wikihow")) &&
+                          "0.05px solid transparent",
+                      }}
+                    >
                       <a
                         href={
                           selectedSource.startsWith("SCP") ||
@@ -780,13 +795,10 @@ export default function Articles({
         <div
           className="description"
           style={{
-            top: width < 900 && showIframe && "18.5%",
-            height:
-              width > 900
-                ? showIframe && !showToc && "54.82%"
-                : showIframe && "52%",
-            width: showIframe && !showToc && "58.2vw",
-            left: showIframe && !showToc && "2%",
+            top: width < 900 && !showToc && "18.5%",
+            height: width > 900 ? !showToc && "54.82%" : !showToc && "52%",
+            width: !showToc && "58.2vw",
+            left: !showToc && "2%",
             zIndex: width < 900 && "650",
           }}
         >
@@ -798,6 +810,7 @@ export default function Articles({
             articleUrl={currentArticleUrl}
             selectedSource={currentArticleSource}
             selectedLang={currentArticleLang}
+            showToc={showToc}
           />
         </div>
       )}
