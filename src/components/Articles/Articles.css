@@ -111,6 +111,12 @@ i {
   text-align: center;
 }
 
+.loading-overlay-dots {
+  display: inline-block;
+  margin-left: 3.5px;
+  letter-spacing: 0.5px;
+}
+
 .iframe-button-wrapper .iframe-toggle-button {
   opacity: 0.1;
   transition: opacity 0.2s ease;

@@ -14,9 +14,8 @@ a:hover {
 
 @media only screen and (min-width: 901px) {
   ::selection {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.9);
     color: rgba(var(--bg-color), 1);
-    text-shadow: 3px 3px 5px rgba(var(--bg-color), 0.2);
   }
 }
 

@@ -106,8 +106,8 @@ export default function Articles({
             {hasError
               ? "Uh Oh!"
               : totalArticles === 0
-              ? "Just a minute..."
-              : "Please wait..."}
+              ? "Just a minute"
+              : "Please wait"}
           </h2>
           <p>
             {hasError && !navigator.onLine
@@ -115,8 +115,16 @@ export default function Articles({
               : hasError
               ? "Looks like there's a problem with the server right now, please try again later."
               : totalArticles === 0
-              ? "Spinning up a new server instance just for you... (can take up to 30 seconds)"
-              : `Getting content from ${selectedSource}... (${articles.length}/${totalArticles})`}
+              ? "Spinning up a new server instance just for you (can take up to 30 seconds)"
+              : `Getting content from ${selectedSource} (${articles.length}/${totalArticles})`}
+
+            {!hasError && (
+              <span className="loading-overlay-dots">
+                <span className="dot dot-1">.</span>
+                <span className="dot dot-2">.</span>
+                <span className="dot dot-3">.</span>
+              </span>
+            )}
           </p>
         </div>
 
@@ -240,7 +248,10 @@ export default function Articles({
                     }
                     style={{
                       top: width < 900 && !showToc && "19.8%",
-                      left: !showToc && "3.5vw",
+                      left:
+                        !showToc && selectedSource.startsWith("SCP")
+                          ? width > 900 && "2.0vw"
+                          : !showToc && "3.5vw",
                       height: width < 900 && !showToc && "50.5%",
                       width: width > 900 && !showToc && "58.5vw",
                       zIndex:
