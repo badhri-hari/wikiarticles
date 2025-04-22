@@ -154,12 +154,12 @@
     backdrop-filter: blur(7px);
     -webkit-backdrop-filter: blur(7px);
     border: 1px solid rgba(255, 255, 255, 0.125);
-    border-radius: 13px;
+    border-radius: 10px;
     font-size: 0.83rem;
   }
 
   .fandom-input:focus {
-    border: 1px solid rgba(var(--bg-color), 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
 
   .change-bgcolor-button {
@@ -258,7 +258,7 @@
 
   .download-liked-articles-button {
     font-size: 1rem;
-    border-radius: 15px;
+    border-radius: 12px;
     background-color: rgba(var(--bg-color), 1);
     border: 0.5px solid rgba(255, 255, 255, 0.15);
   }

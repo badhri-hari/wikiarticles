@@ -753,6 +753,7 @@ export default function Articles({
                             "Pornopedia",
                             "Conservapedia",
                             "Fandom",
+                            "Unusual",
                           ].some((s) => selectedSource.includes(s));
 
                           const isPublishedSource = [

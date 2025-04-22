@@ -77,10 +77,15 @@
     padding: 8px 12px;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(var(--bg-color), 0.5);
+    background: rgba(var(--bg-color), 0.5);
     border-radius: 15px;
     font-size: 0.8rem;
     z-index: 701;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  .iframe-toggle-button:hover {
+    background: rgba(var(--bg-color), 0.5);
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
@@ -129,12 +134,17 @@
     width: 85vw;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(var(--bg-color), 0.5);
+    background: rgba(var(--bg-color), 0.5);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.125);
     font-size: 0.86rem;
     padding: 15px;
     transition: opacity, transform 0.2s ease;
+  }
+
+  .description:hover {
+    background: rgba(var(--bg-color), 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
   .description h2 {
@@ -150,7 +160,7 @@
     padding: 8px 12px;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(var(--bg-color), 0.5);
+    background: rgba(var(--bg-color), 0.5);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.125);
     box-shadow: none;
@@ -160,6 +170,7 @@
   }
 
   .view-count:hover {
+    background: rgba(var(--bg-color), 0.5);
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
@@ -169,7 +180,7 @@
     padding: 8px 12px;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(var(--bg-color), 0.5);
+    background: rgba(var(--bg-color), 0.5);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.125);
     box-shadow: none;
@@ -178,6 +189,7 @@
   }
 
   .last-edited:hover {
+    background: rgba(var(--bg-color), 0.5);
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
@@ -203,6 +215,11 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+  }
+
+  .search:hover {
+    background: none;
+    border: none;
   }
 
   .search h2 {
@@ -279,7 +296,7 @@
     z-index: 600;
     backdrop-filter: blur(7px) saturate(200%);
     -webkit-backdrop-filter: blur(7px) saturate(200%);
-    background-color: rgba(var(--bg-color), 0.65);
+    background: rgba(var(--bg-color), 0.65);
     border-radius: 25px;
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
