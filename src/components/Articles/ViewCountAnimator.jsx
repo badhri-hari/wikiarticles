@@ -23,14 +23,14 @@ export default function ViewCountAnimator({ end, duration, ...rest }) {
   return (
     <div
       ref={containerRef}
-      style={{ textDecoration: "none", fontWeight: "lighter" }}
+      style={{ textDecoration: "none", fontWeight: "400" }}
     >
       {inView && end !== null && (
         <CountUp start={0} end={end} duration={duration} {...rest}>
           {({ countUpRef }) => (
             <span
               ref={countUpRef}
-              style={{ textDecoration: "none", fontWeight: "lighter" }}
+              style={{ textDecoration: "none", fontWeight: "400" }}
             >
               {end}
             </span>

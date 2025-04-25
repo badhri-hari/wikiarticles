@@ -201,16 +201,16 @@ export default function Articles({
                     }}
                     aria-label="Toggle article iframe"
                   >
-                    <span>Toggle article frame</span>
+                    <span>Toggle article page</span>
                   </button>
                   {width > 900 && (
                     <button
                       onClick={() => setShowToc((prev) => !prev)}
                       className="iframe-toggle-button"
                       style={{ left: "12.75%" }}
-                      aria-label="Toggle table of contents"
+                      aria-label="Toggle sidebar"
                     >
-                      <span>Toggle Table of Contents</span>
+                      <span>Toggle sidebar</span>
                     </button>
                   )}
                 </div>
