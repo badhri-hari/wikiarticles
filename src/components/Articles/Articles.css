@@ -127,9 +127,6 @@ i {
 }
 
 .iframe-toggle-button {
-  position: absolute;
-  bottom: 11.25%;
-  left: 2%;
   padding: 8px 15px;
   background: rgba(var(--bg-color), 0.8);
   border-radius: 8px;

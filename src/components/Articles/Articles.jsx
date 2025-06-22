@@ -167,14 +167,24 @@ export default function Articles({
                 <div
                   className={index >= 3 ? "iframe-button-wrapper" : undefined}
                   style={{
+                    position: "absolute",
+                    bottom:
+                      width > 900 ? "13.2%" : showIframe ? "80.71%" : "56.5%",
+                    left: width > 900 ? "2%" : "4%",
+                    height: "36px",
+                    padding: "10px 0",
+                    width: "42vw",
+                    flexDirection: "row",
                     display:
-                      (selectedSource.startsWith("Wikihow") ||
-                        selectedSource.startsWith("Know") ||
-                        selectedSource.startsWith("MickeyWiki") ||
-                        selectedSource.startsWith("Minecraft") ||
-                        selectedSource.startsWith("SCP") ||
-                        selectedSource.startsWith("Poland")) &&
-                      "none",
+                      selectedSource.startsWith("Wikihow") ||
+                      selectedSource.startsWith("Know") ||
+                      selectedSource.startsWith("MickeyWiki") ||
+                      selectedSource.startsWith("Minecraft") ||
+                      selectedSource.startsWith("SCP") ||
+                      selectedSource.startsWith("PolcompballAnarchy") ||
+                      selectedSource.startsWith("Poland")
+                        ? "none"
+                        : "flex",
                   }}
                 >
                   <button
@@ -191,14 +201,7 @@ export default function Articles({
                       }
                     }}
                     className="iframe-toggle-button"
-                    style={{
-                      bottom:
-                        width > 900
-                          ? undefined
-                          : showIframe
-                          ? "80.71%"
-                          : "56.5%",
-                    }}
+                    style={{ marginRight: "1.25%" }}
                     aria-label="Toggle article iframe"
                   >
                     <span>Toggle article page</span>
@@ -207,7 +210,6 @@ export default function Articles({
                     <button
                       onClick={() => setShowToc((prev) => !prev)}
                       className="iframe-toggle-button"
-                      style={{ left: "12.75%" }}
                       aria-label="Toggle sidebar"
                     >
                       <span>Toggle sidebar</span>
@@ -739,7 +741,9 @@ export default function Articles({
                             "Micronations",
                             "Every",
                             "Polandball",
-                            "Polcompball",
+                            "Polcompballanarchy",
+                            "Bulbagarden",
+                            "PolcompballAnarchy",
                             "Wikispecies",
                             "Hetero",
                             "IncelWiki",

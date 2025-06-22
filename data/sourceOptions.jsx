@@ -16,13 +16,14 @@ import {
   GiPotato,
   GiUsaFlag,
   GiPlainCircle,
+  GiGarlic,
 } from "react-icons/gi";
 import { IoEarth, IoPlanet } from "react-icons/io5";
 import { MdOutlineQuestionMark, MdPeopleAlt } from "react-icons/md";
 import { TbRating21Plus, TbRating18Plus } from "react-icons/tb";
 import { RiGlobeLine } from "react-icons/ri";
 import { ImMan } from "react-icons/im";
-import { PiBrain, PiGridFourLight } from "react-icons/pi";
+import { PiBrain, PiGridFourLight, PiSquaresFourThin } from "react-icons/pi";
 
 const ICONS = {
   Wikipedia: FaWikipediaW,
@@ -36,6 +37,7 @@ const ICONS = {
   Wikihow: MdOutlineQuestionMark,
   RationalWiki: PiBrain,
   "Know Your Meme": FaRegLaughBeam,
+  Bulbagarden: GiGarlic,
   Edramatica: TbRating21Plus,
   Metapedia: GiCaesar,
   Micronations: RiGlobeLine,
@@ -44,6 +46,7 @@ const ICONS = {
   EverybodyWiki: MdPeopleAlt,
   "Polandball Wiki": GiPlainCircle,
   "Polcompball Wiki": PiGridFourLight,
+  PolcompballAnarchy: PiSquaresFourThin,
   "Heterodontosaurus Balls": IoPlanet,
   IncelWiki: ImMan,
   Illogicopedia: GiBanana,
@@ -66,6 +69,9 @@ const ICON_STYLES = (logoIsLoading = false) => ({
     ? { size: "5rem", style: { marginRight: "5.3px", marginBottom: "-12px" } }
     : { size: "3rem", style: { marginLeft: "8px", marginTop: "5px" } },
   "Know Your Meme": logoIsLoading
+    ? { size: "4.5rem", style: { marginRight: "5px", marginBottom: "-12px" } }
+    : { size: "2.5rem", style: { marginLeft: "8px", marginTop: "5px" } },
+  Bulbagarden: logoIsLoading
     ? { size: "4.5rem", style: { marginRight: "5px", marginBottom: "-12px" } }
     : { size: "2.5rem", style: { marginLeft: "8px", marginTop: "5px" } },
   "Wikimedia Commons": logoIsLoading
@@ -108,6 +114,9 @@ const ICON_STYLES = (logoIsLoading = false) => ({
     ? { size: "4rem", style: { marginBottom: "-14px" } }
     : { size: "2.6rem", style: { marginLeft: "8px", marginTop: "5px" } },
   "Polcompball Wiki": logoIsLoading
+    ? { size: "4rem", style: { marginBottom: "-14px" } }
+    : { size: "2.6rem", style: { marginLeft: "8px", marginTop: "5px" } },
+  PolcompballAnarchy: logoIsLoading
     ? { size: "4rem", style: { marginBottom: "-14px" } }
     : { size: "2.6rem", style: { marginLeft: "8px", marginTop: "5px" } },
   "Heterodontosaurus Balls": logoIsLoading
@@ -203,6 +212,14 @@ export const sourceOptionsImport = [
     description: "Fan-written articles",
     isGroupStart: true,
     path: "/fandom",
+  },
+  {
+    name: "Bulbagarden",
+    displayName: "Bulbagarden",
+    icon: <GiGarlic style={{ marginRight: "2px" }} />,
+    description: "Pokémon articles",
+    isGroupStart: true,
+    path: "/pokemon",
   },
   {
     name: "Know Your Meme",
@@ -324,6 +341,14 @@ export const sourceOptionsImport = [
     description: "Political ideology articles",
     isGroupStart: false,
     path: "/polcompball",
+  },
+  {
+    name: "PolcompballAnarchy",
+    displayName: "PolcompballAnarchy",
+    icon: <PiSquaresFourThin style={{ marginRight: "2px" }} />,
+    description: "'political' 'ideologies'",
+    isGroupStart: false,
+    path: "/polcompballanarchy",
   },
   {
     name: "Heterodontosaurus Balls",

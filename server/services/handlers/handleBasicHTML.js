@@ -182,52 +182,6 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
     return null;
   }
 
-  let thumbnailUrl;
-  if (source === "polandball" || source === "polcompball") {
-    thumbnailUrl = $("img.pi-image-thumbnail").first().attr("src") || null;
-  } else if (source === "edramatica") {
-    thumbnailUrl =
-      $('figure[typeof="mw:File/Thumb"] img').first().attr("src") || null;
-  } else if (source === "xxx") {
-    thumbnailUrl = $(".mw-file-element").first().attr("src") || null;
-  } else if (source === "rational" || source === "uncyclo") {
-    thumbnailUrl = $(".thumbimage").first().attr("src") || null;
-  } else {
-    thumbnailUrl = $("img").first().attr("src") || null;
-  }
-
-  if (
-    thumbnailUrl &&
-    !thumbnailUrl.startsWith("http") &&
-    source !== "uncyclo" &&
-    source !== "polandball" &&
-    source !== "polcompball" &&
-    source !== "illogic"
-  ) {
-    thumbnailUrl = baseUrl + thumbnailUrl;
-  }
-
-  if (thumbnailUrl) {
-    const badThumbnails = [
-      "/images/thumb/f/fe/Stub.png/",
-      "/resources/assets/poweredby_mediawiki",
-      "/images/Creative_Commons_footer.png",
-      "/images/Weird_Gloop_footer_hosted",
-      "/w/uncyclomedia_icon.svg",
-      "/w/Powered_by_MediaWiki_blob.svg",
-      "Bouncywikilogo",
-      "/w/uncyclomedia_icon.svg",
-      "/resources/assets/poweredby_mediawiki",
-      "Photo_needed",
-      "/Mon_Logo.png",
-      "/PayPal_Logo",
-    ];
-
-    if (badThumbnails.some((bad) => thumbnailUrl.includes(bad))) {
-      thumbnailUrl = null;
-    }
-  }
-
   const toc = extractTOC(html, source);
   const timestamp = await fetchLastEditedDate(titleExtracted, baseUrl, source);
 
@@ -236,7 +190,7 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
     extract: paragraphs,
     extractDataType: "array",
     thumbnail: {
-      source: thumbnailUrl,
+      source: $('meta[property="og:image"]').attr("content") || null,
     },
     viewCount: 0,
     pageViewsLink: null,

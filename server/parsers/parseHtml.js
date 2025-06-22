@@ -5,7 +5,7 @@ export function extractParagraphs($, source = null) {
   const seenTexts = new Set();
 
   $(
-    "#toc, .infobox, .navbox, .metadata, .catlinks, .mw-references-wrap, .reflist, .vertical-navbox, .sidebar"
+    "#toc, .infobox, .navbox, .metadata, .catlinks, .mw-references-wrap, .reflist, .vertical-navbox, .sidebar, .bg-global-nav, .mw-file-element, .cosmos-mobile-navigation, .cosmos-dropdown-list, .wds-dropdown__content, .cosmos-tools-list, .recentchanges-module, .wds-dropdown__toggle"
   ).remove();
 
   const removeFromHeading = (selector) => {
@@ -110,7 +110,11 @@ export function extractParagraphs($, source = null) {
       `${transparentStyle}; background: transparent; background-color: transparent;`.trim()
     );
 
-    if (source === "polandball") {
+    if (
+      source === "polandball" ||
+      source === "polcompball" ||
+      source === "polcompballanarchy"
+    ) {
       $el.find("a:has(img)").each((_, link) => {
         const $link = $(link);
         const $img = $link.find("img").first();

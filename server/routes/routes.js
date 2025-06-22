@@ -473,6 +473,42 @@ export const routeConfigs = [
     noDataError: "No polcompass balls :(",
   },
   {
+    path: "/api/polcompballanarchy",
+    total: 10,
+    source: "polcompballanarchy",
+    customFetchFn: async (req) => {
+      return await Promise.all(
+        Array.from({ length: 10 }).map(() =>
+          getData({
+            source: "polcompballanarchy",
+            baseUrl: "https://polcompballanarchy.miraheze.org/",
+            metricsUrl: "",
+            apiPath: "/wiki/Special:Random",
+          })
+        )
+      );
+    },
+    noDataError: "No polcompass balls :(",
+  },
+  {
+    path: "/api/pokemon",
+    total: 10,
+    source: "pokemon",
+    customFetchFn: async (req) => {
+      return await Promise.all(
+        Array.from({ length: 10 }).map(() =>
+          getData({
+            source: "pokemon",
+            baseUrl: "https://bulbapedia.bulbagarden.net",
+            metricsUrl: "",
+            apiPath: "/wiki/Special:Random",
+          })
+        )
+      );
+    },
+    noDataError: "No pokemans :(",
+  },
+  {
     path: "/api/balls",
     total: 10,
     source: "hetero-balls",

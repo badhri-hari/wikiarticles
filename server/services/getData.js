@@ -45,12 +45,14 @@ export default async function getData({
         "everybodywiki",
         "polandball",
         "polcompball",
+        "polcompballanarchy",
         "hetero-balls",
         "incel",
         "illogic",
         "uncyclo",
         "unop",
         "xxx",
+        "pokemon",
         "trump",
       ].includes(source)
     ) {
