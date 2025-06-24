@@ -2,7 +2,7 @@
   "name": "wikiarticles",
   "short_name": "wikiarticles",
   "description": "A scroll-based interface for exploring random wikis from (mostly) Wikimedia sites.",
-  "version": "2.0.0",
+  "version": "2.6.0",
   "start_url": ".",
   "id": "/",
   "scope": ".",
