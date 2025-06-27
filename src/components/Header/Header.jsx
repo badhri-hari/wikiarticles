@@ -81,6 +81,9 @@ export default function Header({
   const [colorInputValue, setColorInputValue] = useState(userBgColor);
   const [isColorInputValid, setIsColorInputValid] = useState(true);
 
+  const [hideHeader, setHideHeader] = useState(false);
+  const headerRef = useRef(null);
+
   const handleChangeSourceClick = () => {
     if (!showSourceSelectionBox) {
       setSourceOptions(sourceOptionsImport);
@@ -194,15 +197,47 @@ export default function Header({
     showLangSelectionBox,
   ]);
 
+  useEffect(() => {
+    if (width >= 900) {
+      const timer = setTimeout(() => {
+        setHideHeader(true);
+      }, 15000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [width]);
+
+  useEffect(() => {
+    if (width >= 900) {
+      let timeout = setTimeout(() => setHideHeader(true), 15000);
+
+      const resetTimer = () => {
+        setHideHeader(false);
+        clearTimeout(timeout);
+        timeout = setTimeout(() => setHideHeader(true), 15000);
+      };
+
+      const headerEl = headerRef.current;
+      headerEl.addEventListener("mousemove", resetTimer);
+      headerEl.addEventListener("mouseenter", resetTimer);
+
+      return () => {
+        headerEl.removeEventListener("mousemove", resetTimer);
+        headerEl.removeEventListener("mouseenter", resetTimer);
+        clearTimeout(timeout);
+      };
+    }
+  }, [width]);
+
   return (
-    <header>
+    <header ref={headerRef} className={hideHeader ? "hide-header" : ""}>
       <a
         href="https://github.com/badhri-hari/wikiarticles"
         target="_blank"
         rel="noreferrer noopener"
         className="header-logo"
-        title="View source code and legal statements on GitHub"
-        aria-label="Click to view source code and legal statements on GitHub"
+        title="View source code on GitHub"
+        aria-label="Click to view source code on GitHub"
       >
         <span>wiki</span>articles
       </a>

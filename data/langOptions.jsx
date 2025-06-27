@@ -1,7 +1,6 @@
 import {
   GiEuropeanFlag,
   GiEarthAsiaOceania,
-  GiEarthAmerica,
   GiGoldScarab,
 } from "react-icons/gi";
 
@@ -34,6 +33,12 @@ export const langOptionsImport = [
     code: "es",
     name: "Español",
     description: "Wikipedia en español",
+    isGroupStart: false,
+  },
+  {
+    code: "pt",
+    name: "Português",
+    description: "Wikipédia em português",
     isGroupStart: false,
   },
   {
@@ -149,19 +154,6 @@ export const langOptionsImport = [
     code: "ta",
     name: "தமிழ்",
     description: "தமிழ் விக்கிபீடியா",
-    isGroupStart: false,
-  },
-
-  {
-    isGroupStart: true,
-    name: "Americas",
-    icon: <GiEarthAmerica />,
-    code: "",
-  },
-  {
-    code: "pt",
-    name: "Português",
-    description: "Wikipédia em português",
     isGroupStart: false,
   },
 
