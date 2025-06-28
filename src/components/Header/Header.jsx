@@ -32,9 +32,12 @@ export default function Header({
   setFandomQuery,
   selectedLang,
   setSelectedLang,
+  hideHeader,
+  setHideHeader,
 }) {
   const { width } = useWindowSize();
 
+  const headerRef = useRef(null);
   const likedArticlesContainerRef = useRef(null);
   const likedArticlesIconRef = useRef(null);
   const sourceResultsContainerRef = useRef(null);
@@ -80,9 +83,6 @@ export default function Header({
   const [initialBgColor, setInitialBgColor] = useState(userBgColor);
   const [colorInputValue, setColorInputValue] = useState(userBgColor);
   const [isColorInputValid, setIsColorInputValid] = useState(true);
-
-  const [hideHeader, setHideHeader] = useState(false);
-  const headerRef = useRef(null);
 
   const handleChangeSourceClick = () => {
     if (!showSourceSelectionBox) {
@@ -198,36 +198,63 @@ export default function Header({
   ]);
 
   useEffect(() => {
-    if (width >= 900) {
-      const timer = setTimeout(() => {
-        setHideHeader(true);
-      }, 15000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [width]);
-
-  useEffect(() => {
-    if (width >= 900) {
-      let timeout = setTimeout(() => setHideHeader(true), 15000);
-
-      const resetTimer = () => {
-        setHideHeader(false);
-        clearTimeout(timeout);
-        timeout = setTimeout(() => setHideHeader(true), 15000);
-      };
+    if (width > 900) {
+      let timeout = setTimeout(() => setHideHeader(true), 700);
 
       const headerEl = headerRef.current;
-      headerEl.addEventListener("mousemove", resetTimer);
-      headerEl.addEventListener("mouseenter", resetTimer);
+
+      const isMouseOverImportantElement = (e) => {
+        const relatedTargets = [
+          headerRef.current,
+          document.querySelector(".header-logo"),
+          ...Array.from(document.querySelectorAll(".header-icon")),
+          ...Array.from(document.querySelectorAll(".list-box-container")),
+        ];
+        return relatedTargets.some(
+          (el) => el && el.contains(e.relatedTarget || e.target)
+        );
+      };
+
+      const resetTimer = (e) => {
+        if (!e || isMouseOverImportantElement(e)) {
+          setHideHeader(false);
+          clearTimeout(timeout);
+          timeout = setTimeout(() => {
+            const isStillHovering = relatedTargets.some(
+              (el) => el && el.matches(":hover")
+            );
+            if (!isStillHovering) {
+              setHideHeader(true);
+            }
+          }, 700);
+        }
+      };
+
+      const clearHideOnLeave = (e) => {
+        if (!isMouseOverImportantElement(e)) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => setHideHeader(true), 700);
+        }
+      };
+
+      document.addEventListener("mousemove", resetTimer);
+      document.addEventListener("mouseover", resetTimer);
+      document.addEventListener("mouseout", clearHideOnLeave);
 
       return () => {
-        headerEl.removeEventListener("mousemove", resetTimer);
-        headerEl.removeEventListener("mouseenter", resetTimer);
         clearTimeout(timeout);
+        document.removeEventListener("mousemove", resetTimer);
+        document.removeEventListener("mouseover", resetTimer);
+        document.removeEventListener("mouseout", clearHideOnLeave);
       };
     }
-  }, [width]);
+  }, [
+    width,
+    showSourceSelectionBox,
+    showLikedArticles,
+    showColorPicker,
+    showLangSelectionBox,
+  ]);
 
   return (
     <header ref={headerRef} className={hideHeader ? "hide-header" : ""}>

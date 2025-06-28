@@ -7,11 +7,15 @@ header {
   opacity: 1;
   position: relative;
   z-index: 1000;
-  transition: opacity 0.25s linear;
+  transition: all 0.25s linear;
 }
 
 .hide-header {
-  opacity: 0.25;
+  background: transparent;
+  border-bottom: 0.5px solid transparent;
+  height: 50px;
+  padding: 0 10px 0 10px;
+  opacity: 0.38;
 }
 
 .header-logo {
@@ -21,11 +25,15 @@ header {
   left: 15px;
   color: white;
   text-decoration: none;
-  transition: all 0.1s linear;
+  transition: all 0.3s linear;
 }
 
 .header-logo span {
   font-weight: 600;
+}
+
+.hide-header .header-logo {
+  opacity: 0;
 }
 
 .header-icon {

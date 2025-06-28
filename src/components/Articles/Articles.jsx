@@ -34,6 +34,7 @@ export default function Articles({
   selectedSource,
   fandomQuery,
   selectedLang,
+  hideHeader,
 }) {
   const { width } = useWindowSize();
 
@@ -92,7 +93,18 @@ export default function Articles({
 
   return (
     <>
-      <div className="image-container" ref={containerRef} role="region">
+      <div
+        className="image-container"
+        style={
+          width > 900
+            ? {
+                marginTop: hideHeader ? "-50px" : "-70px",
+              }
+            : {}
+        }
+        ref={containerRef}
+        role="region"
+      >
         <div
           className={
             isLoading || hasError ? "loading-overlay" : "loading-overlay hidden"
@@ -149,7 +161,7 @@ export default function Articles({
                       src={`${API_URL}/image?url=${encodeURIComponent(
                         article.thumbnail?.source
                       )}`}
-                      alt={`Image for ${article.title}`}
+                      aria-hidden="true"
                       loading="lazy"
                       className={`fade-in ${
                         imageLoadedMap[article.pageUrl] ? "loaded" : ""

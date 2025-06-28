@@ -8,77 +8,58 @@ export async function handleFandom({ baseUrl }) {
       response.request?.res?.responseUrl || `${baseUrl}/Special:random`;
     const $ = load(response.data);
 
-    let jsonLd = $("script[type='application/ld+json']").html();
-    let parsedData = {};
-
-    try {
-      parsedData = JSON.parse(jsonLd);
-    } catch (e) {
-      console.error("[handleFandom] Failed to parse JSON-LD:", e.message);
-    }
-
     const titleText =
-      parsedData.headline ||
-      parsedData.name ||
-      $("title").text().replace(" | Fandom", "").trim();
-    const aboutExtract = parsedData.abstract || parsedData.description || "";
+      $('meta[property="og:title"]').attr("content")?.trim() || "";
 
-    const imageEl = $("img.pi-image-thumbnail").first();
-    const memeImage = imageEl.length ? imageEl.attr("src") : null;
+    const aboutExtract =
+      $('meta[property="og:description"]').attr("content")?.trim() || "";
 
-    if (memeImage && !memeImage.startsWith("http")) {
-      memeImage = null;
+    let imageUrl =
+      $('meta[property="og:image"]').attr("content")?.trim() || null;
+    if (imageUrl?.includes("Site-logo.png")) {
+      imageUrl = null;
     }
 
     let timestamp = null;
     try {
       const historyResponse = await axios.get(`${pageUrl}?action=history`);
       const history$ = load(historyResponse.data);
-
       const firstDateHeader = history$(".mw-index-pager-list-header")
         .first()
         .text()
         .trim();
-
-      if (firstDateHeader) {
-        const date = new Date(firstDateHeader);
-        if (!isNaN(date)) {
-          timestamp = date.toISOString().split("T")[0];
-        }
+      const date = new Date(firstDateHeader);
+      if (!isNaN(date)) {
+        timestamp = date.toISOString().split("T")[0];
       }
     } catch (err) {
       console.error("Error fetching history:", err);
     }
 
     const toc = [];
-    $("#toc ul li").each((_, el) => {
+    $("#toc li").each((_, el) => {
       const $li = $(el);
-      const anchorEl = $li.find("a").first();
-      const anchorHref = anchorEl.attr("href") || "";
-      let anchorText = anchorEl.find(".toctext").text().trim();
+      const $a = $li.find("> a").first();
+      const href = $a.attr("href");
+      const anchorText = $a.find(".toctext").text().trim();
 
-      anchorText = anchorText.replace(/\[\]$/, "").trim();
-
-      const toclevelMatch = $li.attr("class")?.match(/toclevel-(\d)/);
+      const toclevelMatch = $li.attr("class")?.match(/toclevel-(\d+)/);
       const toclevel = toclevelMatch ? parseInt(toclevelMatch[1], 10) : 1;
-      const anchor = anchorHref.startsWith("#")
-        ? anchorHref.slice(1)
-        : anchorText.replace(/\s+/g, "_");
 
-      if (anchorText && anchor) {
+      if (anchorText && href) {
         toc.push({
           line: anchorText,
-          anchor: anchor,
+          anchor: href.replace(/^#/, ""),
           toclevel: toclevel,
         });
       }
     });
 
     return {
-      title: titleText.trim(),
-      extract: aboutExtract.trim(),
+      title: titleText,
+      extract: aboutExtract,
       extractDataType: "text",
-      thumbnail: memeImage ? { source: memeImage } : null,
+      thumbnail: imageUrl ? { source: imageUrl } : null,
       viewCount: 0,
       pageViewsLink: null,
       pageUrl,

@@ -184,13 +184,34 @@ export async function handleBasicHTML({ title, baseUrl, apiPath, source }) {
 
   const toc = extractTOC(html, source);
   const timestamp = await fetchLastEditedDate(titleExtracted, baseUrl, source);
+  let thumbnailSource = $('meta[property="og:image"]').attr("content") || null;
+  if (thumbnailSource) {
+    if (
+      source === "illogic" ||
+      (source === "polandball" && thumbnailSource.includes("Wiki.png"))
+    ) {
+      thumbnailSource = null;
+    } else if (source === "edramatica" && thumbnailSource.includes("ED_logo")) {
+      thumbnailSource = null;
+    } else if (
+      source === "incel" &&
+      thumbnailSource.includes("Incelwiki.png")
+    ) {
+      thumbnailSource = null;
+    } else if (
+      source === "polcompball" &&
+      thumbnailSource.includes("Polcompballwikiimage")
+    ) {
+      thumbnailSource = null;
+    }
+  }
 
   return {
     title: titleExtracted,
     extract: paragraphs,
     extractDataType: "array",
     thumbnail: {
-      source: $('meta[property="og:image"]').attr("content") || null,
+      source: thumbnailSource,
     },
     viewCount: 0,
     pageViewsLink: null,

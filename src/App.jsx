@@ -40,6 +40,8 @@ function App() {
     installRef,
     triggerInstall,
     handleInstallClick,
+    hideHeader,
+    setHideHeader,
   } = useAppState();
 
   return (
@@ -72,11 +74,14 @@ function App() {
         setFandomQuery={setFandomQuery}
         selectedLang={selectedLang}
         setSelectedLang={setSelectedLang}
+        hideHeader={hideHeader}
+        setHideHeader={setHideHeader}
       />
       <Articles
         selectedSource={selectedSource}
         fandomQuery={fandomQuery}
         selectedLang={selectedLang}
+        hideHeader={hideHeader}
       />
       {showArrow && <Arrow />}
     </>

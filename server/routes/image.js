@@ -29,7 +29,7 @@ imageRouter.get("/", async (req, res) => {
       const inputBuffer = Buffer.from(response.data);
       const outputBuffer = await sharp(inputBuffer)
         .blur(1)
-        .webp({ quality: 90 })
+        .webp({ quality: 80 })
         .toBuffer();
 
       res.setHeader("Content-Type", "image/webp");

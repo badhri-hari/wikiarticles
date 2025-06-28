@@ -47,6 +47,7 @@ export default function useAppState() {
   const [selectedLang, setSelectedLang] = useState(initialValues.lang);
   const [showArrow, setShowArrow] = useState(false);
   const [isPWA, setIsPWA] = useState(false);
+  const [hideHeader, setHideHeader] = useState(false);
 
   useEffect(() => {
     const displayMode =
@@ -140,5 +141,7 @@ export default function useAppState() {
     installRef,
     triggerInstall,
     handleInstallClick,
+    hideHeader,
+    setHideHeader,
   };
 }

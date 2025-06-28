@@ -8,8 +8,8 @@ i {
   height: 100vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  margin-top: -70px;
   scrollbar-width: none;
+  transition: all 0.25s linear;
 }
 
 .like-overlay {
