@@ -691,7 +691,7 @@ export default function Header({
       {showLangSelectionBox && (
         <div
           className={`list-box-container source-selection-container ${animateLangBox}`}
-          style={{ right: "15px" }}
+          style={{ right: "15px", height: "40vh" }}
           ref={langResultsContainerRef}
           aria-label="List of languages you can view random articles/files in"
         >
