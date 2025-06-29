@@ -181,7 +181,7 @@ export default function Articles({
                   style={{
                     position: "absolute",
                     bottom:
-                      width > 900 ? "13.2%" : showIframe ? "80.71%" : "56.5%",
+                      width > 900 ? "13.2%" : showIframe ? "79.71%" : "55.5%",
                     left: width > 900 ? "2%" : "4%",
                     height: "36px",
                     padding: "10px 0",
