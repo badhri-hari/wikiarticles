@@ -5,7 +5,7 @@ export function extractParagraphs($, source = null) {
   const seenTexts = new Set();
 
   $(
-    "#toc, .infobox, .navbox, .metadata, #mw-page-header-links, .catlinks, .mw-references-wrap, .reflist, .vertical-navbox, .sidebar, .bg-global-nav, .mw-file-element, .cosmos-mobile-navigation, .cosmos-dropdown-list, .wds-dropdown__content, .cosmos-tools-list, .recentchanges-module, .wds-dropdown__toggle, .mw-portlet, #user-tools"
+    "#toc, .pi-item, .page-footer, .page-header__categories, .pi-group, .infobox, .navbox, .metadata, #mw-page-header-links, .catlinks, .mw-references-wrap, .reflist, .vertical-navbox, .sidebar, .bg-global-nav, .mw-file-element, .cosmos-mobile-navigation, .cosmos-dropdown-list, .wds-dropdown__content, .cosmos-tools-list, .recentchanges-module, .wds-dropdown__toggle, .mw-portlet, #user-tools"
   ).remove();
 
   const removeFromHeading = (selector) => {

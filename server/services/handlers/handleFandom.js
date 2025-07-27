@@ -1,6 +1,8 @@
 import axios from "axios";
 import { load } from "cheerio";
 
+import { extractParagraphs } from "../../parsers/parseHtml.js";
+
 export async function handleFandom({ baseUrl }) {
   try {
     const response = await axios.get(`${baseUrl}/Special:random`);
@@ -11,8 +13,7 @@ export async function handleFandom({ baseUrl }) {
     const titleText =
       $('meta[property="og:title"]').attr("content")?.trim() || "";
 
-    const aboutExtract =
-      $('meta[property="og:description"]').attr("content")?.trim() || "";
+    const aboutExtract = extractParagraphs($).slice(1);
 
     let imageUrl =
       $('meta[property="og:image"]').attr("content")?.trim() || null;
@@ -58,7 +59,7 @@ export async function handleFandom({ baseUrl }) {
     return {
       title: titleText,
       extract: aboutExtract,
-      extractDataType: "text",
+      extractDataType: "array",
       thumbnail: imageUrl ? { source: imageUrl } : null,
       viewCount: 0,
       pageViewsLink: null,
