@@ -90,7 +90,127 @@
     </script>
   </head>
 
+<noscript>
+      <style>
+        #root {
+          display: none !important;
+        }
+
+        html {
+          background-color: #000000;
+          text-align: center;
+          padding: 10rem;
+          padding-top: 28%;
+        }
+
+        .no-js-warning {
+          color: #fff;
+          font-family: system-ui, sans-serif;
+        }
+
+        .no-js-warning h1 {
+          color: #fff;
+          font-size: 2rem;
+        }
+
+        .no-js-warning a {
+  position: relative;
+  color: white;
+  text-decoration: none;
+}
+
+.no-js-warning a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2.5px;
+  opacity: 0.7;
+}
+
+.no-js-warning a::before,
+.no-js-warning a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.no-js-warning a::before {
+  background-image: repeating-linear-gradient(
+    to right,
+    white -3px,
+    white 3px,
+    transparent 3px,
+    transparent 10px
+  );
+  bottom: 0;
+  height: 1px;
+  transition: opacity 0.2s ease;
+}
+
+.no-js-warning a::after {
+  bottom: -0.75px;
+  left: -2.5%;
+  height: 1rem;
+  opacity: 0;
+  width: 105%;
+  background-color: rgba(var(--bg-color), 0.3);
+  filter: blur(5px) invert(100%);
+  transition: all 0.2s ease;
+  z-index: -1;
+}
+
+.no-js-warning a:hover::before {
+  opacity: 0;
+}
+
+.no-js-warning a:hover {
+  opacity: 1;
+}
+
+.no-js-warning a:hover::after {
+  height: 1.5rem;
+  opacity: 1;
+}
+
+        @media (max-width: 900px) {
+      html {
+        padding: 4rem 1rem;
+        padding-top: 30%;
+      }
+
+      .no-js-warning h1 {
+        font-size: 1.25rem;
+      }
+    }
+      </style>
+    </noscript>
+
   <body>
+ <noscript>
+      <div
+        class="no-js-warning"
+        role="alert"
+        aria-label="JavaScript required warning"
+      >
+        <h1>wikiarticles needs JS!</h1>
+
+        <p>
+          Please enable it to continue.
+        </p>
+
+        <p>
+          <strong>Privacy details:</strong> This website uses
+          <a
+            href="https://vercel.com/docs/analytics"
+            target="_blank"
+            rel="noopener" 
+            >Vercel Analytics</a
+          > to track visitors. The site uses <em>iframes</em> from other sites, which may have their own trackers (but the main site will remain functional even if you keep those trackers disabled). Your data will never be sold to third-parties and will not be used for any purpose, whether commerical or not <em>(I collect this data only to see who has stumbled upon my website)</em>.
+        </p>
+      </div>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/App.jsx"></script>
     <script>
